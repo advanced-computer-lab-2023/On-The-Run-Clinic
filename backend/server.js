@@ -45,8 +45,7 @@ app.post("/register/patient",createPatient);
 app.get("/getDocpatients/:id", getDocPatients);
 app.get("/getDoctors",getDoctors);
 app.get("/getPatients",getPatients);
-
-app.post("/add/familymember",createMember);
+app.post("/addFamilyMember",createMember);
 
 
 //app.put("/updateUser", updateUser);

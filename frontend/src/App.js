@@ -7,6 +7,7 @@ import DoctorDashboard from './components/DoctorDashboard';
 import PatientRegistrationForm  from './pages/PatientRegPage';
 import PatientDashboard from './pages/PatientDashboard';
 import UserSelection from './components/UserSelection';
+import FamilyMemberForm from './components/FamilyMemberForm';
 
 // Import your components
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
           <Route path="/dashboard/patient/:username" component={PatientDashboard} />
           <Route path="/dashboard/doctor/:username" component={DoctorDashboard} />
+          <Route path="/addFamilyMember"  element={<FamilyMemberForm/>} />
           {/* Add other routes as needed */}
         </Routes>
       </div>
