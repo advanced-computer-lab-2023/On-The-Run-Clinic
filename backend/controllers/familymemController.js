@@ -9,6 +9,7 @@ const createMember = async(req,res) => {
         age,
         gender,
         relation,
+        patientUsername
         
       } = req.body;
       const newMember = new FamilyMem({
@@ -17,6 +18,7 @@ const createMember = async(req,res) => {
         age,
         gender,
         relation,
+        patientUsername
       });
       await newMember.save();
 
@@ -27,7 +29,33 @@ const createMember = async(req,res) => {
     res.status(500).json({ error: 'An error occurred while adding the member' });
   }
 }
-  module.exports={createMember}
+const getFamilyMembers=async(req,res)=>{
+  try {
+    // Get the username from the request parameters
+    const { username } = req.query;
+    console.log({username})
+
+    // Find all family members associated with the patient's username
+    const familyMembers = await FamilyMem.find({ patientUsername: username });
+    console.log(familyMembers)
+
+    // Check if any family members were found
+    if (familyMembers.length === 0) {
+      return res.status(404).json({ message: 'No family members found for this patient.' });
+    }
+
+    // Send the family members as a JSON response
+    res.status(200).json(familyMembers);
+
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error('Error fetching family members:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+
+}
+
+  module.exports={createMember,getFamilyMembers}
 
 
 

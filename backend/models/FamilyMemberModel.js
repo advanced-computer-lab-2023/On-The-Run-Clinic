@@ -21,8 +21,13 @@ const family_member_schema =new mongoose.Schema({
       },
       relation: {
         type: String,
+        enum: ['Husband', 'Wife',"Child"],
         required: true,
       },
+      patientUsername: {
+        type: String,
+        required: true,
+      }
       
 });
 

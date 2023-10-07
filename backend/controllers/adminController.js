@@ -34,4 +34,12 @@ const createAdmin = async(req,res) => {
   }
 
 };
-module.exports={createAdmin}
+const getAdmin=async(req,res) =>{
+  const users =await Admin.find({}).sort({createdAt:-1});
+      for(let index=0;index<users.length;index++){
+         const element = users[index];
+         console.log(element.id);
+      }
+      res.status(200).json(users)
+}
+module.exports={createAdmin,getAdmin}

@@ -10,8 +10,11 @@ import UserSelection from './components/UserSelection';
 import AdminRegistrationForm from "./components/AdminRegistrationForm"
 
 import FamilyMemberForm from './components/FamilyMemberForm';
+import MyPatients from './pages/MyPatients';
 
-import FamilyMembers from './pages/viewMyFamilyMem';
+import FamilyMembersList from './pages/viewMyFamilyMem';
+import SearchPatientByName from './pages/SearchPatientsByName';
+
 
 
 // Import your components
@@ -24,14 +27,12 @@ function App() {
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembers/>}/>
-           {/* <Route path="/createAdmin" element={<createAdmin/>}/>  */}
-          <Route path="/createAdmin" element={<AdminRegistrationForm/>}/>
 
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
 
-          <Route path="/dashboard/patient/:username" component={PatientDashboard} />
-          <Route path="/dashboard/doctor/:username" component={DoctorDashboard} />
+          <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />
+          <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
 
           <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />

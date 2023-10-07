@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
 
 
 const DoctorDashboard = () => {
@@ -10,7 +10,8 @@ const DoctorDashboard = () => {
   return (
     <div>
       <h1>Doctor's Dashboard</h1>
-      
+      <Link to={`/viewMyPatients/${username}`}>View my patients</Link>
+      <Link to={`/searchPatientsByName`}>Search for a patient</Link>
     </div>
   );
 };
