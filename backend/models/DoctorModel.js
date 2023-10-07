@@ -31,7 +31,7 @@ const doctorSchema = new mongoose.Schema({
   },
   Affiliation: {
     type: String,
-    required: true,
+    required: false,
   },
   patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Patient' }]
  
