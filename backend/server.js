@@ -4,6 +4,7 @@ require('dotenv').config()
 const express= require("express")
 const mongoose=require('mongoose')
 const {createDoctor,getDocPatients,getDoctors} = require("./controllers/doctorController")
+const {createPatient,getPatients,getFamilyMembers} = require("./controllers/patientController")
 const {createPatient,getPatients} = require("./controllers/patientController")
 const {createMember} = require("./controllers/familymemController")
 const cors = require('cors');
@@ -45,6 +46,7 @@ app.post("/register/patient",createPatient);
 app.get("/getDocpatients/:id", getDocPatients);
 app.get("/getDoctors",getDoctors);
 app.get("/getPatients",getPatients);
+app.get("/getFamilyMembers",getFamilyMembers);
 
 app.post("/add/familymember",createMember);
 
