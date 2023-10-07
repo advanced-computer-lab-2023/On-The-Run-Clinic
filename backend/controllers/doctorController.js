@@ -63,6 +63,23 @@ const getDoctors=async(req,res) =>{
       res.status(200).json(users)
 }
 
+
+const updateDoctor = async (req, res) => {
+   //update a doctor in the database
+
+   const {username, Email,Hourly_Rate, Affiliation} = req.body
+   try {
+    
+  const filter = { username: username };
+  const update = { $set: { email: Email, hourly_Rate: Hourly_Rate, Afiliation: Affiliation } };
+
+  const result = await DoctorModel.updateOne(filter, update);
+  console.log(result);
+      res.status(200).json(user)
+   } catch (error) {
+      res.status(500).json({error: error.message})
+   }
+  }
 // Implement other controllers (e.g., update profile, view profile, list patients, etc.) following a similar structure
 
 module.exports={createDoctor,getDocPatients,getDoctors}
