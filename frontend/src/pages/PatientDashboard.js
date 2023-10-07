@@ -12,7 +12,7 @@ const PatientDashboard = () => {
       <h1>Patient's Dashboard</h1>
     
       <h1>Add Family Member</h1>
-      <Link to="/add/familymember"></Link>
+      <Link to="/addFamilyMember"></Link>
 
     </div>
   );

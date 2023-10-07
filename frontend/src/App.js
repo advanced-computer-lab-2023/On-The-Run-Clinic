@@ -22,7 +22,7 @@ function App() {
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
           <Route path="/dashboard/patient/:username" component={PatientDashboard} />
           <Route path="/dashboard/doctor/:username" component={DoctorDashboard} />
-          <Route path="/addFamilyMember"  element={<FamilyMemberForm/>} />
+          <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
           {/* Add other routes as needed */}
         </Routes>
       </div>
