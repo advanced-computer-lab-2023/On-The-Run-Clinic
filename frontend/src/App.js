@@ -26,7 +26,17 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
-          <Route path="/viewFamilyMembers/:username" element={<FamilyMembers/>}/>
+ 
+
+           {/* <Route path="/createAdmin" element={<createAdmin/>}/>  */}
+          <Route path="/createAdmin" element={<AdminRegistrationForm/>}/>
+
+          <Route path="/viewFamilyMembers/:username" element={<MyPatients/>}/>
+          
+          
+          <Route path="/searchPatientsByName"  element={<SearchPatientByName/>} />
+         
+
 
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
