@@ -23,8 +23,7 @@ const createPatient = async(req,res) => {
         gender,
         mobileNumber,
         emergencyContact,
-        myDoctors:[],
-        myfamilymembers:[]
+        myDoctors:[]
       });
       await newPatient.save();
 
@@ -43,30 +42,20 @@ const getPatients=async(req,res) =>{
       }
       res.status(200).json(users)
 }
-
-const getFamilyMembers = async (req, res) => {
+// Delete Patient Controller
+const deletePatient = async(req,res) => {
   try {
-    // Find the patient by their ID (you need to ensure proper authentication)
-    const patient = await Patient.findById(req.user.id); // Assuming you have a user object with patient ID after authentication
-    
-    if (!patient) {
-      return res.status(404).json({ message: 'Patient not found' });
-    }
+    // Extract the patient ID from the request parameters
+    const { id } = req.params;
 
-    // Access the patient's family members
-    const familyMembers = patient.familyMembers;
+    // Find the patient by ID and delete them from the database
+    await Patient.findByIdAndDelete(id);
 
-    // Return the family members' data as JSON
-    res.json(familyMembers);
+    res.status(200).json({ message: 'Patient deleted successfully' });
   } catch (error) {
-    console.error('Error fetching family members:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while deleting the patient' });
   }
 };
 
-
-
-
-
-
-module.exports={createPatient,getPatients,getFamilyMembers}
+module.exports={createPatient,getPatients,deletePatient}
