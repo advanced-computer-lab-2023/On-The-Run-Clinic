@@ -82,4 +82,4 @@ const updateDoctor = async (req, res) => {
   }
 // Implement other controllers (e.g., update profile, view profile, list patients, etc.) following a similar structure
 
-module.exports={createDoctor,getDocPatients,getDoctors}
+module.exports={createDoctor,getDocPatients,getDoctors,updateDoctor}
