@@ -1,12 +1,14 @@
 import React from 'react';
 
-import { Link } from 'react-router-dom';
+import { Link,useParams } from 'react-router-dom';
+
 
 const PatientDashboard = () => {
+    const { username } = useParams();
     return (
       <div>
-        <h1>PatientDashboard</h1>
-        <Link to="/getFamilyMembers">View my family members</Link>
+        <h1>Current ID: {username}</h1>
+        <Link to={`/getFamilyMembers/${username}`}>View my family members</Link>
         
       </div>
     );
