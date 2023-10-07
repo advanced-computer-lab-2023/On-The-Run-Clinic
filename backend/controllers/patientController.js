@@ -23,8 +23,7 @@ const createPatient = async(req,res) => {
         gender,
         mobileNumber,
         emergencyContact,
-        myDoctors:[],
-        myfamilymembers:[]
+        myDoctors:[]
       });
       await newPatient.save();
 
@@ -43,4 +42,20 @@ const getPatients=async(req,res) =>{
       }
       res.status(200).json(users)
 }
-module.exports={createPatient,getPatients}
+// Delete Patient Controller
+const deletePatient = async(req,res) => {
+  try {
+    // Extract the patient ID from the request parameters
+    const { id } = req.params;
+
+    // Find the patient by ID and delete them from the database
+    await Patient.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Patient deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while deleting the patient' });
+  }
+};
+
+module.exports={createPatient,getPatients,deletePatient}

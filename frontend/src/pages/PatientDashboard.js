@@ -1,21 +1,24 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+
+import { Link,useParams } from 'react-router-dom';
 
 
 const PatientDashboard = () => {
-  const { username } = useParams(); 
- 
+    const { username } = useParams();
+    return (
+      <div>
+        <h1>Current ID: {username}</h1>
+        <Link to={`/getFamilyMembers/${username}`}>View my family members</Link>
+        
+        <Link to={`/addFamilyMember/${username}`}>Add family Member</Link>
+      </div>
+    );
+  };
   
 
-  return (
-    <div>
-      <h1>Patient's Dashboard</h1>
-    
-      <h1>Add Family Member</h1>
-      <Link to="/addFamilyMember"></Link>
+  
 
-    </div>
-  );
-};
 
 export default PatientDashboard;
+
+
