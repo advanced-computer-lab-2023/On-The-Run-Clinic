@@ -8,9 +8,11 @@ const PatientDashboard = () => {
     return (
       <div>
         <h1>Current ID: {username}</h1>
-        <Link to={`/getFamilyMembers/${username}`}>View my family members</Link>
+        <Link to={`/viewFamilyMembers/${username}`}>View my family members</Link>
         
         <Link to={`/addFamilyMember/${username}`}>Add family Member</Link>
+        <Link to={`/addFamilyMember/${username}`}>Add family Member</Link>
+        <Link to={`/filterAppointments/${username}`}>appointments</Link>
       </div>
     );
   };
