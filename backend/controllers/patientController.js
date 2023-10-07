@@ -57,5 +57,22 @@ const deletePatient = async(req,res) => {
     res.status(500).json({ error: 'An error occurred while deleting the patient' });
   }
 };
+const searchPatientsByName = async (req, res) => {
+  try {
+    const { name } = req.query;
+    
+    // Use a case-insensitive regular expression to search for patients by name
+    const patients = await Patient.find({ name: { $regex: new RegExp(name, 'i') } });
 
-module.exports={createPatient,getPatients,deletePatient}
+    if (patients.length === 0) {
+      return res.status(404).json({ message: 'No patients found with the provided name.' });
+    }
+
+    res.status(200).json(patients);
+  } catch (error) {
+    console.error('Error searching for patients by name:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName}

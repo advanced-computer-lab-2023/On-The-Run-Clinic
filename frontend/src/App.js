@@ -12,6 +12,7 @@ import FamilyMemberForm from './components/FamilyMemberForm';
 import MyPatients from './pages/MyPatients';
 
 import FamilyMembersList from './pages/viewMyFamilyMem';
+import SearchPatientByName from './pages/SearchPatientsByName';
 
 
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/viewFamilyMembers/:username" element={<MyPatients/>}/>
           
           <Route path="/viewMyPatients/:username" element={<FamilyMembersList/>}/>
+          <Route path="/searchPatientsByName"  element={<SearchPatientByName/>} />
          
 
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
