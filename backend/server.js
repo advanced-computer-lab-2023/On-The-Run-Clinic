@@ -5,6 +5,7 @@ const express= require("express")
 const mongoose=require('mongoose')
 const {createDoctor,getDocPatients,getDoctors} = require("./controllers/doctorController")
 const {createPatient,getPatients} = require("./controllers/patientController")
+const {createAdmin} = require("./controllers/adminController")
 const cors = require('cors');
 
 
@@ -39,6 +40,7 @@ app.listen(4000,()=>{
     console.log(error)
 })
 app.use(express.json())
+app.post("/createAdmin",createAdmin);
 app.post("/register/doctor",createDoctor);
 app.post("/register/patient",createPatient);
 app.get("/getDocpatients/:id", getDocPatients);
