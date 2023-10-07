@@ -8,8 +8,8 @@ const[username,setUsername]=useState('')
 const[name,setName]=useState('')
 const[email,setEmail]=useState('')
 const[password,setPassword]=useState('')
-const[dateOfBirth,setDateOfBirth]=useState('')
-const[hourlyRate,setHourlyRate]=useState('')
+const[date_of_birth,setDateOfBirth]=useState('')
+const[hourly_rate,setHourlyRate]=useState('')
 const[erro,setError]=useState(null)
 const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
 
@@ -17,7 +17,7 @@ const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const dr={username,name,email,password}
+    const dr={username,name,email,password,date_of_birth,hourly_rate}
     try{const response = await axios.post('http://localhost:4000/register/doctor', dr);
     
     if (response.status === 201) {
@@ -97,11 +97,10 @@ const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
             type="date"
             id="dateOfBirth"
             name="dateOfBirth"
-            value={dateOfBirth}
+            value={date_of_birth}
             onChange={(e) => {
-              const selectedDate = e.target.value;
-              // Format the date to YYYY-MM-DD
-              setDateOfBirth(selectedDate);
+              
+              setDateOfBirth(e.target.value);
             }}
             required
           />
@@ -112,8 +111,9 @@ const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
             type="number"
             id="hourlyRate"
             name="hourlyRate"
-            value={hourlyRate}
-            onChange={(e)=>setHourlyRate(e.target.value)}
+            value={hourly_rate}
+            onChange={(e)=> {
+            setHourlyRate(e.target.value);}}
             required
           />
         </div>

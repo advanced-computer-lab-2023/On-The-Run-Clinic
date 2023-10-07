@@ -22,12 +22,12 @@ const doctorSchema = new mongoose.Schema({
     required: true,
   },
   date_of_birth: {
-    type: Date,
-    required: false,
+    type: String,
+    required: true,
   },
   hourly_rate: {
-    type: Number,
-    required: false,
+    type: String,
+    required: true,
   },
   patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Patient' }]
  
