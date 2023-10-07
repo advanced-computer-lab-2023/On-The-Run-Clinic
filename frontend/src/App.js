@@ -7,6 +7,7 @@ import DoctorDashboard from './components/DoctorDashboard';
 import PatientRegistrationForm  from './pages/PatientRegPage';
 import PatientDashboard from './pages/PatientDashboard';
 import UserSelection from './components/UserSelection';
+import AdminRegistrationForm from "./components/AdminRegistrationForm"
 
 import FamilyMemberForm from './components/FamilyMemberForm';
 
@@ -23,6 +24,8 @@ function App() {
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembers/>}/>
+           {/* <Route path="/createAdmin" element={<createAdmin/>}/>  */}
+          <Route path="/createAdmin" element={<AdminRegistrationForm/>}/>
 
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />

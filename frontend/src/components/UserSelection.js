@@ -7,6 +7,7 @@ const UserSelection = () => {
         <h1>Select Your Role</h1>
         <Link to="/register/doctor">Register as Doctor</Link>
         <Link to="/register/patient">Register as Patient</Link>
+        <Link to="/createAdmin">Register as Admin</Link>
       </div>
     );
   };
