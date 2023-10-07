@@ -5,6 +5,7 @@ const express= require("express")
 const mongoose=require('mongoose')
 const {createDoctor,getDocPatients,getDoctors} = require("./controllers/doctorController")
 const {createPatient,getPatients} = require("./controllers/patientController")
+const {createMember} = require("./controllers/familymemController")
 const cors = require('cors');
 
 
@@ -44,5 +45,9 @@ app.post("/register/patient",createPatient);
 app.get("/getDocpatients/:id", getDocPatients);
 app.get("/getDoctors",getDoctors);
 app.get("/getPatients",getPatients);
+
+app.post("/add/familymember",createMember);
+
+
 //app.put("/updateUser", updateUser);
 //app.delete("/deleteUser", deleteUser);

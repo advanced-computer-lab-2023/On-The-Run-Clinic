@@ -46,7 +46,8 @@ const PatientSchema = new mongoose.Schema({
     },
   },
   
-  myDoctors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' }]
+  myDoctors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' }],
+  myfamilymembers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FamilyMem' }]
  
 });
 
