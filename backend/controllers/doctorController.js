@@ -36,7 +36,7 @@ const createDoctor = async(req,res) => {
     res.status(500).json({ error: 'An error occurred while registering the doctor' });
   }
 };
-const getPatients = async (req, res) => {
+const getDocPatients = async (req, res) => {
   try {
     const { id} = req.params;
 
@@ -65,4 +65,4 @@ const getDoctors=async(req,res) =>{
 
 // Implement other controllers (e.g., update profile, view profile, list patients, etc.) following a similar structure
 
-module.exports={createDoctor,getPatients,getDoctors}
+module.exports={createDoctor,getDocPatients,getDoctors}

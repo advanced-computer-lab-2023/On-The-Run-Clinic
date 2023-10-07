@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import DoctorRegistrationForm from '../pages/DoctorRegPage';
+
 const UserSelection = () => {
     return (
       <div>

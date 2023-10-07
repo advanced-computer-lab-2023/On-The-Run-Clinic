@@ -26,6 +26,25 @@ const PatientSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female'],
+    required: true,
+  },
+  mobileNumber: {
+    type: String,
+    required: true,
+  },
+  emergencyContact: {
+    fullName: {
+      type: String,
+      required: true,
+    },
+    mobileNumber: {
+      type: String,
+      required: true,
+    },
+  },
   
   myDoctors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' }]
  
