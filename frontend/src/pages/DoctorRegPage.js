@@ -10,7 +10,7 @@ const[email,setEmail]=useState('')
 const[password,setPassword]=useState('')
 const[date_of_birth,setDateOfBirth]=useState('')
 const[hourly_rate,setHourlyRate]=useState('')
-const[erro,setError]=useState(null)
+const[error,setError]=useState(null)
 const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
 
   
@@ -46,6 +46,8 @@ const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
   return (
     <div>
       <h2>Doctor Registration</h2>
+      {isDoctorRegistered && <p>Registration successful! You can now log in.</p>}
+      {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Username</label>

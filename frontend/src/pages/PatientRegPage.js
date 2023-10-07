@@ -38,6 +38,7 @@ const [emergencyContact, setEmergencyContact] = useState({
         setEmergencyContact({ fullName: '', mobileNumber: '' });
         setError(null);
         setIsPatientRegistered(true);
+        navigate(`/dashboard/patient/${username}`);
       } else {
         console.error('Registration failed:', response.data);
         setError('Registration failed. Please check your data and try again.');
