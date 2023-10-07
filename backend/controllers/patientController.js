@@ -23,7 +23,8 @@ const createPatient = async(req,res) => {
         gender,
         mobileNumber,
         emergencyContact,
-        myDoctors:[]
+        myDoctors:[],
+        myfamilymembers:[]
       });
       await newPatient.save();
 
