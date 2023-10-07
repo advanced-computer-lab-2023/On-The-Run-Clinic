@@ -18,12 +18,12 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
-          <Route path="/viewFamilyMembers" element={<FamilyMembers/>}/>
+          <Route path="/viewFamilyMembers/:username" element={<FamilyMembers/>}/>
 
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-          <Route path="/dashboard/patient/:username" component={PatientDashboard} />
-          <Route path="/dashboard/doctor/:username" component={DoctorDashboard} />
+          <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />
+          <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           {/* Add other routes as needed */}
         </Routes>
       </div>
