@@ -5,7 +5,7 @@ const express= require("express")
 const mongoose=require('mongoose')
 const {createDoctor,getDocPatients,getDoctors} = require("./controllers/doctorController")
 const {createPatient,getPatients,getFamilyMembers} = require("./controllers/patientController")
-const {createPatient,getPatients} = require("./controllers/patientController")
+
 const {createMember} = require("./controllers/familymemController")
 const cors = require('cors');
 

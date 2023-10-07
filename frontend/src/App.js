@@ -22,8 +22,8 @@ function App() {
 
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-          <Route path="/dashboard/patient/:username" component={PatientDashboard} />
-          <Route path="/dashboard/doctor/:username" component={DoctorDashboard} />
+          <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />
+          <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           {/* Add other routes as needed */}
         </Routes>
       </div>
