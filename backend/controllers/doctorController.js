@@ -62,24 +62,39 @@ const getDoctors=async(req,res) =>{
       }
       res.status(200).json(users)
 }
+// Delete Doctor Controller
+const deleteDoctor = async(req,res) => {
+  try {
+    // Extract the doctor ID from the request parameters
+    const { username } = req.body;
 
+    // Find the doctor by ID and delete them from the database
+    await Doctor.findOneAndDelete(username);
 
-const updateDoctor = async (req, res) => {
-   //update a doctor in the database
-
-   const {username, Email,Hourly_Rate, Affiliation} = req.body
-   try {
-    
-  const filter = { username: username };
-  const update = { $set: { email: Email, hourly_Rate: Hourly_Rate, Afiliation: Affiliation } };
-
-  const result = await DoctorModel.updateOne(filter, update);
-  console.log(result);
-      res.status(200).json(user)
-   } catch (error) {
-      res.status(500).json({error: error.message})
-   }
+    res.status(200).json({ message: 'Doctor deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while deleting the doctor' });
   }
+};
+const updateDoctor = async (req, res) => {
+  //update a doctor in the database
+
+  const {username, Email,Hourly_Rate, Affiliation} = req.body
+  try {
+   
+ const filter = { username: username };
+ const update = { $set: { email: Email, hourly_Rate: Hourly_Rate, Afiliation: Affiliation } };
+
+ const result = await DoctorModel.updateOne(filter, update);
+ console.log(result);
+     res.status(200).json(user)
+  } catch (error) {
+     res.status(500).json({error: error.message})
+  }
+ }
+
+
 // Implement other controllers (e.g., update profile, view profile, list patients, etc.) following a similar structure
 
-module.exports={createDoctor,getDocPatients,getDoctors}
+module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor}
