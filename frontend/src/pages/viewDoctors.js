@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const Doctors = () => {
+const vDoctors = () => {
   const { username } = useParams();
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
@@ -33,7 +33,6 @@ const Doctors = () => {
           }
 
           if(doctors._id === appointments.doctorId){
-
             if (filterDate) {
                 filteredAppointments = filteredAppointments.filter(
                   (appointment) => appointment.date === filterDate
@@ -149,4 +148,4 @@ const Doctors = () => {
   );
 };
 
-export default Doctors;
+export default vDoctors;
