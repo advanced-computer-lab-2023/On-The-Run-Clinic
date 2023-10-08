@@ -82,7 +82,7 @@ const deleteDoctor = async(req,res) => {
     const { username } = req.body;
 
     // Find the doctor by ID and delete them from the database
-    await Doctor.findOneAndDelete(username);
+    await Doctor.findOneAndDelete( {username: username });
 
     res.status(200).json({ message: 'Doctor deleted successfully' });
   } catch (error) {

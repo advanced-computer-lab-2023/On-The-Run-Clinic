@@ -53,7 +53,7 @@ app.get("/getDoctors",getDoctors);
 app.get("/getPatients",getPatients);
 app.get("/getAdmins",getAdmin)
 app.post("/addFamilyMember",createMember);
-app.delete("/deletedoctor",deleteDoctor);
+app.delete("/deleteDoctor",deleteDoctor);
 app.patch("/ubdateDoctor",updateDoctor);
 app.get("/getFamilyMem",getFamilyMembers);
 app.get("/searchPatientsByName",searchPatientsByName);

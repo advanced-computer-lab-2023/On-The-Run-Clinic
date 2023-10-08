@@ -43,8 +43,27 @@ const createRequest = async (req, res) => {
       
 
 };
+const getOneRequest = async (req, res) => {
+  try {
+    const { username } = req.query;
+    
+    // Use a case-insensitive regular expression to search for requests by username
+    const drequest = await requestsModel.find({ username: { $regex: new RegExp(username, 'i') } });
 
-module.exports = { createRequest };
+    if (drequest.length === 0) {
+      return res.status(404).json({ message: 'No request found with the provided docotr username.' });
+    }
+
+    res.status(200).json(drequest);
+  } catch (error) {
+    console.error('Error searching for a doctor request by username:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+module.exports = { createRequest,getOneRequest };
 
 
 
