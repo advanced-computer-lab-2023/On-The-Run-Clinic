@@ -23,6 +23,16 @@ const prescriptionSchema = new mongoose.Schema({
     ref: 'Patient',
     required: true,
   },
+  doctor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Doctor',
+    required: true,
+  },
+  filled: {
+    type: Boolean,
+    default: false, // Set the default value to false
+  },
+  
 });
 
 const Prescription = mongoose.model('Prescription', prescriptionSchema);
