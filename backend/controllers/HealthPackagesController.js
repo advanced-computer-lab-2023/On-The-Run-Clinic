@@ -1,49 +1,78 @@
-const HealthPackage=require('../models/HealthPackages')
+
+const { default: mongoose } = require('mongoose');
+const HealthPackage = require('../models/HealthPackages')
 
 //create a new user
-const { default: mongoose } = require('mongoose');
+
 
 const createHealthPackage = async(req,res) => {
    //add a new user to the database with 
    //Name,type,password
-   const{Price,Services,Type} = req.body ;
+   const{price,services,name} = req.body ;
    console.log(req.body);
    try {
-      const HealthPackage = await HealthPackages.create({Price,Services,Type});
-      console.log(HealthPackage);
-      res.status(200).json(user)
+      const h= new HealthPackage({price,services,name});
+      console.log(h);
+      await h.save();
+      res.status(200).json({ message: 'Package added successfully' })
    }catch(error) {
          res.status(400).json({error:error.message})
        }    
-   }
+   };
 
 
-const getUsers = async (req, res) => {
+const getPackages = async (req, res) => {
    //retrieve all users from the database
-   const users = await userModel.find({}).sort({createdAt : -1});
+   const users = await HealthPackage.find({}).sort({createdAt : -1});
    for (let index = 0; index < users.length;index++) {
       const element = users[index];
       console.log(element.id);
    }
    res.status(200).json(users)
-  }
-
-  const deleteUser = async (req, res) => {
-    const { username } =  req.body;
+  };
+  const updateHealthPackage = async (req, res) => {
+   const { id } = req.query;
+   const updatedFields = req.body;
  
-    try {
-       // Delete the user with the specified username
-       const deletedUser = await userModel.findOneAndDelete({ username });
+   try {
+     const existingPackage = await HealthPackage.findById(id);
  
-       if (!deletedUser) {
-          return res.status(404).json({ message: 'User not found' });
+     if (!existingPackage) {
+       return res.status(404).json({ message: 'Health package not found' });
+     }
+ 
+     // Iterate over the updatedFields and set them in the existing package
+     for (const key in updatedFields) {
+       if (updatedFields.hasOwnProperty(key)) {
+         existingPackage[key] = updatedFields[key];
        }
+     }
  
-       return res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error) {
-       console.error(error);
-       return res.status(500).json({ error: 'An error occurred while deleting the user' });
-    }
+     // Save the updated package
+     await existingPackage.save();
+ 
+     res.status(200).json({ message: 'Health package updated successfully' });
+   } catch (error) {
+     res.status(400).json({ error: error.message });
+   }
  };
+ const deleteHealthPackage = async (req, res) => {
+   const { id } =  req.query;
+ 
+   try {
+     const deletedPackage = await HealthPackage.findByIdAndRemove(id);
+ 
+     if (!deletedPackage) {
+       return res.status(404).json({ message: 'Health package not found' });
+     }
+ 
+     res.status(200).json({ message: 'Health package deleted successfully' });
+   } catch (error) {
+     res.status(400).json({ error: error.message });
+   }
+ };
+ 
+ 
 
-module.exports = {createUser, getUsers, deleteUser};
+  
+module.exports = {createHealthPackage, getPackages,updateHealthPackage,deleteHealthPackage};
