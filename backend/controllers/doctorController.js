@@ -45,17 +45,17 @@ const createDoctor = async(req,res) => {
 };
 const getDocPatients = async (req, res) => {
   try {
-    const { doctorUsername } = req.params; // Update the parameter name to match the URL
+    const { username } = req.query;
 
-    // Find the doctor by username and populate the 'patients' field
-    const doctor = await Doctor.findOne({ username: doctorUsername }).populate('patients');
+    // Find the doctor by ID and populate the 'patients' field
+    const doctor = await Doctor.find({username:username}).populate('patients');
+   
 
     if (!doctor) {
       return res.status(404).json({ message: 'Doctor not found' });
     }
 
-    const patients = doctor.patients;
-
+    const patients = doctor[0].patients;
     res.status(200).json(patients);
   } catch (error) {
     console.error('Error fetching patients:', error);

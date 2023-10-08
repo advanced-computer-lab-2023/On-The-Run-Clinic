@@ -49,7 +49,7 @@ app.post("/createAdmin",createAdmin);
 app.post("/register/doctor",createDoctor);
 app.put("/updateDoctor",updateDoctor);
 app.post("/register/patient",createPatient);
-app.get("/getDocPatients/:doctorUsername", getDocPatients);
+app.get("/getDocPatients", getDocPatients);
 app.get("/getDoctors",getDoctors);
 app.get("/getPatients",getPatients);
 app.get("/getAdmins",getAdmin)
