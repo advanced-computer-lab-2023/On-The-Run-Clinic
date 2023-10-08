@@ -8,14 +8,13 @@ import PatientRegistrationForm  from './pages/PatientRegPage';
 import PatientDashboard from './pages/PatientDashboard';
 import UserSelection from './components/UserSelection';
 import AdminRegistrationForm from "./components/AdminRegistrationForm"
-
 import FamilyMemberForm from './components/FamilyMemberForm';
-
 import FamilyMembersList from './pages/viewMyFamilyMem';
 import SearchPatientByName from './pages/SearchPatientsByName';
 import MyPatients from './pages/MyPatients';
 import MyPrescription from './pages/viewMyPrescriptions'
 import AdminHealthPackages from './pages/AdminHealthPackages';
+import UpdateDoctorInfo from './pages/updateDoctor';
 
 
 
@@ -28,20 +27,16 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
+          <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>
 
-           <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
+          <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
           <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
           <Route path="/viewMyPrescription/:username" element={<MyPrescription/>}/>
  
-
-           {/* <Route path="/createAdmin" element={<createAdmin/>}/>  */}
           <Route path="/createAdmin" element={<AdminRegistrationForm/>}/>
 
           <Route path="/searchPatientsByName"  element={<SearchPatientByName/>} />
-         
-
-
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
 

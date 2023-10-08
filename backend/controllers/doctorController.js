@@ -14,7 +14,8 @@ const createDoctor = async(req,res) => {
       email,
       password,
       date_of_birth,
-      hourly_rate
+      hourly_rate,
+      Affiliation
     } = req.body;
 
     // Create a new doctor record
@@ -25,6 +26,8 @@ const createDoctor = async(req,res) => {
       password, // Hash the password before saving (use a library like bcrypt)
       date_of_birth,
       hourly_rate,
+      Affiliation,
+
       patients:[]
     });
 
@@ -91,21 +94,54 @@ const deleteDoctor = async(req,res) => {
   }
 };
 const updateDoctor = async (req, res) => {
-  //update a doctor in the database
+  const { username } = req.query; // Get the username from the URL parameter
+  const { email, Affiliation, hourly_rate } = req.body; // Get the updated data from the request body
 
-  const {username, Email,Hourly_Rate, Affiliation} = req.body
   try {
-   
- const filter = { username: username };
- const update = { $set: { email: Email, hourly_Rate: Hourly_Rate, Afiliation: Affiliation } };
+    // Find the doctor by username
+    const doctor = await Doctor.findOne({ username });
 
- const result = await DoctorModel.updateOne(filter, update);
- console.log(result);
-     res.status(200).json(user)
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    // Update the doctor's email, affiliation, or hourly rate if provided
+    if (email) {
+      doctor.email = email;
+    }
+
+    if (Affiliation) {
+      doctor.Affiliation = Affiliation;
+    }
+
+    if (hourly_rate) {
+      doctor.hourly_rate = hourly_rate;
+    }
+
+    // Save the updated doctor
+    await doctor.save();
+
+    res.status(200).json({ message: 'Doctor information updated successfully' });
   } catch (error) {
-     res.status(500).json({error: error.message})
+    res.status(500).json({ error: error.message });
   }
  };
+ const getDoctorByUsername = async (req, res) => {
+  const { username } = req.query; // Get the username from the URL parameter
+
+  try {
+    // Find the doctor by username
+    const doctor = await Doctor.findOne({ username:username });
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    res.status(200).json(doctor);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
  const addPatientToDr =async(req,res)=>{
   try {
     const { doctorId, patientId } = req.body;
@@ -148,4 +184,4 @@ const updateDoctor = async (req, res) => {
 
 // Implement other controllers (e.g., update profile, view profile, list patients, etc.) following a similar structure
 
-module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr}
+module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr,getDoctorByUsername}
