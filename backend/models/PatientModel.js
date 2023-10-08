@@ -44,10 +44,15 @@ const PatientSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    
   },
   
   myDoctors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' }],
-  myfamilymembers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FamilyMem' }]
+  myfamilymembers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FamilyMem' }],
+  prescriptions: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Prescription',
+  }],
  
 });
 

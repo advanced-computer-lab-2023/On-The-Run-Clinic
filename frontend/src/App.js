@@ -14,6 +14,7 @@ import FamilyMemberForm from './components/FamilyMemberForm';
 import FamilyMembersList from './pages/viewMyFamilyMem';
 import SearchPatientByName from './pages/SearchPatientsByName';
 import MyPatients from './pages/MyPatients';
+import MyPrescription from './pages/viewMyPrescriptions'
 
 
 
@@ -26,20 +27,15 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
-<<<<<<< HEAD
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>
           
           <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
-=======
+          <Route path="/viewMyPrescription/:username" element={<MyPrescription/>}/>
  
 
            {/* <Route path="/createAdmin" element={<createAdmin/>}/>  */}
           <Route path="/createAdmin" element={<AdminRegistrationForm/>}/>
 
-          <Route path="/viewFamilyMembers/:username" element={<MyPatients/>}/>
-          
-          
->>>>>>> e34665a352c699e51b7e1bdd1d1f9bb07a8d0e6b
           <Route path="/searchPatientsByName"  element={<SearchPatientByName/>} />
          
 
