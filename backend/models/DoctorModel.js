@@ -35,7 +35,8 @@ const doctorSchema = new mongoose.Schema({
   },
   speciality: {
     type: String,
-    required: true,
+    required: false,
+   
   },
   educational_background: {
     type: String,

@@ -27,7 +27,7 @@ const requestSchema = new mongoose.Schema({
   },
   speciality: {
     type: String,
-    required: true, // Set to true if affiliation is required
+    required: false, // Set to true if affiliation is required
   },
   educational_background: {
     type: String,
