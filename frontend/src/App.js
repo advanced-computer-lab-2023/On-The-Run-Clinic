@@ -13,12 +13,9 @@ import FamilyMembersList from './pages/viewMyFamilyMem';
 import SearchPatientByName from './pages/SearchPatientsByName';
 import MyPatients from './pages/MyPatients';
 import MyPrescription from './pages/viewMyPrescriptions'
-<<<<<<< HEAD
 import DeleteDoctorPage from './pages/DeleteDoctorPage';
-=======
 import AdminHealthPackages from './pages/AdminHealthPackages';
 import UpdateDoctorInfo from './pages/updateDoctor';
->>>>>>> d6ac60d432074507e7dadd825e522e68a8d9c773
 
 
 
@@ -41,20 +38,16 @@ function App() {
           <Route path="/createAdmin" element={<AdminRegistrationForm/>}/>
 
           <Route path="/searchPatientsByName"  element={<SearchPatientByName/>} />
-<<<<<<< HEAD
          <Route path="/getDoctors" element={<getDoctors/>}/>
           <Route path="/deleteDoctor" element={<DeleteDoctorPage/>} />
-=======
->>>>>>> d6ac60d432074507e7dadd825e522e68a8d9c773
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-          <Route path="/deleteDoctor" element={<DeleteDoctorPage/>}/>
           <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />
           <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
 
-          <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />
-          <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
+  
+
 
           {/* Add other routes as needed */}
         </Routes>
