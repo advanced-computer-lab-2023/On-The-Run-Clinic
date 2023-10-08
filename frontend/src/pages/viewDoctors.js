@@ -4,12 +4,14 @@ import { useParams } from 'react-router-dom';
 
 const Doctors = () => {
   const { username } = useParams();
-  const [doctors, setDoctos] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [doctorUsername, setDoctorUsername] = useState('');
   const [filledOnly, setFilledOnly] = useState(false);
   const [filterDate, setFilterDate] = useState('');
+  const [searchName, setSearchName] = useState('');
+  const [searchSpec, setSearchSpec] = useState('');
 
   useEffect(() => {
     const fetchDocotrs = async () => {
@@ -58,6 +60,14 @@ const Doctors = () => {
     // Clear the selected prescription to close the modal or side panel
     setSelectedPrescription(null);
   };
+  const handleSearch = () => {
+    // Filter patients based on the search name
+    const filteredDoctors = doctors.filter((doctor) =>
+      doctor.name.toLowerCase().includes(searchName.toLowerCase()) &&
+      doctor.speciality.toLowerCase().includes(searchSpec.toLowerCase())
+    );
+    setDoctors(filteredDoctors);
+  };
 
   return (
     <div>
@@ -70,9 +80,19 @@ const Doctors = () => {
             Doctor Username:
             <input
               type="text"
-              value={doctorUsername}
-              onChange={(e) => setDoctorUsername(e.target.value)}
+              value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
             />
+            <button onClick={handleSearch}>Search</button>
+          </label>
+          <label>
+            Doctor speciality:
+            <input
+              type="text"
+              value={searchSpec}
+            onChange={(e2) => setSearchSpec(e2.target.value)}
+            />
+            <button onClick={handleSearch}>Search</button>
           </label>
         </div>
         <div>
