@@ -12,6 +12,7 @@ const DoctorDashboard = () => {
       <h1>Doctor's Dashboard</h1>
       <Link to={`/viewMyPatients/${username}`}>View my patients</Link>
       <Link to={`/searchPatientsByName`}>Search for a patient</Link>
+      <Link to={`/updateDoctor/${username}`}>Update Info</Link>
     </div>
   );
 };
