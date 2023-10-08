@@ -11,6 +11,7 @@ const cors = require('cors');
 const{createAppointment,filter,getAllAppointments}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest}=require("./controllers/requestsController")
+const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage}=require("./controllers/HealthPackagesController")
 
 
 //express app
@@ -62,6 +63,10 @@ app.post("/addPrescription",createPrescription);
 app.get("/getPrescriptions",getPrescriptionsForPatient);
 app.get("/getMyPrescriptions",getMyPrescriptions);
 app.post("/createRequest",createRequest);
+app.post("/createPackage",createHealthPackage);
+app.get("/getPackages",getPackages);
+app.put("/updatePackage",updateHealthPackage);
+app.delete("/deletePackage",deleteHealthPackage);
 
 app.post("/createAppointment",createAppointment);
 app.get("/getAllAppointments",getAllAppointments);

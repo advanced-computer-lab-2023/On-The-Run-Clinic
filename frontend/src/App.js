@@ -15,6 +15,7 @@ import FamilyMembersList from './pages/viewMyFamilyMem';
 import SearchPatientByName from './pages/SearchPatientsByName';
 import MyPatients from './pages/MyPatients';
 import MyPrescription from './pages/viewMyPrescriptions'
+import AdminHealthPackages from './pages/AdminHealthPackages';
 
 
 
@@ -28,7 +29,8 @@ function App() {
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>
-          
+
+           <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
           <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
           <Route path="/viewMyPrescription/:username" element={<MyPrescription/>}/>
  
