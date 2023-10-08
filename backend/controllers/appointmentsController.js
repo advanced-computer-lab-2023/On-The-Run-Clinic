@@ -1,7 +1,10 @@
 // Import necessary modules and models
 const express = require('express');
 
-const Doctor = require('../models/appointments'); // Import your Doctor model
+const Appointment = require('../models/appointments');
+const Doctor = require('../models/DoctorModel');
+const Patient = require('../models/PatientModel'); // Import your Patient model
+
 
 const createAppointment = async(req,res) => {
     try {
@@ -9,6 +12,27 @@ const createAppointment = async(req,res) => {
         const { patientId, doctorId, date, status, description } = req.body;
         const appointment = new Appointment({ patientId, doctorId, date, status, description });
         await appointment.save();
+        const doctor = await Doctor.findById(doctorId);
+        const doctorUsername = doctor.username;
+        const patient = await Patient.findById(patientId);
+        const patientUsername = patient.username;
+
+        
+        if (!doctor.patients.includes(patientUsername)) {
+          doctor.patients.push(patientUsername);
+          await doctor.save();
+        }
+
+       if (!patient) {
+          return res.status(404).json({ message: 'Patient not found' });
+        }
+    
+        if (!patient.myDoctors.includes(doctorUsername)) {
+          patient.myDoctors.push(doctorUsername);
+          await patient.save();
+        }
+
+
         res.status(201).json({ message: 'Appointment created successfully', appointment });
       } catch (error) {
         console.error('Error creating appointment:', error);
