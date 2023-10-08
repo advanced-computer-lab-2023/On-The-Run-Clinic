@@ -10,6 +10,7 @@ const {createMember,getFamilyMembers} = require("./controllers/familymemControll
 const cors = require('cors');
 const{createAppointment,filter,getAllAppointments}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
+const{createRequest}=require("./controllers/requestsController")
 
 
 //express app
@@ -60,7 +61,7 @@ app.post("/addPatientToDr",addPatientToDr);
 app.post("/addPrescription",createPrescription);
 app.get("/getPrescriptions",getPrescriptionsForPatient);
 app.get("/getMyPrescriptions",getMyPrescriptions);
-
+app.post("/createRequest",createRequest);
 
 app.post("/createAppointment",createAppointment);
 app.get("/getAllAppointments",getAllAppointments);

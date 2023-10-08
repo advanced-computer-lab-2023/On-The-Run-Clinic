@@ -10,15 +10,19 @@ const[email,setEmail]=useState('')
 const[password,setPassword]=useState('')
 const[date_of_birth,setDateOfBirth]=useState('')
 const[hourly_rate,setHourlyRate]=useState('')
+const[affiliation,setAffiliation]=useState('')
+const[educational_background,setEducational_background]=useState('')
 const[error,setError]=useState(null)
 const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
+const [isRequestPending, setIsRequestPending] = useState(false);
 
   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const dr={username,name,email,password,date_of_birth,hourly_rate}
-    try{const response = await axios.post('http://localhost:4000/register/doctor', dr);
+          
+          const dr={username,name,email,password,date_of_birth,hourly_rate,affiliation,educational_background}
+    try{const response = await axios.post('http://localhost:4000/createRequest', dr);
     
     if (response.status === 201) {
       console.log('Registration successful:', response.data);
@@ -28,9 +32,14 @@ const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
       setPassword('')
       setDateOfBirth('')
       setHourlyRate('')
+      setAffiliation('')
+      setEducational_background('')
+      setIsDoctorRegistered(true); // Set registration success
+        setIsRequestPending(true); // Set request as pending
+
       setError(null)
       // You can handle redirection or other actions here
-      navigate(`/dashboard/doctor/${username}`);
+     // navigate(`/dashboard/doctor/${username}`);
     } else {
       console.error('Registration failed:', response.data);
       // Handle and display errors to the user
@@ -46,81 +55,112 @@ const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
   return (
     <div>
       <h2>Doctor Registration</h2>
-      {isDoctorRegistered && <p>Registration successful! You can now log in.</p>}
       {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
+      {isRequestPending ? (
+        <p>Registration request is pending. Please wait for approval.</p>
+      ) : (
         <div>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            onChange={(e)=>setUsername(e.target.value)}
-            value={username}
-            required
-          />
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="email">Email</label>
+              <input
+                type="text"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="password">Password</label>
+              <input
+                type="text"
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="dateOfBirth">Date of Birth</label>
+              <input
+                type="text"
+                id="dateOfBirth"
+                name="dateOfBirth"
+                value={date_of_birth}
+                onChange={(e) => {
+                  setDateOfBirth(e.target.value);
+                }}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="hourlyRate">Hourly Rate</label>
+              <input
+                type="text"
+                id="hourlyRate"
+                name="hourlyRate"
+                value={hourly_rate}
+                onChange={(e) => {
+                  setHourlyRate(e.target.value);
+                }}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="affiliation">affiliation</label>
+              <input
+                type="text"
+                id="affiliation"
+                name="affiliation"
+                value={affiliation}
+                onChange={(e) => {
+                  setAffiliation(e.target.value);
+                }}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="educational_background">educational background</label>
+              <input
+                type="text"
+                id="educational_background"
+                name="educational_background"
+                value={educational_background}
+                onChange={(e) => {
+                  setEducational_background(e.target.value);
+                }}
+                required
+              />
+            </div>
+            <button type="submit">Register as Doctor</button>
+          </form>
         </div>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={name}
-            onChange={(e)=>setName(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e)=>setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e)=>setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="dateOfBirth">Date of Birth</label>
-          <input
-            type="date"
-            id="dateOfBirth"
-            name="dateOfBirth"
-            value={date_of_birth}
-            onChange={(e) => {
-              
-              setDateOfBirth(e.target.value);
-            }}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="hourlyRate">Hourly Rate</label>
-          <input
-            type="number"
-            id="hourlyRate"
-            name="hourlyRate"
-            value={hourly_rate}
-            onChange={(e)=> {
-            setHourlyRate(e.target.value);}}
-            required
-          />
-        </div>
-        <button type="submit">Register as Doctor</button>
-      </form>
+      )}
     </div>
   );
 };
