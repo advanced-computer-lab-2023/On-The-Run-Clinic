@@ -1,6 +1,6 @@
 
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import Home from './pages/home';
+import Navbar from './components/Navbar';
 
 import DoctorRegistrationForm  from './pages/DoctorRegPage';
 import DoctorDashboard from './components/DoctorDashboard';
@@ -25,6 +25,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Navbar/>
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
           <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
