@@ -3,6 +3,14 @@ const express = require('express');
 
 const Admin= require('../models/AdmiModel'); // Import your Admin model
 
+/*const getAdmins=async(req,res) =>{
+  const users =await Admin.find({}).sort({createdAt:-1});
+      for(let index=0;index<users.length;index++){
+         const element = users[index];
+         console.log(element.id);
+      }
+      res.status(200).json(users)
+}*/
 // Register Doctor Controller
 const createAdmin = async(req,res) => {
   try {
@@ -24,6 +32,7 @@ const createAdmin = async(req,res) => {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while registering the Admin' });
   }
+
 };
 const getAdmin=async(req,res) =>{
   const users =await Admin.find({}).sort({createdAt:-1});

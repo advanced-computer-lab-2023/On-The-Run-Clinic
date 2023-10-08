@@ -3,7 +3,7 @@ require('dotenv').config()
 
 const express= require("express")
 const mongoose=require('mongoose')
-const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr} = require("./controllers/doctorController")
+const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor} = require("./controllers/doctorController")
 const {createPatient,getPatients,searchPatientsByName} = require("./controllers/patientController")
 const {createAdmin,getAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
