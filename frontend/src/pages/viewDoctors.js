@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const vDoctors = () => {
+const VDoctors = () => {
   const { username } = useParams();
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
@@ -119,7 +119,9 @@ const vDoctors = () => {
         <p>Loading...</p>
       ) : doctors.length > 0 ? (
         <ul>
-          {filteredDoctors.map((doctor) => (
+          //filteredDoctors
+          
+          {doctors.map((doctor) => (
              <li key={doctor._id}>
              Doctor Name: {doctor.name}<br />
              
@@ -148,4 +150,4 @@ const vDoctors = () => {
   );
 };
 
-export default vDoctors;
+export default VDoctors;
