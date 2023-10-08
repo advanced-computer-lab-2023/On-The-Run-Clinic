@@ -16,7 +16,7 @@ const VDoctors = () => {
   const [searchSpec, setSearchSpec] = useState('');
 
   useEffect(() => {
-    const fetchDoctorss = async () => {
+    const fetchDoctors = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/getDoctors`);
         const response2 = await axios.get(`http://localhost:4000/getAllAppointments`);
