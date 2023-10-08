@@ -10,7 +10,7 @@ const {createMember,getFamilyMembers} = require("./controllers/familymemControll
 const cors = require('cors');
 const{createAppointment,filter,getAllAppointments}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
-const{createRequest}=require("./controllers/requestsController")
+const{createRequest, getOneRequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage}=require("./controllers/HealthPackagesController")
 
 
@@ -49,12 +49,12 @@ app.post("/createAdmin",createAdmin);
 app.post("/register/doctor",createDoctor);
 app.put("/updateDoctor",updateDoctor);
 app.post("/register/patient",createPatient);
-app.get("/getDocpatients", getDocPatients);
+app.get("/getDocPatients/:doctorUsername", getDocPatients);
 app.get("/getDoctors",getDoctors);
 app.get("/getPatients",getPatients);
 app.get("/getAdmins",getAdmin)
 app.post("/addFamilyMember",createMember);
-app.delete("/deletedoctor",deleteDoctor);
+app.delete("/deleteDoctor",deleteDoctor);
 app.patch("/ubdateDoctor",updateDoctor);
 app.get("/getFamilyMem",getFamilyMembers);
 app.get("/searchPatientsByName",searchPatientsByName);
@@ -68,7 +68,7 @@ app.get("/getPackages",getPackages);
 app.put("/updatePackage",updateHealthPackage);
 app.delete("/deletePackage",deleteHealthPackage);
 app.get("/getDoctor",getDoctorByUsername);
-
+app.get("/getOneRequest",getOneRequest);
 app.post("/createAppointment",createAppointment);
 app.get("/getAllAppointments",getAllAppointments);
 app.get("/filterAppointments",filter);

@@ -25,23 +25,14 @@ const requestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  affiliation: {
+  speciality: {
     type: String,
     required: true, // Set to true if affiliation is required
   },
   educational_background: {
     type: String,
     required: true, // Set to true if educational background is required
-  },
-  statuss: {
-    type: String,
-    enum: ['Pending', 'Approved', 'Rejected'],
-    default: 'Pending',
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  }
 });
 
 const Request = mongoose.model('Request', requestSchema);

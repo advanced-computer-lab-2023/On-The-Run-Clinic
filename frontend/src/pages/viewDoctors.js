@@ -2,66 +2,77 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const Doctors = () => {
+const VDoctors = () => {
   const { username } = useParams();
   const [doctors, setDoctors] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [doctorUsername, setDoctorUsername] = useState('');
-  const [filledOnly, setFilledOnly] = useState(false);
+  const [speciality, setSpeciality] = useState('');
   const [filterDate, setFilterDate] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
   const [searchName, setSearchName] = useState('');
   const [searchSpec, setSearchSpec] = useState('');
 
   useEffect(() => {
-    const fetchDocotrs = async () => {
+    const fetchDoctors = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/getDoctors`);
+        const response2 = await axios.get(`http://localhost:4000/getAllAppointments`);
 
         if (response.status === 200) {
-          let filteredPrescriptions = response.data;
+          let filteredDoctors = response.data;
+          let filteredAppointments =response2.data;
 
-          // Apply filters to the prescriptions
-          if (doctorUsername) {
-            filteredPrescriptions = filteredPrescriptions.filter(
-              (prescription) => prescription.doctorUsername === doctorUsername
+          // Apply filters to the doctors
+          if (speciality) {
+            filteredDoctors = filteredDoctors.filter(
+              (doctor) => doctor.speciality === speciality
             );
           }
 
-          if (filledOnly) {
-            filteredPrescriptions = filteredPrescriptions.filter(
-              (prescription) => prescription.filled === true
+          if(selectedDoctor._id === appointments.doctorId){
+            filteredAppointments = filteredAppointments.filter(
+              (appointment) => appointment.doctorId === selectedDoctor._id
             );
           }
 
           if (filterDate) {
-            filteredPrescriptions = filteredPrescriptions.filter(
-              (prescription) => prescription.date === filterDate
+            filteredAppointments = filteredAppointments.filter(
+              (appointment) => appointment.date === filterDate
             );
           }
 
-          setPrescriptions(filteredPrescriptions);
+          if (filterStatus) {
+            filteredAppointments = filteredAppointments.filter(
+              (appointment) => appointment.status === filterStatus
+            );
+          }
+
+          setDoctors(filteredDoctors);
+          setAppointments(filteredAppointments);
         }
       } catch (error) {
-        console.error('Error fetching prescriptions:', error);
+        console.error('Error fetching doctors:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDocotrs();
-  }, [username, doctorUsername, filledOnly, filterDate]);
-  const handleViewPrescription = (prescription) => {
-    // Set the selected prescription to display its details in a modal or side panel
-    setSelectedPrescription(prescription);
+    fetchDoctors();
+  }, [username, speciality, filterDate, filterStatus]);
+  const handleViewDoctor = (doctor) => {
+    // Set the selected doctor to display its details in a modal or side panel
+    setSelectedDoctor(doctor);
   };
 
   const handleCloseModal = () => {
-    // Clear the selected prescription to close the modal or side panel
-    setSelectedPrescription(null);
+    // Clear the selected doctor to close the modal or side panel
+    setSelectedDoctor(null);
   };
   const handleSearch = () => {
-    // Filter patients based on the search name
+    // Filter docotrs based on the search name
     const filteredDoctors = doctors.filter((doctor) =>
       doctor.name.toLowerCase().includes(searchName.toLowerCase()) &&
       doctor.speciality.toLowerCase().includes(searchSpec.toLowerCase())
@@ -71,13 +82,13 @@ const Doctors = () => {
 
   return (
     <div>
-      <h1>Prescriptions of {username}</h1>
+      <h1>Doctors</h1>
 
       {/* Filter form */}
       <form>
         <div>
           <label>
-            Doctor Username:
+            Doctor Name:
             <input
               type="text"
               value={searchName}
@@ -97,16 +108,6 @@ const Doctors = () => {
         </div>
         <div>
           <label>
-            Filled Only:
-            <input
-              type="checkbox"
-              checked={filledOnly}
-              onChange={() => setFilledOnly(!filledOnly)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
             Filter by Date:
             <input
               type="date"
@@ -115,33 +116,44 @@ const Doctors = () => {
             />
           </label>
         </div>
+        <div>
+          <label>
+            Filter by Status:
+            <input
+              type="text"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            />
+          </label>
+        </div>
       </form>
 
       {loading ? (
         <p>Loading...</p>
-      ) : prescriptions.length > 0 ? (
+      ) : doctors.length > 0 ? (
         <ul>
-          {prescriptions.map((prescription) => (
-             <li key={prescription._id}>
-             Medication Name: {prescription.medicationName}<br />
-             
-             <button onClick={() => handleViewPrescription(prescription)}>View Prescription</button>
+          {doctors.map((doctor) => (
+             <li key={doctor._id}>
+             Doctor Name: {doctor.name}<br />
+             Speciality: {doctor.speciality}<br />
+            Session price: {doctor.hourly_raterate * 1.1 - doctor.hourly_rate/ 100}
+             <button onClick={() => handleViewDoctor(doctor)}>View Doctor</button>
            </li>
           ))}
         </ul>
       ) : (
-        <p>No Prescriptions found.</p>
+        <p>No Doctors found.</p>
       )}
-      {selectedPrescription && (
+      {selectedDoctor && (
         <div>
-          {/* Display prescription details here */}
-          <h2>Prescription Details</h2>
-          <p>Medication Name: {selectedPrescription.medicationName}</p>
-          <p>Dosage: {selectedPrescription.dosage}</p>
-          <p>Instructions: {selectedPrescription.instructions}</p>
-          <p>Date: {selectedPrescription.date}</p>
-          <p>Doctor ID: {selectedPrescription.doctor}</p>
-          <p>Filled: {selectedPrescription.filled}</p>
+          {/* Display doctor details here */}
+          <h2>Doctor Details</h2>
+          <p>Doctor Name: {selectedDoctor.name}</p>
+          <p>Email: {selectedDoctor.email}</p>
+          <p>Speciality: {selectedDoctor.speciality}</p>
+          <p>Affiliation: {selectedDoctor.Affiliation}</p>
+          <p>Educational Background: {selectedDoctor.educational_background}</p>
+          <p>Hourly Rate: {selectedDoctor.hourly_rate}</p>
           {/* Add close button or functionality to close the modal */}
           <button onClick={handleCloseModal}>Close</button>
         </div>
@@ -150,4 +162,4 @@ const Doctors = () => {
   );
 };
 
-export default Doctors;
+export default VDoctors;

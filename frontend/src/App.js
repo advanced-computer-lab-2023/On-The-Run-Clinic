@@ -12,10 +12,12 @@ import FamilyMemberForm from './components/FamilyMemberForm';
 import FamilyMembersList from './pages/viewMyFamilyMem';
 import SearchPatientByName from './pages/SearchPatientsByName';
 import MyPatients from './pages/MyPatients';
-import MyPrescription from './pages/viewMyPrescriptions'
+import MyPrescription from './pages/viewMyPrescriptions';
+import VDoctors from './pages/viewDoctors';
+import DeleteDoctorPage from './pages/DeleteDoctorPage';
 import AdminHealthPackages from './pages/AdminHealthPackages';
 import UpdateDoctorInfo from './pages/updateDoctor';
-
+import ViewDoctorRequest from './pages/ViewDoctorRequest';
 
 
 // Import your components
@@ -34,19 +36,20 @@ function App() {
           <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
           <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
           <Route path="/viewMyPrescription/:username" element={<MyPrescription/>}/>
- 
-          <Route path="/createAdmin" element={<AdminRegistrationForm/>}/>
+          <Route path="/viewDoctors/:username" element={<VDoctors/>}/>
 
+          <Route path="/createAdmin" element={<AdminRegistrationForm/>}/>
+          <Route path="/getOneRequest" element={<ViewDoctorRequest/>}/>
           <Route path="/searchPatientsByName"  element={<SearchPatientByName/>} />
+         <Route path="/getDoctors" element={<getDoctors/>}/>
+          <Route path="/deleteDoctor" element={<DeleteDoctorPage/>} />
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-
           <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />
           <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
 
-          <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />
-          <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
+  
 
           {/* Add other routes as needed */}
         </Routes>

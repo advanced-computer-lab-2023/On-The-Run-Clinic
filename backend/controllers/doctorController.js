@@ -45,39 +45,30 @@ const createDoctor = async(req,res) => {
 };
 const getDocPatients = async (req, res) => {
   try {
-    const { username, searchName } = req.query;
-   
+    const { doctorUsername } = req.params; // Update the parameter name to match the URL
 
-    // Find the doctor by ID and populate the 'patients' field
-    const doctor = await Doctor.find({username:username});
-   
+    // Find the doctor by username and populate the 'patients' field
+    const doctor = await Doctor.findOne({ username: doctorUsername }).populate('patients');
 
     if (!doctor) {
       return res.status(404).json({ message: 'Doctor not found' });
     }
-    
 
-    const patientsID = doctor[0].patients;
-    
-    const patients = await Patient.find({ _id: { $in: patientsID } });
-    let filteredPatients = patients;
-    if (searchName) {
-      filteredPatients = patients.filter((patient) =>
-        patient.name.toLowerCase().includes(searchName.toLowerCase())
-      );
-    }
-    console.log(patients)
+    const patients = doctor.patients;
+
     res.status(200).json(patients);
   } catch (error) {
     console.error('Error fetching patients:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
 const getDoctors=async(req,res) =>{
   const users =await Doctor.find({}).sort({createdAt:-1});
       for(let index=0;index<users.length;index++){
          const element = users[index];
-         console.log(element.id);
+        console.log(element.id);
       }
       res.status(200).json(users)
 }
@@ -88,7 +79,7 @@ const deleteDoctor = async(req,res) => {
     const { username } = req.body;
 
     // Find the doctor by ID and delete them from the database
-    await Doctor.findOneAndDelete(username);
+    await Doctor.findOneAndDelete( {username: username });
 
     res.status(200).json({ message: 'Doctor deleted successfully' });
   } catch (error) {
