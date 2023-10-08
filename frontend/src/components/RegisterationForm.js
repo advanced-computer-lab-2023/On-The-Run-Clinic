@@ -27,6 +27,8 @@ const DoctorRegistrationForm = ({ onRegistrationSuccess }) => {
         password: '',
         date_of_birth: '',
         hourly_rate: 0,
+        speciality: '',
+        educational_background: '',
       }}
       onSubmit={handleSubmit}
     >
@@ -46,6 +48,12 @@ const DoctorRegistrationForm = ({ onRegistrationSuccess }) => {
 
           <label htmlFor="date_of_birth">Date of Birth</label>
           <Field type="date" id="date_of_birth" name="date_of_birth" />
+
+          <label htmlFor="speciality">Hourly Rate</label>
+          <Field type="text" id="speciality" name="speciality" />
+
+          <label htmlFor="educational_background">Hourly Rate</label>
+          <Field type="text" id="educational_background" name="educational_background" />
 
           <label htmlFor="hourly_rate">Hourly Rate</label>
           <Field type="number" id="hourly_rate" name="hourly_rate" />

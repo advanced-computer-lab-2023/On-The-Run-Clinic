@@ -15,7 +15,9 @@ const createDoctor = async(req,res) => {
       password,
       date_of_birth,
       hourly_rate,
-      Affiliation
+      Affiliation,
+      speciality,
+      educational_background
     } = req.body;
 
     // Create a new doctor record
@@ -27,7 +29,8 @@ const createDoctor = async(req,res) => {
       date_of_birth,
       hourly_rate,
       Affiliation,
-
+      speciality,
+      educational_background,
       patients:[]
     });
 
