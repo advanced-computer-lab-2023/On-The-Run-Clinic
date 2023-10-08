@@ -33,7 +33,15 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  patients: [{ type :String }]
+  speciality: {
+    type: String,
+    required: true,
+  },
+  educational_background: {
+    type: String,
+    required: true,
+  },
+  patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Patient' }]
  
 });
 

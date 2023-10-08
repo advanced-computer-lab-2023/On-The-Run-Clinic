@@ -1,13 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true,
-     },
+const healthPackage = new Schema({
+
     price: {
-      type: String,
+      type: Number,
       required: true,
       unique: true // Ensures username uniqueness
    },
@@ -17,12 +14,13 @@ const userSchema = new Schema({
        required: true,
     },
  ],
-   type: {
+   name: {
     type: String,
-    enum: ['Silver', 'Gold', 'Platinum'],
     required: true,
+    unique:true
  }
    
 });
+const HealthPackage = mongoose.model('HealthPackage', healthPackage);
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = HealthPackage;
