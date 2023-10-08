@@ -9,14 +9,14 @@ const VDoctors = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [doctorUsername, setDoctorUsername] = useState('');
-  const [speciality, setSpeciality] = useState(false);
+  const [speciality, setSpeciality] = useState('');
   const [filterDate, setFilterDate] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [searchName, setSearchName] = useState('');
   const [searchSpec, setSearchSpec] = useState('');
 
   useEffect(() => {
-    const fetchDocotrs = async () => {
+    const fetchDoctorss = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/getDoctors`);
         const response2 = await axios.get(`http://localhost:4000/getAllAppointments`);
@@ -32,19 +32,22 @@ const VDoctors = () => {
             );
           }
 
-          if(doctors._id === appointments.doctorId){
-            if (filterDate) {
-                filteredAppointments = filteredAppointments.filter(
-                  (appointment) => appointment.date === filterDate
-                );
-              }
-    
-              if (filterStatus) {
-                filteredAppointments = filteredAppointments.filter(
-                  (appointment) => appointment.status === filterStatus
-                );
-              }
+          if(selectedDoctor._id === appointments.doctorId){
+            filteredAppointments = filteredAppointments.filter(
+              (appointment) => appointment.doctorId === selectedDoctor._id
+            );
+          }
 
+          if (filterDate) {
+            filteredAppointments = filteredAppointments.filter(
+              (appointment) => appointment.date === filterDate
+            );
+          }
+
+          if (filterStatus) {
+            filteredAppointments = filteredAppointments.filter(
+              (appointment) => appointment.status === filterStatus
+            );
           }
 
           setDoctors(filteredDoctors);
@@ -57,7 +60,7 @@ const VDoctors = () => {
       }
     };
 
-    fetchDocotrs();
+    fetchDoctors();
   }, [username, speciality, filterDate, filterStatus]);
   const handleViewDoctor = (doctor) => {
     // Set the selected doctor to display its details in a modal or side panel
@@ -113,18 +116,27 @@ const VDoctors = () => {
             />
           </label>
         </div>
+        <div>
+          <label>
+            Filter by Status:
+            <input
+              type="text"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            />
+          </label>
+        </div>
       </form>
 
       {loading ? (
         <p>Loading...</p>
       ) : doctors.length > 0 ? (
         <ul>
-          //filteredDoctors
-          
           {doctors.map((doctor) => (
              <li key={doctor._id}>
              Doctor Name: {doctor.name}<br />
-             
+             Speciality: {doctor.speciality}<br />
+            Session price: {doctor.hourly_raterate * 1.1 - doctor.hourly_rate/ 100}
              <button onClick={() => handleViewDoctor(doctor)}>View Doctor</button>
            </li>
           ))}
