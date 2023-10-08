@@ -12,6 +12,7 @@ const[date_of_birth,setDateOfBirth]=useState('')
 const[hourly_rate,setHourlyRate]=useState('')
 const[affiliation,setAffiliation]=useState('')
 const[educational_background,setEducational_background]=useState('')
+const[speciality,setSpeciality]= useState('')
 const[error,setError]=useState(null)
 const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
 const [isRequestPending, setIsRequestPending] = useState(false);
@@ -34,8 +35,9 @@ const [isRequestPending, setIsRequestPending] = useState(false);
       setHourlyRate('')
       setAffiliation('')
       setEducational_background('')
+      setSpeciality('')
       setIsDoctorRegistered(true); // Set registration success
-        setIsRequestPending(true); // Set request as pending
+      setIsRequestPending(true); // Set request as pending
 
       setError(null)
       // You can handle redirection or other actions here
@@ -153,6 +155,19 @@ const [isRequestPending, setIsRequestPending] = useState(false);
                 value={educational_background}
                 onChange={(e) => {
                   setEducational_background(e.target.value);
+                }}
+                required
+              />
+            </div>     
+            <div>
+              <label htmlFor="speciality">speciality</label>
+              <input
+                type="text"
+                id="speciality"
+                name="speciality"
+                value={speciality}
+                onChange={(e) => {
+                  setSepciality(e.target.value);
                 }}
                 required
               />

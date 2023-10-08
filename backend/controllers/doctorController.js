@@ -14,7 +14,9 @@ const createDoctor = async(req,res) => {
       email,
       password,
       date_of_birth,
-      hourly_rate
+      hourly_rate,
+      speciality,
+      educational_background
     } = req.body;
 
     // Create a new doctor record
@@ -25,6 +27,8 @@ const createDoctor = async(req,res) => {
       password, // Hash the password before saving (use a library like bcrypt)
       date_of_birth,
       hourly_rate,
+      speciality,
+      educational_background,
       patients:[]
     });
 
