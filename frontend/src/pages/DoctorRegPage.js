@@ -167,7 +167,7 @@ const [isRequestPending, setIsRequestPending] = useState(false);
                 name="speciality"
                 value={speciality}
                 onChange={(e) => {
-                  setSepciality(e.target.value);
+                  setSpeciality(e.target.value);
                 }}
                 required
               />
