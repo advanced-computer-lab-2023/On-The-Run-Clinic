@@ -6,12 +6,13 @@ const MyPatients = () => {
   const { username } = useParams();
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
     const fetchPatients= async () => {
       try {
        
-        const response = await axios.get(`http://localhost:4000//getDocpatients?username=${username}`);
+        const response = await axios.get(`http://localhost:4000/getDocpatients?username=${username}`);
         console.log(response.data);
 
         if (response.status === 200) {
@@ -26,10 +27,28 @@ const MyPatients = () => {
 
     fetchPatients();
   }, [username]);
+  const handleSearch = () => {
+    // Filter patients based on the search name
+    const filteredPatients = patients.filter((patient) =>
+      patient.name.toLowerCase().includes(searchName.toLowerCase())
+    );
+    setPatients(filteredPatients);
+  };
+  
 
   return (
     <div>
       <h1>Patients of {username}</h1>
+      <div>
+        <input
+          type="text"
+          placeholder="Enter patient's name"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+        />
+        <button onClick={handleSearch}>Search</button>
+      </div>
+
       {loading ? (
         <p>Loading...</p>
       ) : patients.length > 0 ? (

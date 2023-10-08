@@ -9,10 +9,10 @@ import PatientDashboard from './pages/PatientDashboard';
 import UserSelection from './components/UserSelection';
 
 import FamilyMemberForm from './components/FamilyMemberForm';
-import MyPatients from './pages/MyPatients';
 
 import FamilyMembersList from './pages/viewMyFamilyMem';
 import SearchPatientByName from './pages/SearchPatientsByName';
+import MyPatients from './pages/MyPatients';
 
 
 
@@ -25,9 +25,9 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
-          <Route path="/viewFamilyMembers/:username" element={<MyPatients/>}/>
+          <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>
           
-          <Route path="/viewMyPatients/:username" element={<FamilyMembersList/>}/>
+          <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
           <Route path="/searchPatientsByName"  element={<SearchPatientByName/>} />
          
 
