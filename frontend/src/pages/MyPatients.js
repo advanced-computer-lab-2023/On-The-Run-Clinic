@@ -65,9 +65,9 @@ const MyPatients = () => {
   
 
 
-const handlePatientSelect = (selectedPatient) => {
+/*const handlePatientSelect = (selectedPatient) => {
   setSelectedPatient(selectedPatient);
-};
+};*/
   
 
 

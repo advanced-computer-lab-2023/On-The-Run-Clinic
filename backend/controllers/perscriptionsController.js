@@ -48,7 +48,7 @@ const createPrescription = async (req, res) => {
       }
   
       // Retrieve all prescriptions for the patient
-      const prescriptions = await Prescription.find({ patient: patientId });
+      const prescriptions = await Prescription.find({ patient: id });
   
       return res.status(200).json(prescriptions);
     } catch (error) {

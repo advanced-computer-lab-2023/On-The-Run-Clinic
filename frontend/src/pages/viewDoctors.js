@@ -1,165 +1,179 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 
-const VDoctors = () => {
-  const { username } = useParams();
+import './MedicineList.css'; // Import your CSS file for styling
+import DoctorDetails from './doctorDetails';
+
+const DoctorListPage = () => {
   const [doctors, setDoctors] = useState([]);
-  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [doctorUsername, setDoctorUsername] = useState('');
-  const [speciality, setSpeciality] = useState('');
-  const [filterDate, setFilterDate] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
   const [searchName, setSearchName] = useState('');
-  const [searchSpec, setSearchSpec] = useState('');
+  const [SpecialtyFilter, setSpecialtyFilter] = useState('');
+  const [filterDate, setFilterDate] = useState('');
+  const [filterHour, setFilterHour] = useState('');
+  const [appointments, setAppointments] = useState([]);
+
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const fetchDoctors = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/getDoctors`);
+
+      if (response.status === 200) {
+        setDoctors(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching medicines:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchAppointments = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/getAllAppointments`);
+
+      if (response.status === 200) {
+        setAppointments(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await axios.get(`http://localhost:4000/getDoctors`);
-        const response2 = await axios.get(`http://localhost:4000/getAllAppointments`);
-
-        if (response.status === 200) {
-          let filteredDoctors = response.data;
-          let filteredAppointments =response2.data;
-
-          // Apply filters to the doctors
-          if (speciality) {
-            filteredDoctors = filteredDoctors.filter(
-              (doctor) => doctor.speciality === speciality
-            );
-          }
-
-          if(selectedDoctor._id === appointments.doctorId){
-            filteredAppointments = filteredAppointments.filter(
-              (appointment) => appointment.doctorId === selectedDoctor._id
-            );
-          }
-
-          if (filterDate) {
-            filteredAppointments = filteredAppointments.filter(
-              (appointment) => appointment.date === filterDate
-            );
-          }
-
-          if (filterStatus) {
-            filteredAppointments = filteredAppointments.filter(
-              (appointment) => appointment.status === filterStatus
-            );
-          }
-
-          setDoctors(filteredDoctors);
-          setAppointments(filteredAppointments);
-        }
-      } catch (error) {
-        console.error('Error fetching doctors:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDoctors();
-  }, [username, speciality, filterDate, filterStatus]);
-  const handleViewDoctor = (doctor) => {
-    // Set the selected doctor to display its details in a modal or side panel
+    fetchAppointments();
+  }, []);
+  const doctorIsAvailable = (doctorId, filterDate, filterHour) => {
+    // Convert filterHour to a number
+    const filterHourNumber = parseInt(filterHour);
+    const filterDateObj = new Date(filterDate);
+  
+    // Check if there are appointments for the specified doctor, date, and hour
+    return !appointments.some((appointment) => {
+      return (
+        appointment.doctorId === doctorId &&
+        appointment.date === filterDateObj &&
+        appointment.hour === filterHourNumber
+      );
+    });
+  };
+
+  const handleSearch = () => {
+    if (searchName === '' && SpecialtyFilter === ''&& filterDate === '' && filterHour === '') {
+      fetchDoctors();
+      return;
+    }
+
+    const filtered = doctors.filter((doctor) => {
+      const nameMatch = searchName
+        ? doctor.name && doctor.name.toLowerCase().includes(searchName.toLowerCase())
+        : true;
+      const medicalUseMatch = SpecialtyFilter
+        ? doctor.speciality && doctor.speciality.toLowerCase().includes(SpecialtyFilter.toLowerCase())
+        : true;
+      const isDoctorAvailable = doctorIsAvailable(doctor._id, filterDate, filterHour);
+      return nameMatch && medicalUseMatch && isDoctorAvailable;
+    });
+
+    setDoctors(filtered);
+    console.log(filtered);
+  };
+  const handleDoctorClick = (doctor) => {
     setSelectedDoctor(doctor);
   };
 
-  const handleCloseModal = () => {
-    // Clear the selected doctor to close the modal or side panel
+  const handleCloseDetails = () => {
     setSelectedDoctor(null);
   };
-  const handleSearch = () => {
-    // Filter docotrs based on the search name
-    const filteredDoctors = doctors.filter((doctor) =>
-      doctor.name.toLowerCase().includes(searchName.toLowerCase()) &&
-      doctor.speciality.toLowerCase().includes(searchSpec.toLowerCase())
-    );
-    setDoctors(filteredDoctors);
+
+  const handleSearchNameChange = (e) => {
+    setSearchName(e.target.value);
+    handleSearch();
+  };
+
+  const handleMedicalUseFilterChange = (e) => {
+    setSpecialtyFilter(e.target.value);
+    handleSearch();
+  };
+  const handleFilterDateChange = (e) => {
+    setFilterDate(e.target.value);
+    handleSearch();
+  };
+
+  const handleFilterHourChange = (e) => {
+    setFilterHour(e.target.value);
+    handleSearch();
+  };
+
+  const resetFilters = () => {
+    setSearchName('');
+    setSpecialtyFilter('');
+    setFilterDate('');
+    setFilterHour('');
+    fetchDoctors();
   };
 
   return (
-    <div>
-      <h1>Doctors</h1>
-
-      {/* Filter form */}
-      <form>
-        <div>
-          <label>
-            Doctor Name:
-            <input
-              type="text"
-              value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            />
-            <button onClick={handleSearch}>Search</button>
-          </label>
-          <label>
-            Doctor speciality:
-            <input
-              type="text"
-              value={searchSpec}
-            onChange={(e2) => setSearchSpec(e2.target.value)}
-            />
-            <button onClick={handleSearch}>Search</button>
-          </label>
-        </div>
-        <div>
-          <label>
-            Filter by Date:
-            <input
-              type="date"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            Filter by Status:
-            <input
-              type="text"
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-            />
-          </label>
-        </div>
-      </form>
+    <div className="medicine-list-container">
+      <h1>All Medicines</h1>
+      <div className="filter-container">
+        <input
+          type="text"
+          placeholder="Enter doctor's name"
+          value={searchName}
+          onChange={handleSearchNameChange}
+        />
+        <input
+          type="text"
+          placeholder="Filter by Specialty"
+          value={SpecialtyFilter}
+          onChange={handleMedicalUseFilterChange}
+        />
+         <input
+          type="date"
+          placeholder="Select Date of Appointment"
+          value={filterDate}
+          onChange={handleFilterDateChange}
+        />
+        <input
+          type="number"
+          placeholder="Enter Hour of Appointment"
+          value={filterHour}
+          onChange={handleFilterHourChange}
+        />
+        <button onClick={resetFilters}>Reset Filters</button>
+      </div>
 
       {loading ? (
         <p>Loading...</p>
       ) : doctors.length > 0 ? (
-        <ul>
-          {doctors.map((doctor) => (
-             <li key={doctor._id}>
-             Doctor Name: {doctor.name}<br />
-             Speciality: {doctor.speciality}<br />
-            Session price: {doctor.hourly_raterate * 1.1 - doctor.hourly_rate/ 100}
-             <button onClick={() => handleViewDoctor(doctor)}>View Doctor</button>
-           </li>
+        <ul className="medicine-list">
+         
+          {doctors.map((m) => (
+            
+            <li
+              key={m._id}
+              className="medicine-item"
+              onClick={() => handleDoctorClick(m)} // Add this click handler
+            >
+              <div className="medicine-details">
+                <strong>Name:</strong> {m.name}<br />
+                <strong>Speciality:</strong> {m.speciality}<br />
+                <strong>Username:</strong> {m.username}<br />
+               
+              </div>
+              
+            </li>
           ))}
         </ul>
       ) : (
         <p>No Doctors found.</p>
       )}
       {selectedDoctor && (
-        <div>
-          {/* Display doctor details here */}
-          <h2>Doctor Details</h2>
-          <p>Doctor Name: {selectedDoctor.name}</p>
-          <p>Email: {selectedDoctor.email}</p>
-          <p>Speciality: {selectedDoctor.speciality}</p>
-          <p>Affiliation: {selectedDoctor.Affiliation}</p>
-          <p>Educational Background: {selectedDoctor.educational_background}</p>
-          <p>Hourly Rate: {selectedDoctor.hourly_rate}</p>
-          {/* Add close button or functionality to close the modal */}
-          <button onClick={handleCloseModal}>Close</button>
-        </div>
+        <DoctorDetails doctor={selectedDoctor} onClose={handleCloseDetails} />
       )}
     </div>
   );
 };
 
-export default VDoctors;
+export default DoctorListPage;

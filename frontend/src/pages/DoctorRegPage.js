@@ -160,6 +160,7 @@ const [isRequestPending, setIsRequestPending] = useState(false);
               />
             </div>     
            
+            
             <button type="submit">Register as Doctor</button>
           </form>
         </div>

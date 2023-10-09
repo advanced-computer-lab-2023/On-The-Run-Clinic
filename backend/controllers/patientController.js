@@ -80,7 +80,7 @@ const searchPatientsByName = async (req, res) => {
 };
 const getMyPrescriptions = async (req, res) => {
   try {
-    const { username} = req.query;
+    const { username} = req.params;
    
 
     // Find the doctor by ID and populate the 'patients' field
@@ -103,6 +103,22 @@ const getMyPrescriptions = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+const searchPatientsByUserame = async (req, res) => {
+  try {
+    const { username } = req.body;
+    
+    // Use a case-insensitive regular expression to search for patients by name
+    const patients = await Patient.find({ username:username });
 
+    if (patients.length === 0) {
+      return res.status(404).json({ message: 'No patients found with the provided name.' });
+    }
 
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,testpatient}
+    res.status(200).json(patients);
+  } catch (error) {
+    console.error('Error searching for patients by name:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame}

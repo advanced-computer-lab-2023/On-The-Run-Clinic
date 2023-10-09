@@ -35,9 +35,35 @@ const PatientDetails = () => {
       }
     };
 
+    // Call the fetchPatientData function when the component mounts
+    fetchPatientData();
+  }, [username]);
+
+  // Use another useEffect for fetching prescriptions, but make sure it depends only on username
+  useEffect(() => {
+    if (username) {
+      const fetchPrescriptions = async () => {
+        try {
+          const response = await axios.get(`http://localhost:4000/getMyPrescriptions/${username}`);
+          if (response.status === 200) {
+            setPrescriptions(response.data);
+          }
+        } catch (error) {
+          console.error('Error fetching prescriptions:', error);
+        }
+      };
+
+      // Call the fetchPrescriptions function when the username changes
+      fetchPrescriptions();
+    }
+  }, [username]);
+
+  useEffect(() => {
+    // ...
+
     const fetchFamilyMembers = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/getFamilyMem/${patient._id}`);
+        const response = await axios.get(`http://localhost:4000/getFamilyMem/${username}`);
         if (response.status === 200) {
           setFamilyMembers(response.data);
         }
@@ -46,24 +72,22 @@ const PatientDetails = () => {
       }
     };
 
-    const fetchPrescriptions = async () => {
+    // Call the fetchFamilyMembers function when the patient ID changes
+      fetchFamilyMembers();
+  }, [patient]);
+
+
+     /* const fetchFamilyMembers = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/getPrescriptions/${patient._id}`);
+        const response = await axios.get(`http://localhost:4000/getFamilyMem/${patient._id}`);
         if (response.status === 200) {
-          setPrescriptions(response.data);
+          setFamilyMembers(response.data);
         }
       } catch (error) {
-        console.error('Error fetching prescriptions:', error);
+        console.error('Error fetching family members:', error);
       }
-    };
+    };*/
 
-    // Call the fetchPatientData function when the component mounts
-    fetchPatientData();
-    if (patient) {
-      fetchFamilyMembers();
-      fetchPrescriptions();
-    }
-  }, [username, patient]);
 
   if (loading) {
     return <div>Loading patient details...</div>;
@@ -84,7 +108,6 @@ const PatientDetails = () => {
       <p>Mobile Number: {patient.mobileNumber}</p>
       <p>Emergency Contact Name: {patient.emergencyContact.fullname}</p>
       <p>Emergency Contact Mobile Number: {patient.emergencyContact.mobileNumber}</p>
-
 
       <h3>Family Members</h3>
       <ul>

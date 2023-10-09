@@ -4,7 +4,7 @@ require('dotenv').config()
 const express= require("express")
 const mongoose=require('mongoose')
 const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,testpatient} = require("./controllers/patientController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame} = require("./controllers/patientController")
 const {createAdmin,getAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
@@ -49,19 +49,19 @@ app.post("/createAdmin",createAdmin);
 app.post("/register/doctor",createDoctor);
 app.put("/updateDoctor",updateDoctor);
 app.post("/register/patient",createPatient);
-app.get("/getDocPatients/:doctorUsername", getDocPatients);
+app.get("/getDocPatients/:username", getDocPatients);
 app.get("/getDoctors",getDoctors);
 app.get("/getPatients",getPatients);
 app.get("/getAdmins",getAdmin)
 app.post("/addFamilyMember",createMember);
 app.delete("/deleteDoctor",deleteDoctor);
 app.patch("/ubdateDoctor",updateDoctor);
-app.get("/getFamilyMem",getFamilyMembers);
+app.get("/getFamilyMem/:username",getFamilyMembers);
 app.get("/searchPatientsByName",searchPatientsByName);
 app.post("/addPatientToDr",addPatientToDr);
 app.post("/addPrescription",createPrescription);
-app.get("/getPrescriptions/",getPrescriptionsForPatient);
-app.get("/getMyPrescriptions",getMyPrescriptions);
+app.get("/getPrescriptions/:id",getPrescriptionsForPatient);
+app.get("/getMyPrescriptions/:username",getMyPrescriptions);
 app.post("/createRequest",createRequest);
 app.post("/createPackage",createHealthPackage);
 app.get("/getPackages",getPackages);
@@ -72,9 +72,7 @@ app.get("/getOneRequest",getOneRequest);
 app.post("/createAppointment",createAppointment);
 app.get("/getAllAppointments",getAllAppointments);
 app.get("/filterAppointments",filter);
-app.post("/createDoctor",createDoctor);
-app.post("/test",testpatient);
-
+app.get("/search",searchPatientsByUserame);
 
 //app.put("/updateUser", updateUser);
 

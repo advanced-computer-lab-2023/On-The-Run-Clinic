@@ -24,6 +24,11 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  hour:{
+    type:Number,
+    required:false
+  }
+  
 });
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);

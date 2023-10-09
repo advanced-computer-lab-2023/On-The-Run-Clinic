@@ -1,6 +1,6 @@
 
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import Home from './pages/home';
+import Navbar from './components/Navbar';
 
 import DoctorRegistrationForm  from './pages/DoctorRegPage';
 import DoctorDashboard from './components/DoctorDashboard';
@@ -13,7 +13,7 @@ import FamilyMembersList from './pages/viewMyFamilyMem';
 import SearchPatientByName from './pages/SearchPatientsByName';
 import MyPatients from './pages/MyPatients';
 import MyPrescription from './pages/viewMyPrescriptions';
-import VDoctors from './pages/viewDoctors';
+import DoctorListPage from './pages/viewDoctors';
 import DeleteDoctorPage from './pages/DeleteDoctorPage';
 import AdminHealthPackages from './pages/AdminHealthPackages';
 import UpdateDoctorInfo from './pages/updateDoctor';
@@ -28,6 +28,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Navbar/>
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
           <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
@@ -36,7 +37,7 @@ function App() {
           <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
           <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
           <Route path="/viewMyPrescription/:username" element={<MyPrescription/>}/>
-          <Route path="/viewDoctors/:username" element={<VDoctors/>}/>
+          <Route path="/viewDoctors/:username" element={<DoctorListPage/>}/>
 
           <Route path="/createAdmin" element={<AdminRegistrationForm/>}/>
           <Route path="/getOneRequest" element={<ViewDoctorRequest/>}/>

@@ -46,7 +46,7 @@ const createMember = async(req,res) => {
 const getFamilyMembers=async(req,res)=>{
   try {
     // Get the username from the request parameters
-    const { username } = req.query;
+    const { username } = req.params;
     console.log({username})
 
     // Find all family members associated with the patient's username
