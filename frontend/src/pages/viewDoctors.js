@@ -17,6 +17,7 @@ const VDoctors = () => {
   const [searchSpec, setSearchSpec] = useState('');
   const [searchDate, setSearchDate] = useState('');
   const [searchStatus, setSearchStatus] = useState('');
+  const [search, setSearch] = useState('');
 
    useEffect(() => {
      const fetchDoctors = async () => {
@@ -174,7 +175,7 @@ const VDoctors = () => {
 
       <Form>
         <Form.Control
-        onChange = {(e)=> setSearch(e.target.value)}/>
+        onChange = {(e)=> setSearchName(e.target.value)}/>
       </Form>
       <Table>
         <thread>
@@ -187,7 +188,7 @@ const VDoctors = () => {
         </thread>
         <tbody>
 
-          {appointments
+          {/* {appointments
           .filter((appointment) =>{
             return searchDate === ''
                       ? appointment
@@ -198,7 +199,7 @@ const VDoctors = () => {
                       ? appointment
                       : appointment.date.includes(searchStatus);
               })                     
-          }
+          } */}
           {doctors
           .filter((doctor) =>{
             return searchName.toLowerCase() === ''
@@ -206,11 +207,11 @@ const VDoctors = () => {
                   : doctor.name.toLowerCase().includes(searchName);
               })
 
-          .filter((doctor) =>{
-            return searchSpec.toLowerCase() === ''
-                    ? doctor
-                    : doctor.speciality.toLowerCase().includes(searchSpec);
-              })    
+          // .filter((doctor) =>{
+          //   return searchSpec.toLowerCase() === ''
+          //           ? doctor
+          //           : doctor.speciality.toLowerCase().includes(searchSpec);
+          //     })    
            
             
           .map((doctor) => (
