@@ -18,6 +18,7 @@ import DeleteDoctorPage from './pages/DeleteDoctorPage';
 import AdminHealthPackages from './pages/AdminHealthPackages';
 import UpdateDoctorInfo from './pages/updateDoctor';
 import ViewDoctorRequest from './pages/ViewDoctorRequest';
+import PatientDetails from './components/PatientDetails';
 
 
 // Import your components
@@ -47,6 +48,7 @@ function App() {
           <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />
           <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
+          <Route path="/patient-details/:username" element = {<PatientDetails />} />
 
   
 
