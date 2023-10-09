@@ -14,7 +14,7 @@ const MyPrescription = () => {
   useEffect(() => {
     const fetchPrescriptions = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/getMyPrescriptions?username=${username}`);
+        const response = await axios.get(`http://localhost:4000/getMyPrescriptions/${username}`);
 
         if (response.status === 200) {
           let filteredPrescriptions = response.data;

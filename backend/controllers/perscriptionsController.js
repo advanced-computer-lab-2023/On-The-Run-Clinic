@@ -38,10 +38,10 @@ const createPrescription = async (req, res) => {
   // Get all prescriptions for a patient
   const getPrescriptionsForPatient = async (req, res) => {
     try {
-      const { patientId } = req.params;
+      const { id } = req.params;
   
       // Check if the patient exists
-      const patient = await Patient.findById(patientId);
+      const patient = await Patient.findById(id);
   
       if (!patient) {
         return res.status(404).json({ message: 'Patient not found' });
