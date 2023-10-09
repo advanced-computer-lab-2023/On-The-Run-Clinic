@@ -1,282 +1,179 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { Form, Table, Modal, Button } from 'react-bootstrap';
 
-const VDoctors = () => {
-  const { username } = useParams();
+import './MedicineList.css'; // Import your CSS file for styling
+import DoctorDetails from './doctorDetails';
+
+const DoctorListPage = () => {
   const [doctors, setDoctors] = useState([]);
-  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [doctorUsername, setDoctorUsername] = useState('');
-  const [speciality, setSpeciality] = useState('');
-  const [filterDate, setFilterDate] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
   const [searchName, setSearchName] = useState('');
-  const [searchSpec, setSearchSpec] = useState('');
-  const [searchDate, setSearchDate] = useState('');
-  const [searchStatus, setSearchStatus] = useState('');
-  const [search, setSearch] = useState('');
+  const [SpecialtyFilter, setSpecialtyFilter] = useState('');
+  const [filterDate, setFilterDate] = useState('');
+  const [filterHour, setFilterHour] = useState('');
+  const [appointments, setAppointments] = useState([]);
 
-   useEffect(() => {
-     const fetchDoctors = async () => {
-       try {
-         const response = await axios.get(`http://localhost:4000/getDoctors`);
-  //       const response2 = await axios.get(`http://localhost:4000/getAllAppointments`);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const fetchDoctors = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/getDoctors`);
 
-         if (response.status === 200) {
-           let filteredDoctors = response.data;
-           setDoctors(filteredDoctors);
-  //         let filteredAppointments =response2.data;
-         }
-  //         // Apply filters to the doctors
-  //         if (speciality) {
-  //           filteredDoctors = filteredDoctors.filter(
-  //             (doctor) => doctor.speciality === speciality
-  //           );
-  //         }
+      if (response.status === 200) {
+        setDoctors(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching medicines:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchAppointments = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/getAllAppointments`);
 
-  //         if(selectedDoctor._id === appointments.doctorId){
-  //           filteredAppointments = filteredAppointments.filter(
-  //             (appointment) => appointment.doctorId === selectedDoctor._id
-  //           );
-  //         }
+      if (response.status === 200) {
+        setAppointments(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
 
-  //         if (filterDate) {
-  //           filteredAppointments = filteredAppointments.filter(
-  //             (appointment) => appointment.date === filterDate
-  //           );
-  //         }
-
-  //         if (filterStatus) {
-  //           filteredAppointments = filteredAppointments.filter(
-  //             (appointment) => appointment.status === filterStatus
-  //           );
-  //         }
-
-           
-  //         setAppointments(filteredAppointments);
-  //       }
-       } catch (error) {
-         console.error('Error fetching doctors:', error);
-       } finally {
-         setLoading(false);
-       }
-     };
-
-     fetchDoctors();
-   }, 
-   [username, speciality, filterDate, filterStatus]);
+  useEffect(() => {
+    fetchDoctors();
+    fetchAppointments();
+  }, []);
+  const doctorIsAvailable = (doctorId, filterDate, filterHour) => {
+    // Convert filterHour to a number
+    const filterHourNumber = parseInt(filterHour);
+    const filterDateObj = new Date(filterDate);
   
-  
-  const handleViewDoctor = (doctor) => {
-    // Set the selected doctor to display its details in a modal or side panel
+    // Check if there are appointments for the specified doctor, date, and hour
+    return !appointments.some((appointment) => {
+      return (
+        appointment.doctorId === doctorId &&
+        appointment.date === filterDateObj &&
+        appointment.hour === filterHourNumber
+      );
+    });
+  };
+
+  const handleSearch = () => {
+    if (searchName === '' && SpecialtyFilter === ''&& filterDate === '' && filterHour === '') {
+      fetchDoctors();
+      return;
+    }
+
+    const filtered = doctors.filter((doctor) => {
+      const nameMatch = searchName
+        ? doctor.name && doctor.name.toLowerCase().includes(searchName.toLowerCase())
+        : true;
+      const medicalUseMatch = SpecialtyFilter
+        ? doctor.speciality && doctor.speciality.toLowerCase().includes(SpecialtyFilter.toLowerCase())
+        : true;
+      const isDoctorAvailable = doctorIsAvailable(doctor._id, filterDate, filterHour);
+      return nameMatch && medicalUseMatch && isDoctorAvailable;
+    });
+
+    setDoctors(filtered);
+    console.log(filtered);
+  };
+  const handleDoctorClick = (doctor) => {
     setSelectedDoctor(doctor);
   };
 
-  const handleCloseModal = () => {
-    // Clear the selected doctor to close the modal or side panel
+  const handleCloseDetails = () => {
     setSelectedDoctor(null);
   };
 
-  // const handleSearch = () => {
-  //   // Filter docotrs based on the search name
-  //   const filteredDoctors = doctors.filter((doctor) =>
-  //     doctor.name.toLowerCase().includes(searchName.toLowerCase()) &&
-  //     doctor.speciality.toLowerCase().includes(searchSpec.toLowerCase())
-  //   );
-  //   setDoctors(filteredDoctors);
-  // };
-
-  // return (
-  //   <div>
-  //     <h1>Doctors</h1>
-
-  //     {/* Filter form */}
-  //     <form>
-  //       <div>
-  //         <label>
-  //           Doctor Name:
-  //           <input
-  //             type="text"
-  //             value={searchName}
-  //           onChange={(e) => setSearchName(e.target.value)}
-  //           />
-  //           <button onClick={handleSearch}>Search</button>
-  //         </label>
-  //         <label>
-  //           Doctor speciality:
-  //           <input
-  //             type="text"
-  //             value={searchSpec}
-  //           onChange={(e2) => setSearchSpec(e2.target.value)}
-  //           />
-  //           <button onClick={handleSearch}>Search</button>
-  //         </label>
-  //       </div>
-  //       <div>
-  //         <label>
-  //           Filter by Date:
-  //           <input
-  //             type="date"
-  //             value={filterDate}
-  //             onChange={(e) => setFilterDate(e.target.value)}
-  //           />
-  //         </label>
-  //       </div>
-  //       <div>
-  //         <label>
-  //           Filter by Status:
-  //           <input
-  //             type="text"
-  //             value={filterStatus}
-  //             onChange={(e) => setFilterStatus(e.target.value)}
-  //           />
-  //         </label>
-  //       </div>
-  //     </form>
-
-  //     {loading ? (
-  //       <p>Loading...</p>
-  //     ) : doctors.length > 0 ? (
-  //       <ul>
-  //         {doctors.map((doctor) => (
-  //            <li key={doctor._id}>
-  //            Doctor Name: {doctor.name}<br />
-  //            Speciality: {doctor.speciality}<br />
-  //           Session price: {doctor.hourly_raterate * 1.1 - doctor.hourly_rate/ 100}
-  //            <button onClick={() => handleViewDoctor(doctor)}>View Doctor</button>
-  //          </li>
-  //         ))}
-  //       </ul>
-  //     ) : (
-  //       <p>No Doctors found.</p>
-  //     )}
-  //     {selectedDoctor && (
-  //       <div>
-  //         {/* Display doctor details here */}
-  //         <h2>Doctor Details</h2>
-  //         <p>Doctor Name: {selectedDoctor.name}</p>
-  //         <p>Email: {selectedDoctor.email}</p>
-  //         <p>Speciality: {selectedDoctor.speciality}</p>
-  //         <p>Affiliation: {selectedDoctor.Affiliation}</p>
-  //         <p>Educational Background: {selectedDoctor.educational_background}</p>
-  //         <p>Hourly Rate: {selectedDoctor.hourly_rate}</p>
-  //         {/* Add close button or functionality to close the modal */}
-  //         <button onClick={handleCloseModal}>Close</button>
-  //       </div>
-  //     )}
-  //   </div>
-  // );
-
-  const excludeColumns = [doctors.email, doctors.password, doctors.username, doctors.date_of_birth, doctors.Affiliation, doctors.educational_background];
-
-
-  const filteredData = (doctor) => {
-    const lowercaseddoc = doctor.toLowerCase().trim();
-    if(lowercaseddoc==="") setDoctors(filteredDoctors);
-    else {
-      const filteredData = filteredDoctors.filter(doctor => {
-        return Object.keys(doctor).some(key =>
-          excludeColumns.includes(key) ? false : doctor[key].toString().toLowerCase().includes(lowercaseddoc)
-          );
-      });
-      setDoctors(filteredData);
-    }
-  }
-
-  const handleChange = doctor => {
-    setSearch(doctor);
-    filteredData(doctor);
+  const handleSearchNameChange = (e) => {
+    setSearchName(e.target.value);
+    handleSearch();
   };
 
-  return(
-    <div>
-      <h1>Doctors</h1>
+  const handleMedicalUseFilterChange = (e) => {
+    setSpecialtyFilter(e.target.value);
+    handleSearch();
+  };
+  const handleFilterDateChange = (e) => {
+    setFilterDate(e.target.value);
+    handleSearch();
+  };
 
-      <Form>
-        <Form.Control
-        onChange = {(e)=> handleChange(e.target.value)}
-        placeHolder = 'Search for Doctors'
+  const handleFilterHourChange = (e) => {
+    setFilterHour(e.target.value);
+    handleSearch();
+  };
+
+  const resetFilters = () => {
+    setSearchName('');
+    setSpecialtyFilter('');
+    setFilterDate('');
+    setFilterHour('');
+    fetchDoctors();
+  };
+
+  return (
+    <div className="medicine-list-container">
+      <h1>All Medicines</h1>
+      <div className="filter-container">
+        <input
+          type="text"
+          placeholder="Enter doctor's name"
+          value={searchName}
+          onChange={handleSearchNameChange}
         />
-      </Form>
-      <Table>
-        <thread>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Speciality</th>
-            <th>Session Price</th>
-          </tr>
-        </thread>
-        <tbody>
+        <input
+          type="text"
+          placeholder="Filter by Specialty"
+          value={SpecialtyFilter}
+          onChange={handleMedicalUseFilterChange}
+        />
+         <input
+          type="date"
+          placeholder="Select Date of Appointment"
+          value={filterDate}
+          onChange={handleFilterDateChange}
+        />
+        <input
+          type="number"
+          placeholder="Enter Hour of Appointment"
+          value={filterHour}
+          onChange={handleFilterHourChange}
+        />
+        <button onClick={resetFilters}>Reset Filters</button>
+      </div>
 
-          {/* {appointments
-          .filter((appointment) =>{
-            return searchDate === ''
-                      ? appointment
-                      : appointment.date.includes(searchDate);
-              })
-          .filter((appointment) =>{
-            return searchDate === ''
-                      ? appointment
-                      : appointment.date.includes(searchStatus);
-              })                     
-          } */}
-          {/* {doctors
-          .filter((doctor) =>{
-          //  return searchName.toLowerCase() === ''
-                  ? doctor
-                  : doctor.name.toLowerCase().includes(searchName);
-              })
-
-          // .filter((doctor) =>{
-          //   return searchSpec.toLowerCase() === ''
-          //           ? doctor
-          //           : doctor.speciality.toLowerCase().includes(searchSpec);
-          //     })     */}
-           
+      {loading ? (
+        <p>Loading...</p>
+      ) : doctors.length > 0 ? (
+        <ul className="medicine-list">
+         
+          {doctors.map((m) => (
             
-          {doctors.map((doctor) => (
-                <tr key={doctor._id} onClick={() => handleViewDoctor(doctor)}>
-                <td>{doctor.name}</td>
-                <td>{doctor.email}</td>
-                <td>{doctor.speciality}</td>
-                <td>{doctor.hourly_rate * 1.1 - doctor.hourly_rate/ 100}</td>
-                </tr>
-              ))}
-              {doctors.length === 0 && <span>No docotrs found to display!</span>}
-        </tbody>
-      </Table>
-
-     {/* to display info of selected doctor */}
-
-     <Modal show = {selectedDoctor!== null} onHide={handleCloseModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>Doctor Details</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              {selectedDoctor && (
-                <>
-                <p>Name: {selectedDoctor.name}</p>
-                <p>Email: {selectedDoctor.email}</p>
-                <p>Speciality: {selectedDoctor.speciality}</p>
-                <p>Affiliation: {selectedDoctor.Affiliation}</p>
-                <p>Educational Background: {selectedDoctor.educational_background}</p>
-                <p>Hourly Rate: {selectedDoctor.hourly_rate}</p>
-                <p>Session Price: {selectedDoctor.hourly_rate * 1.1 - selectedDoctor.hourly_rate/ 100}</p>
-                </>
-              )}
-            </Modal.Body>
-            <Modal.Footer>
-              <Button onClick={handleCloseModal}>
-                Close
-              </Button>
-            </Modal.Footer>
-     </Modal>
+            <li
+              key={m._id}
+              className="medicine-item"
+              onClick={() => handleDoctorClick(m)} // Add this click handler
+            >
+              <div className="medicine-details">
+                <strong>Name:</strong> {m.name}<br />
+                <strong>Speciality:</strong> {m.speciality}<br />
+                <strong>Username:</strong> {m.username}<br />
+               
+              </div>
+              
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No Doctors found.</p>
+      )}
+      {selectedDoctor && (
+        <DoctorDetails doctor={selectedDoctor} onClose={handleCloseDetails} />
+      )}
     </div>
   );
 };
 
-export default VDoctors;
+export default DoctorListPage;
