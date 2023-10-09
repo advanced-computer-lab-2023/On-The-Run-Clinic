@@ -169,13 +169,37 @@ const VDoctors = () => {
   //     )}
   //   </div>
   // );
+
+  const excludeColumns = [doctors.email, doctors.password, doctors.username, doctors.date_of_birth, doctors.Affiliation, doctors.educational_background];
+
+
+  const filteredData = (doctor) => {
+    const lowercaseddoc = doctor.toLowerCase().trim();
+    if(lowercaseddoc==="") setDoctors(filteredDoctors);
+    else {
+      const filteredData = filteredDoctors.filter(doctor => {
+        return Object.keys(doctor).some(key =>
+          excludeColumns.includes(key) ? false : doctor[key].toString().toLowerCase().includes(lowercaseddoc)
+          );
+      });
+      setDoctors(filteredData);
+    }
+  }
+
+  const handleChange = doctor => {
+    setSearch(doctor);
+    filteredData(doctor);
+  };
+
   return(
     <div>
       <h1>Doctors</h1>
 
       <Form>
         <Form.Control
-        onChange = {(e)=> setSearchName(e.target.value)}/>
+        onChange = {(e)=> handleChange(e.target.value)}
+        placeHolder = 'Search for Doctors'
+        />
       </Form>
       <Table>
         <thread>
@@ -200,9 +224,9 @@ const VDoctors = () => {
                       : appointment.date.includes(searchStatus);
               })                     
           } */}
-          {doctors
+          {/* {doctors
           .filter((doctor) =>{
-            return searchName.toLowerCase() === ''
+          //  return searchName.toLowerCase() === ''
                   ? doctor
                   : doctor.name.toLowerCase().includes(searchName);
               })
@@ -211,10 +235,10 @@ const VDoctors = () => {
           //   return searchSpec.toLowerCase() === ''
           //           ? doctor
           //           : doctor.speciality.toLowerCase().includes(searchSpec);
-          //     })    
+          //     })     */}
            
             
-          .map((doctor) => (
+          {doctors.map((doctor) => (
                 <tr key={doctor._id} onClick={() => handleViewDoctor(doctor)}>
                 <td>{doctor.name}</td>
                 <td>{doctor.email}</td>
@@ -222,6 +246,7 @@ const VDoctors = () => {
                 <td>{doctor.hourly_rate * 1.1 - doctor.hourly_rate/ 100}</td>
                 </tr>
               ))}
+              {doctors.length === 0 && <span>No docotrs found to display!</span>}
         </tbody>
       </Table>
 
