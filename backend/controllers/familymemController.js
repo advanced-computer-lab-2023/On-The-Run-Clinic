@@ -1,4 +1,5 @@
 const FamilyMem = require('../models/FamilyMemberModel');
+const Patient = require('../models/PatientModel');
 
 const { default: mongoose } = require('mongoose');
 
@@ -21,6 +22,19 @@ const createMember = async(req,res) => {
         patientUsername
       });
       await newMember.save();
+
+      const patient = await Patient.findOne({ username: patientUsername });
+
+      if (!patient) {
+        return res.status(404).json({ error: 'Patient not found' });
+      }
+  
+      // Push the new family member's _id to the patient's myfamilymembers array
+      patient.myfamilymembers.push(newMember._id);
+  
+      // Save the patient with the updated myfamilymembers array
+      await patient.save();
+
 
     res.status(201).json({ message: 'Family Member added successfully' });
 

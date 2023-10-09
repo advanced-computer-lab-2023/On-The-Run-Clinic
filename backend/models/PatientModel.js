@@ -1,7 +1,7 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const PatientModel=require('./DoctorModel')
+const DoctorModel=require('./DoctorModel')
 
 const PatientSchema = new mongoose.Schema({
   username: {
@@ -47,7 +47,7 @@ const PatientSchema = new mongoose.Schema({
     
   },
   
-  myDoctors: [{ type: String }],
+  myDoctors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' }],
   myfamilymembers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FamilyMem' }],
   prescriptions: [{
     type: mongoose.Schema.Types.ObjectId,
