@@ -10,7 +10,7 @@ import UserSelection from './components/UserSelection';
 import AdminRegistrationForm from "./components/AdminRegistrationForm"
 import FamilyMemberForm from './components/FamilyMemberForm';
 import FamilyMembersList from './pages/viewMyFamilyMem';
-import SearchPatientByName from './pages/SearchPatientsByName';
+
 import MyPatients from './pages/MyPatients';
 import MyPrescription from './pages/viewMyPrescriptions';
 import DoctorListPage from './pages/viewDoctors';
@@ -48,7 +48,7 @@ function App() {
 
           <Route path="/addAdmin" element={<AdminRegistrationForm/>}/>
           <Route path="/viewRequests" element={<ViewRequests/>}/>
-          <Route path="/searchPatientsByName"  element={<SearchPatientByName/>} />
+          
          <Route path="/getDoctors" element={<getDoctors/>}/>
           <Route path="/deleteDoctor" element={<DeleteDoctorPage/>} />
           <Route path="/deleteAdmin" element={<DeleteAdmin/>} />

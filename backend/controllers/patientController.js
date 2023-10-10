@@ -38,6 +38,27 @@ const createPatient = async(req,res) => {
     res.status(500).json({ error: 'An error occurred while registering the Patient' });
   }
 }
+const getPatient=async(req,res)=>{
+  try {
+    // Get the patient ID from the URL parameters
+    const { id } = req.params;
+
+    // Fetch the patient from the database using the ID
+    const patient = await Patient.findById(id);
+
+    if (!patient) {
+      // If no patient is found with the given ID, return a 404 status
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    // Return the patient data as JSON response
+    res.status(200).json(patient)
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error('Error fetching patient:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
 const getPatients=async(req,res) =>{
   const users =await Patient.find({}).sort({createdAt:-1});
      // for(let index=0;index<users.length;index++){
@@ -121,4 +142,4 @@ const searchPatientsByUserame = async (req, res) => {
   }
 };
 
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame}
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient}

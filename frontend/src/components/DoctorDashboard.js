@@ -15,12 +15,7 @@ const DoctorDashboard = () => {
             View my patients
           </Link>
         </li>
-        <li>
-          <Link to={`/searchPatientsByName`} className="menu-link">
-            <i className="fas fa-search"></i>
-            Search for a patient
-          </Link>
-        </li>
+        
         <li>
           <Link to={`/updateDoctor/${username}`} className="menu-link">
             <i className="fas fa-edit"></i>
