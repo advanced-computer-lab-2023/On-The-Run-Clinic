@@ -1,6 +1,5 @@
 // Import necessary modules and models
 const express = require('express');
-
 const Appointment = require('../models/appointments');
 const Doctor = require('../models/DoctorModel');
 const Patient = require('../models/PatientModel'); // Import your Patient model
@@ -17,21 +16,24 @@ const createAppointment = async(req,res) => {
         const patient = await Patient.findById(patientId);
         const patientUsername = patient.username;
 
-        
-        if (!doctor.patients.includes(patientUsername)) {
-          doctor.patients.push(patientUsername);
-          await doctor.save();
+        if (!doctor) {
+          return res.status(404).json({ message: 'Doctor not found' });
         }
+       
+        if (!patient) {
+          return res.status(404).json({ message: 'Patient not found' });
+        }
+
+        
 
        if (!patient) {
           return res.status(404).json({ message: 'Patient not found' });
         }
-    
-        if (!patient.myDoctors.includes(doctorUsername)) {
-          patient.myDoctors.push(doctorUsername);
-          await patient.save();
+        if (!patient.myDoctors || !Array.isArray(patient.myDoctors)) {
+          patient.myDoctors = [];
         }
-
+    
+        
 
         res.status(201).json({ message: 'Appointment created successfully', appointment });
       } catch (error) {
@@ -39,6 +41,18 @@ const createAppointment = async(req,res) => {
         res.status(500).json({ error: 'An error occurred while creating the appointment' });
       }
 };
+
+/*const createAppointment = async (req, res) => {
+  try {
+    const { patientId, doctorId, date, status, description } = req.body;
+    const appointment = new Appointment({ patientId, doctorId, date, status, description });
+    await appointment.save();
+    res.status(201).json({ message: 'Appointment created successfully', appointment });
+  } catch (error) {
+    console.error('Error creating appointment:', error);
+    res.status(500).json({ error: 'An error occurred while creating the appointment' });
+  }
+};*/
 const getAllAppointments = async (req, res) => {
     try {
         const appointments = await Appointment.find();

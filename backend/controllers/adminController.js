@@ -34,6 +34,14 @@ const createAdmin = async(req,res) => {
   }
 
 };
+const getAdmins=async(req,res) =>{
+  const users =await Admin.find({}).sort({createdAt:-1});
+      for(let index=0;index<users.length;index++){
+         const element = users[index];
+        console.log(element.id);
+      }
+      res.status(200).json(users)
+}
 const getAdmin=async(req,res) =>{
   const users =await Admin.find({}).sort({createdAt:-1});
       for(let index=0;index<users.length;index++){
@@ -42,4 +50,18 @@ const getAdmin=async(req,res) =>{
       }
       res.status(200).json(users)
 }
-module.exports={createAdmin,getAdmin}
+const deleteAdmin = async(req,res) => {
+  try {
+    // Extract the doctor ID from the request parameters
+    const { id } = req.params;
+
+    // Find the doctor by ID and delete them from the database
+    const deletedUser = await Admin.findByIdAndDelete({ _id:id });
+
+    res.status(200).json({ message: 'Doctor deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while deleting the doctor' });
+  }
+};
+module.exports={createAdmin,getAdmin,getAdmins,deleteAdmin}

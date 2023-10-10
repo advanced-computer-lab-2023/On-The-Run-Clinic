@@ -49,16 +49,16 @@ const getPatients=async(req,res) =>{
 // Delete Patient Controller
 const deletePatient = async(req,res) => {
   try {
-    // Extract the patient ID from the request parameters
+    // Extract the doctor ID from the request parameters
     const { id } = req.params;
 
-    // Find the patient by ID and delete them from the database
-    await Patient.findByIdAndDelete(id);
+    // Find the doctor by ID and delete them from the database
+    const deletedUser = await Patient.findByIdAndDelete({ _id:id });
 
-    res.status(200).json({ message: 'Patient deleted successfully' });
+    res.status(200).json({ message: 'Doctor deleted successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'An error occurred while deleting the patient' });
+    res.status(500).json({ error: 'An error occurred while deleting the doctor' });
   }
 };
 const searchPatientsByName = async (req, res) => {
