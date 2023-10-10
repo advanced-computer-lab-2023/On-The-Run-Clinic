@@ -45,7 +45,7 @@ const createDoctor = async(req,res) => {
 };
 const getDocPatients = async (req, res) => {
   try {
-    const { username } = req.query;
+    const { username } = req.params;
 
     // Find the doctor by ID and populate the 'patients' field
     const doctor = await Doctor.find({username:username}).populate('patients');

@@ -40,10 +40,10 @@ const createPatient = async(req,res) => {
 }
 const getPatients=async(req,res) =>{
   const users =await Patient.find({}).sort({createdAt:-1});
-      for(let index=0;index<users.length;index++){
-         const element = users[index];
-         console.log(element.id);
-      }
+     // for(let index=0;index<users.length;index++){
+       //  const element = users[index];
+        // console.log(element.id);
+      //}
       res.status(200).json(users)
 }
 // Delete Patient Controller

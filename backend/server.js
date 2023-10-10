@@ -49,14 +49,14 @@ app.post("/createAdmin",createAdmin);
 app.post("/register/doctor",createDoctor);
 app.put("/updateDoctor",updateDoctor);
 app.post("/register/patient",createPatient);
-app.get("/getDocPatients", getDocPatients);
+app.get("/getDocPatients/:username", getDocPatients);
 app.get("/getDoctors",getDoctors);
 app.get("/getPatients",getPatients);
 app.get("/getAdmins",getAdmins)
 app.post("/addFamilyMember",createMember);
 app.delete("/deleteDoctor/:id",deleteDoctor);
 app.patch("/ubdateDoctor",updateDoctor);
-app.get("/getFamilyMem",getFamilyMembers);
+app.get("/getFamilyMem/:username",getFamilyMembers);
 app.get("/searchPatientsByName",searchPatientsByName);
 app.post("/addPatientToDr",addPatientToDr);
 app.post("/addPrescription",createPrescription);
