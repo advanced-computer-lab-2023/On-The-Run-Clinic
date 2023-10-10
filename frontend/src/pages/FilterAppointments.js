@@ -1,114 +1,114 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { useParams } from 'react-router-dom';
 
-import './MedicineList.css';
-
-const FilterAppointments = () => {
+const DoctorAppointments = () => {
   const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchStatus, setStatus] = useState('');
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  const fetchAppointments = async () => {
-    try {
-      const response = await axios.get(`http://localhost:4000/getAllAppointments`);
-
-      if (response.status === 200) {
-        setAppointments(response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const { username } = useParams();
+  const [doctor, setDoctor] = useState(null);
 
   useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        // First, fetch the doctor based on the username
+        const response1 = await axios.get(`http://localhost:4000/getDoctor/${username}`);
+        console.log(response1);
+        setDoctor(response1.data);
+
+        // Then, fetch all appointments based on the doctor's ID
+        if (response1.data) {
+          console.log(response1.data._id)
+          const response2 = await axios.get(`http://localhost:4000/getDoctorAppointments/${response1.data._id}`);
+          if (response2.status === 200) {
+            console.log(response2.data)
+            setAppointments(response2.data);
+            setFilteredAppointments(response2.data); // Set filteredAppointments to show all appointments initially
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
     fetchAppointments();
-  }, []);
+  }, [username]);
 
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  const handleDateFilterChange = (event) => {
+    const selectedDate = event.target.value;
+    setSelectedDate(selectedDate);
+    filterAppointments(selectedDate, selectedStatus);
   };
 
-  const handleSearch = () => {
-    if (searchStatus === '' && !selectedDate) {
-      fetchAppointments();
-      return;
-    }
-
-    const filtered = appointments.filter((appointment) => {
-      const nameMatch = searchStatus
-        ? appointment.status && appointment.status.toLowerCase().includes(searchStatus.toLowerCase())
-        : true;
-
-      const dateMatch = selectedDate
-        ? formatDate(new Date(appointment.date)) === formatDate(new Date(selectedDate))
-        : true;
-
-      return nameMatch && dateMatch;
-    });
-
-    setAppointments(filtered);
-  };
-
-  const handleSearchNameChange = (e) => {
-    setStatus(e.target.value);
-  };
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+  const handleStatusFilterChange = (event) => {
+    const selectedStatus = event.target.value;
+    setSelectedStatus(selectedStatus);
+    filterAppointments(selectedDate, selectedStatus);
   };
 
   const resetFilters = () => {
-    setStatus('');
-    setSelectedDate(null);
-    fetchAppointments();
+    setSelectedDate('');
+    setSelectedStatus('');
+    setFilteredAppointments(appointments); // Reset filters to show all appointments
+  };
+
+  const filterAppointments = (date, status) => {
+    const filtered = appointments.filter((appointment) => {
+      if (!date && !status) {
+        return true; // No filters applied, return all appointments
+      }
+      if (date && status) {
+        return (
+          appointment.date.substring(0, 10) === date &&
+          appointment.status === status
+        );
+      }
+      if (date) {
+        return appointment.date.substring(0, 10) === date;
+      }
+      if (status) {
+        return appointment.status === status;
+      }
+      return false;
+    });
+
+    setFilteredAppointments(filtered);
   };
 
   return (
-    <div className="medicine-list-container">
-      <h1>All Appointments</h1>
-      <div className="filter-container">
+    <div>
+      <h1>Doctor Appointments</h1>
+      <div>
+        <label>Date Filter:</label>
         <input
-          type="text"
-          placeholder="Enter status"
-          value={searchStatus}
-          onChange={handleSearchNameChange}
+          type="date"
+          value={selectedDate}
+          onChange={handleDateFilterChange}
         />
-        <DatePicker
-          selected={selectedDate}
-          onChange={handleDateChange}
-          placeholderText="Select a date"
-        />
-        <button onClick={handleSearch}>Apply Filters</button>
-        <button onClick={resetFilters}>Reset Filters</button>
       </div>
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : appointments.length > 0 ? (
-        <ul className="medicine-list">
-          {appointments.map((m) => (
-            <li key={m._id} className="medicine-item">
-              <div className="medicine-details">
-                <strong>Status:</strong> {m.status}<br />
-                <strong>Date:</strong> {m.date}<br />
-                <strong>Description:</strong> {m._id}<br />
-              </div>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No Appointments found.</p>
-      )}
+      <div>
+        <label>Status Filter:</label>
+        <select
+          value={selectedStatus}
+          onChange={handleStatusFilterChange}
+        >
+          <option value="">All</option>
+          <option value="Scheduled">Scheduled</option>
+          <option value="Cancelled">Cancelled</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+      <button onClick={resetFilters}>Reset Filters</button>
+      <ul>
+        {filteredAppointments.map((appointment) => (
+          <li key={appointment._id}>
+            Date: {appointment.date}, Status: {appointment.status}, Description: {appointment.description}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default FilterAppointments;
+export default DoctorAppointments;

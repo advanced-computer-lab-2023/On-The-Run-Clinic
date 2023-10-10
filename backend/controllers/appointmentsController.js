@@ -75,6 +75,22 @@ const filter=async(req,res) =>{
         res.status(500).json({ error: 'An error occurred while filtering appointments' });
       }
 }
+const getDoctorAppointments = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the doctor's ID from the request parameters
+
+    // Check if the doctor exists
+    
+    // Fetch appointments for the specified doctor
+    const appointments = await Appointment.find({ doctorId: id });
+
+    res.status(200).json(appointments);
+  } catch (error) {
+    console.error('Error fetching doctor appointments:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 
-module.exports={createAppointment,getAllAppointments,filter}
+
+module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments}
