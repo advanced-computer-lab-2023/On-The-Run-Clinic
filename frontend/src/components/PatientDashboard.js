@@ -1,6 +1,6 @@
 import React from 'react';
-
-import { Link,useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import './Dashboard.css'; // Import your CSS file for styling
 
 
 const PatientDashboard = () => {

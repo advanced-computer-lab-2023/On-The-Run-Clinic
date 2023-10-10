@@ -5,7 +5,7 @@ import Navbar from './components/Navbar';
 import DoctorRegistrationForm  from './pages/DoctorRegPage';
 import DoctorDashboard from './components/DoctorDashboard';
 import PatientRegistrationForm  from './pages/PatientRegPage';
-import PatientDashboard from './pages/PatientDashboard';
+import PatientDashboard from './components/PatientDashboard';
 import UserSelection from './components/UserSelection';
 import AdminRegistrationForm from "./components/AdminRegistrationForm"
 import FamilyMemberForm from './components/FamilyMemberForm';

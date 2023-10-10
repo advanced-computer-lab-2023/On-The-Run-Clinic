@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 
 const FamilyMembersList = () => {
   const { username } = useParams();
+  const navigate=useNavigate();
   const [familyMembers, setFamilyMembers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -11,7 +12,7 @@ const FamilyMembersList = () => {
     const fetchFamilyMembers = async () => {
       try {
        
-        const response = await axios.get(`http://localhost:4000/getFamilyMem?username=${username}`);
+        const response = await axios.get(`http://localhost:4000/getFamilyMem/${username}`);
         console.log(response.data);
 
         if (response.status === 200) {
@@ -47,6 +48,7 @@ const FamilyMembersList = () => {
       ) : (
         <p>No family members found.</p>
       )}
+      <button onClick={() => navigate(-1)}>Back</button>
     </div>
   );
 };
