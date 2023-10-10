@@ -16,7 +16,7 @@ const MyPatients = () => {
     const fetchPatients = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/getDocpatients/${username}`);
-        console.log(response.data);
+        //console.log(response.data);
 
         if (response.status === 200) {
           setPatients(response.data);
@@ -86,26 +86,28 @@ const MyPatients = () => {
       if (response.status === 200) {
         const allAppointments = response.data;
   
-        const searchDate = new Date(searchByAppointment);
+        const searchDate = new Date(searchByAppointment).toDateString();
         console.log("date"+searchDate);
   
         // Retrieve the doctorId asynchronously
         const doctorId = await getDoctorIdByUsername(username);
+        console.log("doctor" + doctorId);
   
         // Filter appointments based on date and doctorId
         const filteredAppointments = allAppointments.filter((appointment) => {
-          const appointmentDate = new Date(appointment.date);
-          console.log("app date"+ appointmentDate);
-  
+          const appointmentDate = new Date(appointment.date).toDateString();
+          //console.log("app date"+ appointmentDate);
+          
           // Check if the appointment matches the date and doctorId
           return (
-            appointmentDate.toDateString() === searchDate.toDateString() &&
-            appointment.doctorId === doctorId
+            (appointmentDate >= searchDate &&
+            appointment.doctorId === doctorId)
           );
         });
   
         // Extract patient IDs from the filtered appointments
         const patientIds = filteredAppointments.map((appointment) => appointment.patientId);
+        console.log("patients" + patientIds);
   
         // Make an API request to get all patient information
         const patientInfoResponse = await axios.get('http://localhost:4000/getPatients');
