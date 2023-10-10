@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams,Link } from 'react-router-dom';
-
+import './Dashboard.css'; // Import your CSS file for styling
 
 const DoctorDashboard = () => {
   const { username } = useParams(); 
@@ -18,3 +18,11 @@ const DoctorDashboard = () => {
 };
 
 export default DoctorDashboard;
+
+
+
+
+
+
+
+

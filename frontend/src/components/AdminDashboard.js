@@ -30,6 +30,18 @@ const AdminDashboard = () => {
             Manage Patients
           </a>
         </li>
+        <li>
+          <a href="/viewRequests" className="menu-link">
+            <i className="fas fa-clipboard-list"></i>
+            View Requests
+          </a>
+        </li>
+        <li>
+          <a href="/healthPackages" className="menu-link">
+            <i className="fas fa-clipboard-list"></i>
+            Manage Health Packages
+          </a>
+        </li>
       </ul>
     </div>
   );

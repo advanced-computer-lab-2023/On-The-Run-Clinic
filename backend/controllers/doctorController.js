@@ -121,7 +121,7 @@ const updateDoctor = async (req, res) => {
   }
  };
  const getDoctorByUsername = async (req, res) => {
-  const { username } = req.query; // Get the username from the URL parameter
+  const { username } = req.params; // Get the username from the URL parameter
 
   try {
     // Find the doctor by username

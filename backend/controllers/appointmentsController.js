@@ -12,26 +12,6 @@ const createAppointment = async (req, res) => {
     const appointment = new Appointment({ patientId, doctorId, date, status, description });
     await appointment.save();
 
-<<<<<<< HEAD
-        if (!doctor) {
-          return res.status(404).json({ message: 'Doctor not found' });
-        }
-       
-        if (!patient) {
-          return res.status(404).json({ message: 'Patient not found' });
-        }
-
-        
-
-       if (!patient) {
-          return res.status(404).json({ message: 'Patient not found' });
-        }
-        if (!patient.myDoctors || !Array.isArray(patient.myDoctors)) {
-          patient.myDoctors = [];
-        }
-    
-        
-=======
     // Fetch the doctor and patient objects
     const doctor = await Doctor.findById(doctorId);
     const patient = await Patient.findById(patientId);
@@ -43,7 +23,6 @@ const createAppointment = async (req, res) => {
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
->>>>>>> d72c857530c49137d152362fdf4b00e440263245
 
     const doctorUsername = doctor.username;
     const patientUsername = patient.username;
@@ -67,21 +46,6 @@ const createAppointment = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
-/*const createAppointment = async (req, res) => {
-  try {
-    const { patientId, doctorId, date, status, description } = req.body;
-    const appointment = new Appointment({ patientId, doctorId, date, status, description });
-    await appointment.save();
-    res.status(201).json({ message: 'Appointment created successfully', appointment });
-  } catch (error) {
-    console.error('Error creating appointment:', error);
-    res.status(500).json({ error: 'An error occurred while creating the appointment' });
-  }
-};*/
-=======
-
->>>>>>> d72c857530c49137d152362fdf4b00e440263245
 const getAllAppointments = async (req, res) => {
     try {
         const appointments = await Appointment.find();

@@ -10,7 +10,7 @@ const {createMember,getFamilyMembers} = require("./controllers/familymemControll
 const cors = require('cors');
 const{createAppointment,filter,getAllAppointments}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
-const{createRequest, getOneRequest}=require("./controllers/requestsController")
+const{createRequest, getOneRequest,getRequests}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage}=require("./controllers/HealthPackagesController")
 
 
@@ -69,8 +69,9 @@ app.put("/updatePackage",updateHealthPackage);
 app.delete("/deletePackage",deleteHealthPackage);
 app.delete("/deleteAdmin/:id",deleteAdmin);
 app.delete("/deletePatient/:id",deletePatient);
-app.get("/getDoctor",getDoctorByUsername);
+app.get("/getDoctor/:username",getDoctorByUsername);
 app.get("/getOneRequest",getOneRequest);
+app.get("/getRequests",getRequests);
 app.post("/createAppointment",createAppointment);
 app.get("/getAllAppointments",getAllAppointments);
 app.get("/filterAppointments",filter);

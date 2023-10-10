@@ -1,57 +1,70 @@
-import React, { useState } from 'react';
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const ViewDoctorRequest = () => {
-  const [username, setUsername] = useState('');
-const [error, setError] = useState(null);
-const [loading, setLoading] = useState(false);
-const [request, setRequest] = useState(null);
-  const handleSearch = async () => {
-    try {
-      setLoading(true);
 
-      // Send a GET request to your server to search for patients by name
-      const response = await axios.get(`http://localhost:4000/getOneRequest?username=${username}`);
+import './List.css'; // Import your CSS file for styling
+
+const ViewRequests = () => {
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+ 
+
+  const fetchRequests = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/getRequests`);
 
       if (response.status === 200) {
-        setRequest(response.data[0]);
+        setRequests(response.data);
       }
     } catch (error) {
-      console.error('Error searching for Doctor:', error);
+      console.error('Error fetching requests:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div>
-      <h1>Search Doctor request by Username</h1>
-      <input
-        type="text"
-        placeholder="Enter doctor username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
-      {request && (
-        <div>
-          <h2>Doctor Request Details</h2>
-          <p>Username: {request.username}</p>
-          <p>name: {request.name}</p>
-          <p>email: {request.email}</p>
-          <p>date_of_birth: {request.date_of_birth}</p>
-          <p>hourly_rate: {request.hourly_rate}</p>
-          <p>speciality: {request.speciality}</p>
-          <p>educational_background: {request.educational_background}</p>
-        </div>
-      )}
-      
+  useEffect(() => {
+    fetchRequests();
+  }, []);
   
+
+  return (
+    <div className="medicine-list-container">
+      <h1>All Requests</h1>
       
+      {loading ? (
+        <p>Loading...</p>
+      ) : requests.length > 0 ? (
+        <ul className="medicine-list">
+          {requests.map((m) => (
+            <li key={m._id} className="medicine-item">
+              <div className="medicine-details">
+                <strong>Name:</strong> {m.name}<br />
+                <strong>Username:</strong> {m.username}<br />
+                <strong>email:</strong> {m.email}<br />
+                <strong>Date Of Birth:</strong> {m.date_of_birth}<br />
+                <strong>Hourly Rate:</strong> {m.hourly_rate}<br />
+                <strong>speciality:</strong> {m.speciality}<br />
+                <strong>Educational Background:</strong> {m.educational_background}<br />
+                
+                
+                
+              </div>
+              
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No Requests found.</p>
+      )}
     </div>
   );
 };
 
-export default ViewDoctorRequest;
+export default ViewRequests;

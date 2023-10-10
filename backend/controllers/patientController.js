@@ -105,7 +105,7 @@ const getMyPrescriptions = async (req, res) => {
 };
 const searchPatientsByUserame = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username } = req.params;
     
     // Use a case-insensitive regular expression to search for patients by name
     const patients = await Patient.find({ username:username });
