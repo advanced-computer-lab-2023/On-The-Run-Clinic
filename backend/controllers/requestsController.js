@@ -60,10 +60,18 @@ const getOneRequest = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+const getRequests=async(req,res) =>{
+  const users =await Request.find({}).sort({createdAt:-1});
+      for(let index=0;index<users.length;index++){
+         const element = users[index];
+        console.log(element.id);
+      }
+      res.status(200).json(users)
+}
 
 
 
-module.exports = { createRequest,getOneRequest };
+module.exports = { createRequest,getOneRequest,getRequests };
 
 
 

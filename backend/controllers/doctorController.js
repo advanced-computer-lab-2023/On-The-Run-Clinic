@@ -76,10 +76,10 @@ const getDoctors=async(req,res) =>{
 const deleteDoctor = async(req,res) => {
   try {
     // Extract the doctor ID from the request parameters
-    const { username } = req.body;
+    const { id } = req.params;
 
     // Find the doctor by ID and delete them from the database
-    await Doctor.findOneAndDelete( {username: username });
+    const deletedUser = await Doctor.findByIdAndDelete({ _id:id });
 
     res.status(200).json({ message: 'Doctor deleted successfully' });
   } catch (error) {
@@ -121,7 +121,7 @@ const updateDoctor = async (req, res) => {
   }
  };
  const getDoctorByUsername = async (req, res) => {
-  const { username } = req.query; // Get the username from the URL parameter
+  const { username } = req.params; // Get the username from the URL parameter
 
   try {
     // Find the doctor by username
@@ -173,9 +173,30 @@ const updateDoctor = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while adding the patient to the doctor.' });
   }
 }
+const getDoctorbyId=async(req,res)=>{
+  try {
+    // Get the patient ID from the URL parameters
+    const { id } = req.params;
+
+    // Fetch the patient from the database using the ID
+    const doctor = await Doctor.findById(id);
+
+    if (!doctor) {
+      // If no patient is found with the given ID, return a 404 status
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    // Return the patient data as JSON response
+    res.status(200).json(doctor)
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error('Error fetching doctor:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
  
 
 
 // Implement other controllers (e.g., update profile, view profile, list patients, etc.) following a similar structure
 
-module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr,getDoctorByUsername}
+module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId}

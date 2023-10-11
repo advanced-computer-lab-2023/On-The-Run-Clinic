@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+const PatientModel=require('./PatientModel');
+const DoctorModel=require('./DoctorModel');
 const appointmentSchema = new mongoose.Schema({
   patientId: {
     type: mongoose.Schema.Types.ObjectId,

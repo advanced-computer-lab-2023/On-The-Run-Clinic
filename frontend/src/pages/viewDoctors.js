@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import './MedicineList.css'; // Import your CSS file for styling
 import DoctorDetails from './doctorDetails';
+import { Link } from 'react-router-dom';
+
 
 const DoctorListPage = () => {
   const [doctors, setDoctors] = useState([]);
@@ -115,7 +117,7 @@ const DoctorListPage = () => {
 
   return (
     <div className="medicine-list-container">
-      <h1>All Medicines</h1>
+      <h1>All Doctors</h1>
       <div className="filter-container">
         <input
           type="text"
@@ -157,7 +159,7 @@ const DoctorListPage = () => {
               onClick={() => handleDoctorClick(m)} // Add this click handler
             >
               <div className="medicine-details">
-                <strong>Name:</strong> {m.name}<br />
+                <strong>Name:</strong> <Link to={`/doctor-details/${m.username}`}> {m.name} </Link><br />
                 <strong>Speciality:</strong> {m.speciality}<br />
                 <strong>Username:</strong> {m.username}<br />
                

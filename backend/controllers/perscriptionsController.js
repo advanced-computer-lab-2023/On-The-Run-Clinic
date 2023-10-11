@@ -1,10 +1,11 @@
 const Prescription = require('../models/perscriptionsModel');
 const Patient = require('../models/PatientModel');
+const Doctor = require('../models/DoctorModel');
 
 const createPrescription = async (req, res) => {
     try {
     
-      const { patientId,medicationName, dosage, instructions } = req.body;
+      const { patientId,medicationName, dosage, instructions, date ,doctorId , filled } = req.body;
   
       // Check if the patient exists
       const patient = await Patient.findById(patientId);
@@ -12,13 +13,23 @@ const createPrescription = async (req, res) => {
       if (!patient) {
         return res.status(404).json({ message: 'Patient not found' });
       }
+
+      const doctor = await Doctor.findById(doctorId);
+  
+      if (!doctor) {
+        return res.status(404).json({ message: 'Doctor not found' });
+      }
+
   
       // Create a new prescription
       const prescription = new Prescription({
         medicationName,
         dosage,
         instructions,
+        date,
         patient: patientId,
+        doctor : doctorId,
+        filled
       });
   
       // Save the prescription

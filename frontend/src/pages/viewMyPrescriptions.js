@@ -121,7 +121,7 @@ const MyPrescription = () => {
           <p>Instructions: {selectedPrescription.instructions}</p>
           <p>Date: {selectedPrescription.date}</p>
           <p>Doctor ID: {selectedPrescription.doctor}</p>
-          <p>Filled: {selectedPrescription.filled}</p>
+          <p>Filled: {selectedPrescription.filled ? 'Yes' : 'No'}</p>
           {/* Add close button or functionality to close the modal */}
           <button onClick={handleCloseModal}>Close</button>
         </div>

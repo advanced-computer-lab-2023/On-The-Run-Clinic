@@ -8,18 +8,18 @@ import { Link } from 'react-router-dom';
 
 import './List.css'; // Import your CSS file for styling
 
-const DeleteDoctor = () => {
-  const [doctors, setDoctors] = useState([]);
+const DeleteAdmin = () => {
+  const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   
  
 
-  const fetchDoctors = async () => {
+  const fetchAdmins = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/getDoctors`);
+      const response = await axios.get(`http://localhost:4000/getAdmins`);
 
       if (response.status === 200) {
-        setDoctors(response.data);
+        setAdmins(response.data);
       }
     } catch (error) {
       console.error('Error fetching doctors:', error);
@@ -29,15 +29,15 @@ const DeleteDoctor = () => {
   };
 
   useEffect(() => {
-    fetchDoctors();
+    fetchAdmins();
   }, []);
-  const handleDelete = async (doctorId) => {
+  const handleDelete = async (adminId) => {
     try {
       // Make a DELETE request to the backend to delete the patient
-      await axios.delete(`http://localhost:4000/deleteDoctor/${doctorId}`);
+      await axios.delete(`http://localhost:4000/deleteAdmin/${adminId}`);
 
       // After successful deletion, refresh the patient list by re-fetching
-      fetchDoctors();
+      fetchAdmins();
     } catch (error) {
       console.error('Error deleting doctor:', error);
     }
@@ -45,18 +45,18 @@ const DeleteDoctor = () => {
 
   return (
     <div className="medicine-list-container">
-      <h1>All Doctors</h1>
+      <h1>All Admins</h1>
       
       {loading ? (
         <p>Loading...</p>
-      ) : doctors.length > 0 ? (
+      ) : admins.length > 0 ? (
         <ul className="medicine-list">
-          {doctors.map((m) => (
+          {admins.map((m) => (
             <li key={m._id} className="medicine-item">
               <div className="medicine-details">
-                <strong>Name:</strong> {m.name}<br />
+                
                 <strong>Username:</strong> {m.username}<br />
-                <strong>email:</strong> {m.email}<br />
+                
                
                 <Link to="#" onClick={() => handleDelete(m._id)}>Delete</Link>
                 
@@ -67,10 +67,10 @@ const DeleteDoctor = () => {
           ))}
         </ul>
       ) : (
-        <p>No Doctors found.</p>
+        <p>No Admins found.</p>
       )}
     </div>
   );
 };
 
-export default DeleteDoctor;
+export default DeleteAdmin;

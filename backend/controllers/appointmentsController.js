@@ -1,6 +1,5 @@
 // Import necessary modules and models
 const express = require('express');
-
 const Appointment = require('../models/appointments');
 const Doctor = require('../models/DoctorModel');
 const Patient = require('../models/PatientModel'); // Import your Patient model
@@ -10,6 +9,13 @@ const createAppointment = async (req, res) => {
   try {
     const { username } = req.query;
     const { patientId, doctorId, date, status, description } = req.body;
+
+    const existingAppointment = await Appointment.findOne({ patientId, doctorId, date });
+
+    if (existingAppointment) {
+      return res.status(409).json({ message: 'Duplicate appointment found' });
+    }
+
     const appointment = new Appointment({ patientId, doctorId, date, status, description });
     await appointment.save();
 
@@ -25,20 +31,23 @@ const createAppointment = async (req, res) => {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
-    const doctorUsername = doctor.username;
-    const patientUsername = patient.username;
-
-    if (Array.isArray(doctor.patients) && !doctor.patients.includes(patientUsername)) {
-      console.log('Before:', doctor.patients);
-      doctor.patients.push(patient._id);
-      await doctor.save();
-      console.log('After:', doctor.patients);
+    if (!doctor.patients.includes(patientId)) {
+      const doctorUsername = doctor.username;
+      const patientUsername = patient.username;
+  
+      if (Array.isArray(doctor.patients) && !doctor.patients.includes(patientUsername)) {
+        console.log('Before:', doctor.patients);
+        doctor.patients.push(patient._id);
+        await doctor.save();
+        console.log('After:', doctor.patients);
+      }
+  
+      if (Array.isArray(patient.myDoctors) && !patient.myDoctors.includes(doctorUsername)) {
+        patient.myDoctors.push(doctor._id);
+        await patient.save();
+      }
     }
 
-    if (Array.isArray(patient.myDoctors) && !patient.myDoctors.includes(doctorUsername)) {
-      patient.myDoctors.push(doctor._id);
-      await patient.save();
-    }
 
     res.status(201).json({ message: 'Appointment created successfully', appointment });
   } catch (error) {
@@ -46,7 +55,6 @@ const createAppointment = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while creating the appointment' });
   }
 };
-
 
 const getAllAppointments = async (req, res) => {
     try {
@@ -77,6 +85,36 @@ const filter=async(req,res) =>{
         res.status(500).json({ error: 'An error occurred while filtering appointments' });
       }
 }
+const getDoctorAppointments = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the doctor's ID from the request parameters
+
+    // Check if the doctor exists
+    
+    // Fetch appointments for the specified doctor
+    const appointments = await Appointment.find({ doctorId: id });
+
+    res.status(200).json(appointments);
+  } catch (error) {
+    console.error('Error fetching doctor appointments:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const getPatientAppointments = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    
+    // Fetch appointments for the specified patient
+    const appointments = await Appointment.find({ patientId: id });
+
+    res.status(200).json(appointments);
+  } catch (error) {
+    console.error('Error fetching doctor appointments:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 
-module.exports={createAppointment,getAllAppointments,filter}
+
+module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments}

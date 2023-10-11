@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate  } from 'react-router-dom';
 import axios from 'axios';
 
 const PatientDetails = () => {
   const { username } = useParams();
+  const navigate = useNavigate();
   const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -38,6 +39,7 @@ const PatientDetails = () => {
     // Call the fetchPatientData function when the component mounts
     fetchPatientData();
   }, [username]);
+  
 
   // Use another useEffect for fetching prescriptions, but make sure it depends only on username
   useEffect(() => {
@@ -106,7 +108,7 @@ const PatientDetails = () => {
       <p>Date of Birth: {patient.date_of_birth}</p>
       <p>Gender: {patient.gender}</p>
       <p>Mobile Number: {patient.mobileNumber}</p>
-      <p>Emergency Contact Name: {patient.emergencyContact.fullname}</p>
+      <p>Emergency Contact Name: {patient.emergencyContact.fullName}</p>
       <p>Emergency Contact Mobile Number: {patient.emergencyContact.mobileNumber}</p>
 
       <h3>Family Members</h3>
@@ -134,6 +136,7 @@ const PatientDetails = () => {
           </li>
         ))}
       </ul>
+      <button onClick={() => navigate(-1)}>Back</button>
 
       {/* Display additional patient information and health records here */}
     </div>

@@ -12,7 +12,7 @@ const UpdateDoctorInfo = () => {
 
   useEffect(() => {
     // Fetch the doctor's information based on the username from the URL
-    axios.get(`http://localhost:4000/getDoctor?username=${username}`)
+    axios.get(`http://localhost:4000/getDoctor/${username}`)
       .then((response) => {
         console.log(response);
         setDoctor(response.data);
@@ -75,3 +75,12 @@ const UpdateDoctorInfo = () => {
 };
 
 export default UpdateDoctorInfo;
+
+
+
+
+
+
+
+
+

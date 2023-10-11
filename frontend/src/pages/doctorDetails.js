@@ -1,15 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const DoctorDetails = ({ doctor, onClose }) => {
+const DoctorDetails = () => {
+  const { username } = useParams();
+  const navigate = useNavigate();
+  const [doctor, setDoctor] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDoctorData = async () => {
+      try {
+        // Make an API request to get all doctor information
+        const response = await axios.get('http://localhost:4000/getDoctors');
+
+        if (response.status === 200) {
+          const allDoctors = response.data;
+
+          // Find the doctor with the matching username
+          const matchingDoctor = allDoctors.find((doc) => doc.username === username);
+          if (matchingDoctor) {
+            setDoctor(matchingDoctor);
+          } else {
+            // Handle the case where no doctor with the username is found
+            console.error('Doctor not found:', username);
+          }
+        }
+      } catch (error) {
+        // Handle API request errors more gracefully
+        console.error('Error fetching doctor data:', error);
+      } finally {
+        setLoading(false); // Mark loading as complete, whether successful or not
+      }
+    };
+
+    // Call the fetchDoctorData function when the component mounts
+    fetchDoctorData();
+  }, [username]);
+
+  if (loading) {
+    return <div>Loading doctor details...</div>;
+  }
+
+  if (!doctor) {
+    return <div>Doctor Not Found</div>;
+  }
+
   return (
-    <div className="doctor-details">
-      <h2>{doctor.name}</h2>
-      <p><strong>Speciality:</strong> {doctor.speciality}</p>
-      <p><strong>Username:</strong> {doctor.username}</p>
-      <p><strong>Affiliation:</strong> {doctor.Affiliation}</p>
-      <p><strong>Educational Background:</strong> {doctor.educational_background}</p>
-      {/* Add more details as needed */}
-      <button onClick={onClose}>Close</button>
+    <div>
+      <h2>Doctor Details</h2>
+      <p>Name: {doctor.name}</p>
+      <p>Username: {doctor.username}</p>
+      <p>Email: {doctor.email}</p>
+      <p>Date of Birth: {doctor.date_of_birth}</p>
+      <p>Hourly Rate: {doctor.hourly_rate}</p>
+      <p>Affiliation: {doctor.Affiliation}</p>
+      <p>Speciality: {doctor.speciality}</p>
+      <p>Educational Background: {doctor.educational_background}</p>
+
+      {/* Display additional doctor information and appointments here */}
+      <button onClick={() => navigate(-1)}>Back</button>
     </div>
   );
 };

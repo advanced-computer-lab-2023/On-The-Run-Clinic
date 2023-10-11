@@ -3,14 +3,14 @@ require('dotenv').config()
 
 const express= require("express")
 const mongoose=require('mongoose')
-const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame} = require("./controllers/patientController")
-const {createAdmin,getAdmin} = require("./controllers/adminController")
+const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId} = require("./controllers/doctorController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient} = require("./controllers/patientController")
+const {createAdmin,getAdmin,getAdmins,deleteAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
-const{createAppointment,filter,getAllAppointments}=require("./controllers/appointmentsController")
+const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
-const{createRequest, getOneRequest}=require("./controllers/requestsController")
+const{createRequest, getOneRequest,getRequests}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage}=require("./controllers/HealthPackagesController")
 
 
@@ -52,9 +52,9 @@ app.post("/register/patient",createPatient);
 app.get("/getDocPatients/:username", getDocPatients);
 app.get("/getDoctors",getDoctors);
 app.get("/getPatients",getPatients);
-app.get("/getAdmins",getAdmin)
+app.get("/getAdmins",getAdmins)
 app.post("/addFamilyMember",createMember);
-app.delete("/deleteDoctor",deleteDoctor);
+app.delete("/deleteDoctor/:id",deleteDoctor);
 app.patch("/ubdateDoctor",updateDoctor);
 app.get("/getFamilyMem/:username",getFamilyMembers);
 app.get("/searchPatientsByName",searchPatientsByName);
@@ -67,12 +67,20 @@ app.post("/createPackage",createHealthPackage);
 app.get("/getPackages",getPackages);
 app.put("/updatePackage",updateHealthPackage);
 app.delete("/deletePackage",deleteHealthPackage);
-app.get("/getDoctor",getDoctorByUsername);
+app.delete("/deleteAdmin/:id",deleteAdmin);
+app.delete("/deletePatient/:id",deletePatient);
+app.get("/getDoctor/:username",getDoctorByUsername);
 app.get("/getOneRequest",getOneRequest);
+app.get("/getRequests",getRequests);
 app.post("/createAppointment",createAppointment);
 app.get("/getAllAppointments",getAllAppointments);
 app.get("/filterAppointments",filter);
-app.get("/search",searchPatientsByUserame);
+app.get("/search/:username",searchPatientsByUserame);
+app.get("/getDoctorAppointments/:id",getDoctorAppointments);
+app.get("/getPatientAppointments/:id",getPatientAppointments);
+app.get("/getPatient/:id",getPatient);
+app.get("/getDoc/:id",getDoctorbyId);
+
 
 //app.put("/updateUser", updateUser);
 
