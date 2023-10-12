@@ -15,7 +15,7 @@ import MyPatients from './pages/MyPatients';
 import MyPrescription from './pages/viewMyPrescriptions';
 import DoctorListPage from './pages/viewDoctors';
 import DeleteDoctorPage from './pages/DeleteDoctorPage';
-import AdminHealthPackages from './pages/AdminHealthPackages';
+import AdminHealthPackages from './pages/admin/AdminHealthPackages';
 import UpdateDoctorInfo from './pages/updateDoctor';
 import ViewRequests from './pages/ViewDoctorRequest';
 import FilterAppointments from './pages/FilterAppointments';
