@@ -14,7 +14,7 @@ const DoctorListPage = () => {
   const [filterDate, setFilterDate] = useState('');
   const [filterHour, setFilterHour] = useState('');
   const [appointments, setAppointments] = useState([]);
-
+  const [patient, setPatient] = useState(null);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const fetchDoctors = async () => {
     try {
@@ -40,10 +40,22 @@ const DoctorListPage = () => {
       console.error('Error fetching appointments:', error);
     }
   };
+  const fetchPatient = async (patientId) => { // Add this function
+    try {
+      const response = await axios.get(`http://localhost:4000/getPatient/${patientId}`);
+
+      if (response.status === 200) {
+        setPatient(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching patient:', error);
+    }
+  };
 
   useEffect(() => {
     fetchDoctors();
     fetchAppointments();
+    fetchPatient(patient); // Replace 'patient_id_here' with the actual patient ID
   }, []);
   const doctorIsAvailable = (doctorId, filterDate, filterHour) => {
     // Convert filterHour to a number
@@ -162,7 +174,7 @@ const DoctorListPage = () => {
                 <strong>Name:</strong> <Link to={`/doctor-details/${m.username}`}> {m.name} </Link><br />
                 <strong>Speciality:</strong> {m.speciality}<br />
                 <strong>Username:</strong> {m.username}<br />
-               
+                <strong>Session Price:</strong>{m.hourlyRate * (1-patient?.healthPackage?.discount)}<br />
               </div>
               
             </li>

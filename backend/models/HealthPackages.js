@@ -19,6 +19,13 @@ const healthPackage = new Schema({
     required: true,
     unique:true
  }
+ ,
+  discount: {
+    type: Number,
+    required: false,
+    default: 0.0
+  }
+
    
 });
 const HealthPackage = mongoose.model('HealthPackage', healthPackage);

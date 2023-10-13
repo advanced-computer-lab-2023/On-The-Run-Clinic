@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const DoctorModel=require('./DoctorModel')
+const HealthPackageModel = require('./HealthPackages');
 
 const PatientSchema = new mongoose.Schema({
   username: {
@@ -44,6 +45,12 @@ const PatientSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    healthpackage: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'HealthPackage',
+      required: false
+    }
+
     
   },
   
