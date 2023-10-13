@@ -13,6 +13,7 @@ const createPatient = async(req,res) => {
         gender,
         mobileNumber,
         emergencyContact,
+        healthpackage
         
       } = req.body;
       const newPatient = new Patient({
@@ -24,6 +25,7 @@ const createPatient = async(req,res) => {
         gender,
         mobileNumber,
         emergencyContact,
+        healthpackage,
         myDoctors:[],
         myfamilymembers:[],
         prescriptions:[]
