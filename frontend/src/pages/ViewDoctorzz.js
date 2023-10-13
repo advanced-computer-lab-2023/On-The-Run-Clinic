@@ -13,7 +13,8 @@ const Doctorz = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedHour, setSelectedHour] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
-
+  const[patient,setPatient]= useState(null);
+  const[discount,setDiscount]= useState(null);
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -25,6 +26,16 @@ const Doctorz = () => {
       } catch (error) {
         console.error('Error fetching doctors:', error);
       }
+      try {
+        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+        if (response.status === 200) {
+          setPatient(response.data);
+          
+        }
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+      }
+
     };
 
     const fetchAppointments = async () => {
@@ -32,15 +43,42 @@ const Doctorz = () => {
         const response = await axios.get(`http://localhost:4000/getAllAppointments`);
         if (response.status === 200) {
           setAppointments(response.data);
+          if (response.data.healthPackage) {
+            const healthPackageId = response.data.healthPackage;
+            fetchHealthPackage(healthPackageId);
+          }else{
+            setDiscount(0);
+          }
         }
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
     };
+    const fetchHealthPackage = async (healthPackageId) => {
+        try {
+          const response = await axios.get(`http://localhost:4000/getPackage/${healthPackageId}`);
+          if (response.status === 200) {
+            setDiscount(response.data.discount);
+          }
+        } catch (error) {
+          console.error('Error fetching health package:', error);
+        }
+      };
 
     fetchDoctors();
+    fetchHealthPackage();
     fetchAppointments();
   }, [username]);
+  const fetchHealthPackage = async (healthPackageId) => {
+      try {
+        const response = await axios.get(`http://localhost:4000/getHealthPackageById/${healthPackageId}`);
+        if (response.status === 200) {
+          setDiscount(response.data.discount);
+        }
+      } catch (error) {
+        console.error('Error fetching health package:', error);
+      }
+    };
 
   const handleSearch = () => {
     const filtered = doctors.filter((doctor) => {
@@ -118,6 +156,7 @@ const Doctorz = () => {
                 <strong>Name:</strong> <Link to={`/doctor-details/${m.username}`}> {m.name} </Link><br />
                 <strong>Speciality:</strong> {m.speciality}<br />
                 <strong>Username:</strong> {m.username}<br />
+                <strong>Price:</strong> {m.hourly_rate} - {discount} = {m.hourlyRate - discount}
                
               </div>
               

@@ -13,7 +13,7 @@ const PatientDashboard = () => {
         <Link to={`/addFamilyMember/${username}`}>Add family Member</Link>
         <Link to={`/viewMyPrescription/${username}`}>View My Prescriptions</Link>
         <Link to={`/filterAppointmentsPatient/${username}`}>View My Appointments</Link>
-        <Link to={`/viewDoctors/`}>View List Of Doctors</Link>
+        <Link to={`/viewDoctors/${username}`}>View List Of Doctors</Link>
 
       </div>
     );

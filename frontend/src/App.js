@@ -46,7 +46,7 @@ function App() {
           <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
           <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
           <Route path="/viewMyPrescription/:username" element={<MyPrescription/>}/>
-          <Route path="/viewDoctors" element={<Doctorz/>}/>
+          <Route path="/viewDoctors/:username" element={<Doctorz/>}/>
 
           <Route path="/addAdmin" element={<AdminRegistrationForm/>}/>
           <Route path="/viewRequests" element={<ViewRequests/>}/>

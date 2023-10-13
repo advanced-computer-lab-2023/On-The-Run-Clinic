@@ -16,6 +16,9 @@ const UserSelection = () => {
                 <Link to="/register/doctor" className="btn btn-success btn-lg btn-block">
                   Register as Doctor
                 </Link>
+                <Link to="/dashboard/admin" className="btn btn-success btn-lg btn-block">
+                 Admin Login
+                </Link>
               </div>
             </div>
           </div>

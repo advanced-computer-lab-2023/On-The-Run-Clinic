@@ -45,13 +45,14 @@ const PatientSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    healthpackage: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'HealthPackage',
-      required: false
-    }
+   
 
     
+  },
+  healthpackage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'HealthPackage',
+    required: false
   },
   
   myDoctors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' }],

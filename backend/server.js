@@ -4,14 +4,14 @@ require('dotenv').config()
 const express= require("express")
 const mongoose=require('mongoose')
 const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient} = require("./controllers/patientController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,searchPatientsByUSername} = require("./controllers/patientController")
 const {createAdmin,getAdmin,getAdmins,deleteAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
 const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests}=require("./controllers/requestsController")
-const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage}=require("./controllers/HealthPackagesController")
+const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 
 
 //express app
@@ -80,6 +80,8 @@ app.get("/getDoctorAppointments/:id",getDoctorAppointments);
 app.get("/getPatientAppointments/:id",getPatientAppointments);
 app.get("/getPatient/:id",getPatient);
 app.get("/getDoc/:id",getDoctorbyId);
+app.get("/getPatientByUsername/:username",searchPatientsByUSername);
+app.get("/getPackage/:id",getHealthPackage);
 
 
 //app.put("/updateUser", updateUser);

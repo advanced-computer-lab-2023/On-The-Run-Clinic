@@ -71,8 +71,23 @@ const getPackages = async (req, res) => {
      res.status(400).json({ error: error.message });
    }
  };
+ const getHealthPackage = async (req, res) => {
+  const { id } =  req.params;
+
+  try {
+    const healthPackage = await HealthPackage.findById(id);
+
+    if (!healthPackage) {
+      return res.status(404).json({ message: 'Health package not found' });
+    }
+
+    res.status(200).json(healthPackage);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
  
  
 
   
-module.exports = {createHealthPackage, getPackages,updateHealthPackage,deleteHealthPackage};
+module.exports = {createHealthPackage, getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage};
