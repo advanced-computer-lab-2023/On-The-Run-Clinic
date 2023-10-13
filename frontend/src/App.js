@@ -13,7 +13,7 @@ import FamilyMembersList from './pages/viewMyFamilyMem';
 
 import MyPatients from './pages/MyPatients';
 import MyPrescription from './pages/viewMyPrescriptions';
-import DoctorListPage from './pages/viewDoctors';
+import Doctorz from './pages/ViewDoctorzz';
 import DeleteDoctorPage from './pages/DeleteDoctorPage';
 import AdminHealthPackages from './pages/AdminHealthPackages';
 import UpdateDoctorInfo from './pages/updateDoctor';
@@ -46,7 +46,7 @@ function App() {
           <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
           <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
           <Route path="/viewMyPrescription/:username" element={<MyPrescription/>}/>
-          <Route path="/viewDoctors" element={<DoctorListPage/>}/>
+          <Route path="/viewDoctors" element={<Doctorz/>}/>
 
           <Route path="/addAdmin" element={<AdminRegistrationForm/>}/>
           <Route path="/viewRequests" element={<ViewRequests/>}/>
