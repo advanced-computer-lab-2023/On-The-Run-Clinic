@@ -2,27 +2,66 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './Dashboard.css'; // Import your CSS file for styling
 
-
 const PatientDashboard = () => {
-    const { username } = useParams();
-    return (
-      <div>
-        <h1>Current ID: {username}</h1>
-        <Link to={`/viewFamilyMembers/${username}`}>View my family members</Link>
+  const { username } = useParams();
+
+  return (
+    <div className="admin-dashboard">
+      <h1>Patient's Dashboard</h1>
+      <ul className="admin-menu">
+        <li>
+          <Link to={`/viewFamilyMembers/${username}`} className="menu-link">
+            <i className="fas fa-users"></i>
+            View my family Members
+          </Link>
+        </li>
         
-        <Link to={`/addFamilyMember/${username}`}>Add family Member</Link>
-        <Link to={`/viewMyPrescription/${username}`}>View My Prescriptions</Link>
-        <Link to={`/filterAppointmentsPatient/${username}`}>View My Appointments</Link>
-        <Link to={`/viewDoctors/${username}`}>View List Of Doctors</Link>
-
-      </div>
-    );
-  };
-  
-
-  
-
+        <li>
+          <Link to={`/viewMyPrescription/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            view My prescriptions
+          </Link>
+        </li>
+        <li>
+          <Link to={`/viewDoctors/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+           view Doctors
+          </Link>
+        </li>
+        <li>
+          <Link to={`/addFamilyMember/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            add family member
+          </Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
 
 export default PatientDashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
