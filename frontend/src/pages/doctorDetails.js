@@ -67,4 +67,4 @@ const DoctorDetails = () => {
 export default DoctorDetails;
 
 
-/*this is a doctor page*/
+//  this is a doctor page

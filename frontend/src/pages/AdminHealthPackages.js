@@ -171,4 +171,4 @@ const AdminHealthPackages = () => {
 
 export default AdminHealthPackages;
 
-/*this is an admin page*/
+//  this is an admin page

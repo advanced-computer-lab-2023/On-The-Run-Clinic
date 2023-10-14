@@ -69,4 +69,4 @@ const ViewRequests = () => {
 
 export default ViewRequests;
 
-/*this is a doctor page*/
+//  this is a doctor page

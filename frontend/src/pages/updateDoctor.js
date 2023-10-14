@@ -77,4 +77,4 @@ const UpdateDoctorInfo = () => {
 export default UpdateDoctorInfo;
 
 
-/*this is a doctor page*/
+// this is a doctor page

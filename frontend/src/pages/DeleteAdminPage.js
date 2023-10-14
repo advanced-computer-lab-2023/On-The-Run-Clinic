@@ -75,4 +75,4 @@ const DeleteAdmin = () => {
 
 export default DeleteAdmin;
 
-/*this is an admin page*/
+//   this is an admin page

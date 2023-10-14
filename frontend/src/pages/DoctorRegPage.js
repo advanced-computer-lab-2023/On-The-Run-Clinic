@@ -171,4 +171,4 @@ const [isRequestPending, setIsRequestPending] = useState(false);
 
 export default DoctorRegistrationForm;
 
-/*this is a doctor page*/
+//  this is a doctor page

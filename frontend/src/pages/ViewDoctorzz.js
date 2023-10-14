@@ -171,4 +171,4 @@ const Doctorz = () => {
 export default Doctorz;
 
 
-/*this is a doctor page*/
+//  this is a doctor page

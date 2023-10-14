@@ -68,4 +68,4 @@ const handleSubmit = async (e) => {
 
 export default AdminRegistrationForm;
 
-/*this is an admin page*/
+//   this is an admin page
