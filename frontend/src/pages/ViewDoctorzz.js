@@ -156,7 +156,7 @@ const Doctorz = () => {
                 <strong>Name:</strong> <Link to={`/doctor-details/${m.username}`}> {m.name} </Link><br />
                 <strong>Speciality:</strong> {m.speciality}<br />
                 <strong>Username:</strong> {m.username}<br />
-                <strong>Price:</strong> {m.hourly_rate} - {discount} = {m.hourlyRate - discount}
+                <strong>Price:</strong> {m.hourly_rate} - {discount} = {m.hourly_rate - discount}
                
               </div>
               
