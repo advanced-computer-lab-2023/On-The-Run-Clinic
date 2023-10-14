@@ -68,3 +68,5 @@ const ViewRequests = () => {
 };
 
 export default ViewRequests;
+
+/*this is a doctor page*/

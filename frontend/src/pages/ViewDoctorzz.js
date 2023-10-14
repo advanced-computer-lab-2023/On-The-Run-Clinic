@@ -169,3 +169,6 @@ const Doctorz = () => {
 };
 
 export default Doctorz;
+
+
+/*this is a doctor page*/

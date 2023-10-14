@@ -74,3 +74,5 @@ const DeletePatient = () => {
 };
 
 export default DeletePatient;
+
+/*this is a patient page*/

@@ -65,3 +65,6 @@ const DoctorDetails = () => {
 };
 
 export default DoctorDetails;
+
+
+/*this is a doctor page*/

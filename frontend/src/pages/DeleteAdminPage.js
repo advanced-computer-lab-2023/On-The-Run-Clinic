@@ -74,3 +74,5 @@ const DeleteAdmin = () => {
 };
 
 export default DeleteAdmin;
+
+/*this is an admin page*/
