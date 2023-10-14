@@ -34,7 +34,7 @@ const MyPrescription = () => {
 
           if (filterDate) {
             filteredPrescriptions = filteredPrescriptions.filter(
-              (prescription) => prescription.date === filterDate
+              (prescription) => prescription.date.substring(0, 10)  === filterDate
             );
           }
 
