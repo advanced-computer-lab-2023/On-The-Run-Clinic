@@ -37,10 +37,10 @@ const createDoctor = async(req,res) => {
     // Save the new doctor to the database
     await newDoctor.save();
 
-    res.status(201).json({ message: 'Doctor registered successfully' });
+    res.status(201).json({ message: 'Doctor registered successfully.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'An error occurred while registering the doctor' });
+    res.status(500).json({ error: 'An error occurred while registering the doctor.' });
   }
 };
 const getDocPatients = async (req, res) => {
@@ -52,14 +52,14 @@ const getDocPatients = async (req, res) => {
    
 
     if (!doctor) {
-      return res.status(404).json({ message: 'Doctor not found' });
+      return res.status(404).json({ message: 'Doctor not found.' });
     }
 
     const patients = doctor[0].patients;
     res.status(200).json(patients);
   } catch (error) {
     console.error('Error fetching patients:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error.' });
   }
 };
 
@@ -75,16 +75,16 @@ const getDoctors=async(req,res) =>{
 // Delete Doctor Controller
 const deleteDoctor = async(req,res) => {
   try {
-    // Extract the doctor ID from the request parameters
+    // Extracts the doctor ID from the request parameters
     const { id } = req.params;
 
-    // Find the doctor by ID and delete them from the database
+    // Finds the doctor by ID and delete them from the database
     const deletedUser = await Doctor.findByIdAndDelete({ _id:id });
 
-    res.status(200).json({ message: 'Doctor deleted successfully' });
+    res.status(200).json({ message: 'Doctor deleted successfully.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'An error occurred while deleting the doctor' });
+    res.status(500).json({ error: 'An error occurred while deleting the doctor.' });
   }
 };
 const updateDoctor = async (req, res) => {
@@ -96,7 +96,7 @@ const updateDoctor = async (req, res) => {
     const doctor = await Doctor.findOne({ username });
 
     if (!doctor) {
-      return res.status(404).json({ message: 'Doctor not found' });
+      return res.status(404).json({ message: 'Doctor not found.' });
     }
 
     // Update the doctor's email, affiliation, or hourly rate if provided
@@ -115,7 +115,7 @@ const updateDoctor = async (req, res) => {
     // Save the updated doctor
     await doctor.save();
 
-    res.status(200).json({ message: 'Doctor information updated successfully' });
+    res.status(200).json({ message: 'Doctor information updated successfully.' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -128,7 +128,7 @@ const updateDoctor = async (req, res) => {
     const doctor = await Doctor.findOne({ username:username });
 
     if (!doctor) {
-      return res.status(404).json({ message: 'Doctor not found' });
+      return res.status(404).json({ message: 'Doctor not found.' });
     }
 
     res.status(200).json(doctor);
@@ -175,7 +175,7 @@ const updateDoctor = async (req, res) => {
 }
 const getDoctorbyId=async(req,res)=>{
   try {
-    // Get the patient ID from the URL parameters
+    // Gets the patient ID from the URL parameters
     const { id } = req.params;
 
     // Fetch the patient from the database using the ID
