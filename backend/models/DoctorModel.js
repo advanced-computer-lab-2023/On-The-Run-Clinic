@@ -42,7 +42,11 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Patient' }]
+  patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Patient' }],
+  wallet:{
+    default:0,
+    type:Number
+  }
 });
 
 // Hash the password before saving to the database

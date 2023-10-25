@@ -1,12 +1,32 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './Dashboard.css'; // Import your CSS file for styling
+import axios from 'axios';
+
 
 const DoctorDashboard = () => {
   const { username } = useParams();
+  const [doctor,setDoctor]=useState('')
+  useEffect(() => {
+    // Fetch available health packages from the backend when the component mounts
+    async function fetchWallet() {
+      try {
+        const response = await axios.get(`http://localhost:4000/getdoctor/${username}`);
+        if (response.status === 200) {
+          setDoctor(response.data);
+          
+        }
+      } catch (error) {
+        console.error('Error fetching health packages:', error);
+      }
+    }
+    fetchWallet();
+  }, []);
 
   return (
     <div className="admin-dashboard">
+      <strong>Wallet:</strong> {doctor.wallet}
       <h1>Doctor's Dashboard</h1>
       <ul className="admin-menu">
         <li>
@@ -28,6 +48,7 @@ const DoctorDashboard = () => {
             My appointments
           </Link>
         </li>
+        
       </ul>
     </div>
   );

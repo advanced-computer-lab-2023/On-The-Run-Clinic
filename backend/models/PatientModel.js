@@ -35,6 +35,7 @@ const PatientSchema = new mongoose.Schema({
   mobileNumber: {
     type: String,
     required: true,
+    unique: true,
   },
   emergencyContact: {
     fullName: {
@@ -61,6 +62,25 @@ const PatientSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Prescription',
   }],
+  linkedPatients:[{
+    linkedPatientId:{
+      type: mongoose.Schema.Types.ObjectId, ref: 'Patient'
+    },
+    linkedPatientRelation:{
+    
+        type: String,
+        enum: ['Husband', 'Wife',"Child"],
+        required: true,
+    
+    },
+    linkedPatientName:{
+      type: String,
+    },wallet:{
+      default:0,
+      type:Number
+    }
+
+  }]
  
 });
 

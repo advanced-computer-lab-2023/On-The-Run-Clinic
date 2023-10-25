@@ -2,15 +2,11 @@
 const express = require('express');
 
 const Admin= require('../models/AdmiModel'); // Import your Admin model
+const Doctor = require('../models/DoctorModel'); // Import your Doctor model
+const Patient = require('../models/PatientModel');
 
-/*const getAdmins=async(req,res) =>{
-  const users =await Admin.find({}).sort({createdAt:-1});
-      for(let index=0;index<users.length;index++){
-         const element = users[index];
-         console.log(element.id);
-      }
-      res.status(200).json(users)
-}*/
+
+
 // Register Doctor Controller
 const createAdmin = async(req,res) => {
   try {
@@ -18,7 +14,13 @@ const createAdmin = async(req,res) => {
     const {
       username,
       password
-     } =req.body
+     } =req.body;
+     const existingDoctor = await Doctor.findOne({ username });
+    const existingPatient = await Patient.findOne({ username });
+    const existingAdmin= await Admin.findOne({ username });
+    if (existingDoctor||existingPatient||existingAdmin) {
+      return res.status(400).json({ error: 'Username already exists.' });
+    }
     const newAdmin = new Admin({
         username,
         password // Hash the password before saving (use a library like bcrypt)

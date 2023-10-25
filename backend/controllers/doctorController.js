@@ -3,6 +3,7 @@ const express = require('express');
 
 const Doctor = require('../models/DoctorModel'); // Import your Doctor model
 const Patient = require('../models/PatientModel');
+const Admin = require('../models/AdmiModel');
 
 // Register Doctor Controller
 const createDoctor = async(req,res) => {
@@ -19,6 +20,12 @@ const createDoctor = async(req,res) => {
       speciality,
       educational_background
     } = req.body;
+    const existingDoctor = await Doctor.findOne({ username });
+    const existingPatient = await Patient.findOne({ username });
+    const existingAdmin= await Admin.findOne({ username });
+    if (existingDoctor||existingPatient||existingAdmin) {
+      return res.status(400).json({ error: 'Username already exists.' });
+    }
 
     // Create a new doctor record
     const newDoctor = new Doctor({

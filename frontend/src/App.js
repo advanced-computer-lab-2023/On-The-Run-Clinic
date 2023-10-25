@@ -25,6 +25,8 @@ import DeletePatient from './pages/DeletePatientPAge';
 import PatientDetails from './components/PatientDetails';
 import FilterAppointmentsPatient from './pages/FilterAppointmentsPatient';
 import DoctorDetails from './pages/doctorDetails';
+import LinkPatientPage from './pages/linkPatient';
+import HealthPackageSubscriptionPage from './pages/SelectHealthPackages';
 
 
 
@@ -38,10 +40,14 @@ function App() {
         <Navbar/>
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
+          <Route path="/subHealthPackages" element={<HealthPackageSubscriptionPage/>}/>
+
           
           <Route path="/dashboard/admin" element={<AdminDashboard/>}/>
           <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>
+          <Route path="/linkFamilyMember/:username" element={<LinkPatientPage/>}/>
+
 
           <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
           <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
