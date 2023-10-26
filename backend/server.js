@@ -3,8 +3,10 @@ require('dotenv').config()
 
 const express= require("express")
 const mongoose=require('mongoose')
+const Patient = require('./models/PatientModel');
+
 const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers} = require("./controllers/patientController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory} = require("./controllers/patientController")
 const {createAdmin,getAdmin,getAdmins,deleteAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
@@ -13,6 +15,7 @@ const{createPrescription,getPrescriptionsForPatient}=require("./controllers/pers
 const{createRequest, getOneRequest,getRequests}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 
+const multer=require("multer");
 
 //express app
 const app = express()
@@ -29,7 +32,49 @@ app.use((req,res,next)=>{
     console.log(req.path,req.method)
     next()
 })
-//routes
+const storage=multer.diskStorage({
+    destination:function(req,file,cb){
+        return cb(null,'./controllers/uploads')
+},
+filename:function(req,file,cb){
+    return cb(null,Date.now()+file.originalname)
+}
+}) 
+const upload=multer({storage:storage})
+app.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+      // Find the patient by their username
+      const patient = await Patient.findOne({ username: req.body.username });
+      console.log(patient);
+  
+      if (!patient) {
+        console.error('Patient not found.');
+        return res.status(404).json({ message: 'Patient not found.' });
+      }
+  
+      // Check if a file was successfully uploaded
+      if (!req.file) {
+        console.error('No file uploaded.');
+        return res.status(400).json({ message: 'No file uploaded.' });
+      }
+  
+      // Update the patient's medicalHistory field with the file data
+      patient.medicalHistory.push({
+        filename: req.file.originalname,  // Use 'originalname' to get the original file name
+        path: req.file.path,             // Use 'path' to get the path to the uploaded file
+        mimetype: req.file.mimetype
+      });
+  
+      // Save the updated patient model to the database
+      await patient.save();
+  
+      res.status(200).json({ message: 'File uploaded successfully' });
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
 
 
 //connect to DB
@@ -84,6 +129,9 @@ app.get("/getPatientByUsername/:username",searchPatientsByUSername);
 app.get("/getPackage/:id",getHealthPackage);
 app.get("/getLinkedFamilyMembers/:username",getLinkedFamilyMembers);
 app.post("/linkMember",linkMemberByEmail);
+//app.post("/upload",uploadFile);
+app.get("/getMedicalHistory/:username",getMedicalHistory);
+app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
 
 
 //app.put("/updateUser", updateUser);

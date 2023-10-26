@@ -75,12 +75,18 @@ const PatientSchema = new mongoose.Schema({
     },
     linkedPatientName:{
       type: String,
-    },wallet:{
-      default:0,
-      type:Number
     }
-
   }]
+  ,wallet:{
+    default:0,
+    type:Number
+  },medicalHistory: [{
+    filename: String,
+    path: String,
+    mimetype: String,
+    data: Buffer
+  }]
+
  
 });
 

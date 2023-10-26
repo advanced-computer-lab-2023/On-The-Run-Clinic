@@ -57,6 +57,12 @@ const PatientDashboard = () => {
             Link family member
           </Link>
         </li>
+        <li>
+          <Link to={`/deleteMedicalHistory/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            Manage Medical History
+          </Link>
+        </li>
       </ul>
     </div>
   );

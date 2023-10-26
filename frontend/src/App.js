@@ -28,6 +28,8 @@ import DoctorDetails from './pages/doctorDetails';
 import LinkPatientPage from './pages/linkPatient';
 import HealthPackageSubscriptionPage from './pages/SelectHealthPackages';
 
+import MedicalHistoryList from './pages/deleteMedicalHistory';
+
 
 
 // Import your components
@@ -41,8 +43,11 @@ function App() {
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
           <Route path="/subHealthPackages" element={<HealthPackageSubscriptionPage/>}/>
+          <Route path="/deleteMedicalHistory/:username" element={<MedicalHistoryList/>}/>
 
           
+
+          <Route path="/uploadHistory/:username" element={<ManageMedicalHistory/>}/>
           <Route path="/dashboard/admin" element={<AdminDashboard/>}/>
           <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>

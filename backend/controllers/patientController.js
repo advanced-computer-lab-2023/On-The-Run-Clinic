@@ -4,8 +4,13 @@ const { default: mongoose } = require('mongoose');
 const Doctor = require('../models/DoctorModel'); // Import your Doctor model
 const Patient = require('../models/PatientModel');
 const Admin = require('../models/AdmiModel');
+
 const jwt = require('jsonwebtoken');
 const HealthPackage = require('../models/HealthPackages');
+const multer = require('multer');
+const path = require('path');
+
+
 const createToken=(_id)=>{
   jwt.sign({_id:_id},process.env.SECRET,{expiresIn:'3d'})
 }
@@ -217,11 +222,6 @@ const linkMemberByEmail=async(req,res)=>{
       await patient.save();
     }
     
-    
-
-    
-
-
     res.status(200).json(patient);
   } catch (error) {
     console.error('Error searching for patients by name:', error);
@@ -245,5 +245,52 @@ const getLinkedFamilyMembers = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching linked family members.' });
   }
 };
+const getMedicalHistory= async (req, res) => {
+  const { username } = req.params;
 
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers}
+  try {
+    const patient = await Patient.findOne({ username });
+    if (!patient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    const medicalHistory = patient.medicalHistory.map(record => ({
+      filename: record.filename,
+      path: record.path,
+      mimetype: record.mimetype
+    }));
+
+    res.status(200).json(medicalHistory);
+  } catch (error) {
+    console.error('Error fetching medical history:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+const deleteMedicalHistory= async (req, res) => {
+  const { username, filename } = req.params;
+
+  try {
+    const patient = await Patient.findOne({ username });
+    if (!patient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    const recordIndex = patient.medicalHistory.findIndex(record => record.filename === filename);
+    if (recordIndex === -1) {
+      return res.status(404).json({ error: 'Medical record not found' });
+    }
+
+    const record = patient.medicalHistory[recordIndex];
+    patient.medicalHistory.splice(recordIndex, 1);
+    await patient.save();
+
+    res.status(200).json(record);
+  } catch (error) {
+    console.error('Error deleting medical record:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+
+}
+
+
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory}
