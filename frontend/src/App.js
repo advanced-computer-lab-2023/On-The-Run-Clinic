@@ -42,12 +42,12 @@ function App() {
         <Navbar/>
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
-          <Route path="/subHealthPackages" element={<HealthPackageSubscriptionPage/>}/>
+          <Route path="/subHealthPackages/:username" element={<HealthPackageSubscriptionPage/>}/>
           <Route path="/deleteMedicalHistory/:username" element={<MedicalHistoryList/>}/>
 
           
 
-          <Route path="/uploadHistory/:username" element={<ManageMedicalHistory/>}/>
+        
           <Route path="/dashboard/admin" element={<AdminDashboard/>}/>
           <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>

@@ -63,6 +63,12 @@ const PatientDashboard = () => {
             Manage Medical History
           </Link>
         </li>
+        <li>
+          <Link to={`/subHealthPackages/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            Subscribe to Health Packages
+          </Link>
+        </li>
       </ul>
     </div>
   );

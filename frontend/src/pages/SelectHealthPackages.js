@@ -3,13 +3,18 @@ import axios from 'axios';
 import { Elements } from '@stripe/react-stripe-js';
 import PaymentForm from '../components/Stripe';
 import { loadStripe } from '@stripe/stripe-js';
+
+import { useParams,useNavigate } from 'react-router-dom';
 const stripePromise = loadStripe('your-publishable-key');
 
 function HealthPackageSubscriptionPage() {
+  const { username } = useParams();
+  const [patient,setPatient]=useState('')
   const [healthPackages, setHealthPackages] = useState([]);
   const [formData, setFormData] = useState({
     selectedPackage: '', // Store the selected package ID
     paymentMethod: 'creditCard',
+    username:username,
   });
   const [selectedPackageInfo, setSelectedPackageInfo] = useState(null); // Store the selected package details
 
@@ -20,23 +25,31 @@ function HealthPackageSubscriptionPage() {
         const response = await axios.get('http://localhost:4000/getPackages');
         if (response.status === 200) {
           setHealthPackages(response.data);
-          if (response.data.length > 0) {
-            // Set the selected package to the first one by default
-            setFormData({ ...formData, selectedPackage: response.data[0]._id });
-            setSelectedPackageInfo(response.data[0]);
-          }
         }
       } catch (error) {
         console.error('Error fetching health packages:', error);
       }
     }
+    async function fetchWallet() {
+      try {
+        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+        if (response.status === 200) {
+          setPatient(response.data);
+          console.log("patient:",patient);
+          
+        }
+      } catch (error) {
+        console.error('Error fetching health packages:', error);
+      }
+    }
+    fetchWallet();
     fetchHealthPackages();
   }, []);
 
   const handleSelectPackage = (selectedPackageId) => {
-    const selectedPackage = healthPackages.find((pkg) => pkg.id === selectedPackageId);
+    const selectedPackage = healthPackages.find((pkg) => pkg._id === selectedPackageId);
     if (selectedPackage) {
-      setFormData({ ...formData, selectedPackage: selectedPackage.id });
+      setFormData({ ...formData, selectedPackage: selectedPackage._id });
       setSelectedPackageInfo(selectedPackage);
     }
   };
@@ -51,41 +64,52 @@ function HealthPackageSubscriptionPage() {
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
-  
-    if (formData.paymentMethod === 'wallet') {
-      try {
-        const response = await axios.post('http://localhost:4000/payByWallet', formData);
-        if (response.status === 200) {
-          alert('Payment successful.');
-          // You can navigate to the dashboard or another page
+    if(formData.selectedPackage===''){
+      alert('Please select a package');}
+      else{
+        try {
+          const response = await axios.post('http://localhost:4000/payPackage', formData);
+          const response1 = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+        if (response1.status === 200) {
+          setPatient(response1.data);
+          console.log("patient:",patient);
+          
         }
-      } catch (error) {
-        console.error('Error processing wallet payment:', error);
-        alert('An error occurred while processing the payment.');
+          if (response.status === 200) {
+            alert('Payment successful.');
+            // You can navigate to the dashboard or another page
+          }
+
+        } catch (error) {
+          console.error('Error processing wallet payment:', error);
+          alert('An error occurred while processing the payment.');
+        } 
       }
-    }
+  
+      
+    
   };
+  
 
   return (
     <div>
+
       <h1>Health Package Subscription</h1>
+      <strong>Wallet:</strong> {patient.wallet}
+    
       <div>
         <h2>Select a Health Package:</h2>
         <ul>
           {healthPackages.map((packagee) => (
-            <li key={packagee.id}>
+            <li key={packagee._id}>
               <button
-                onClick={() => handleSelectPackage(packagee.id)}
-                style={{
-                  backgroundColor:
-                    formData.selectedPackage === packagee.id ? 'lightblue' : 'white',
-                }}
+                onClick={() => handleSelectPackage(packagee._id)}
+                
               >
                 <strong>{packagee.name}</strong>
                 <br />
-                Cost: ${packagee.cost}
+                Cost: ${packagee.price}
                 <br />
-                Description: {packagee.description}
               </button>
             </li>
           ))}
@@ -98,10 +122,13 @@ function HealthPackageSubscriptionPage() {
             <strong>Name:</strong> {selectedPackageInfo.name}
           </p>
           <p>
-            <strong>Cost:</strong> ${selectedPackageInfo.cost}
+            <strong>Cost:</strong> ${selectedPackageInfo.price}
           </p>
           <p>
-            <strong>Description:</strong> {selectedPackageInfo.description}
+            <strong>Services:</strong> {selectedPackageInfo.services}
+          </p>
+          <p>
+            <strong>Discount:</strong> {selectedPackageInfo.discount}
           </p>
         </div>
       )}

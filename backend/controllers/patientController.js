@@ -291,6 +291,37 @@ const deleteMedicalHistory= async (req, res) => {
   }
 
 }
+const payByPackage = async (req, res) => {
+  try {
+    const { username, paymentMethod, selectedPackage } = req.body;
+    const packagee = await HealthPackage.findById(selectedPackage);
+    const patient = await Patient.findOne({ username: username });
+    const myfamily=patient.linkedPatients;
+    if(paymentMethod==='wallet'){
+      if (packagee.price > patient.wallet) {
+        return res.status(400).json({ error: 'Not enough money in wallet' });
+      }else{
+        patient.wallet = patient.wallet - packagee.price;
+
+      }
+
+    }
+    patient.healthpackage = packagee;
+      for (let i = 0; i < myfamily.length; i++) {
+        const familyMember = myfamily[i];
+        const familyMemberObject = await Patient.findById(familyMember.linkedPatientId);
+        familyMemberObject.healthpackage = packagee;
+        await familyMemberObject.save();
+        // Do something with the family member object
+      }
+
+      await patient.save();
+      res.status(200).json({ message: 'Payment successful' });
+  } catch (error) {
+    console.error('Error making wallet payment:', error);
+    res.status(500).json({ error: 'Error making wallet payment' });
+  }
+};
 
 
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory}
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage}

@@ -6,7 +6,7 @@ const mongoose=require('mongoose')
 const Patient = require('./models/PatientModel');
 
 const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory} = require("./controllers/patientController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage} = require("./controllers/patientController")
 const {createAdmin,getAdmin,getAdmins,deleteAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
@@ -125,10 +125,11 @@ app.get("/getDoctorAppointments/:id",getDoctorAppointments);
 app.get("/getPatientAppointments/:id",getPatientAppointments);
 app.get("/getPatient/:id",getPatient);
 app.get("/getDoc/:id",getDoctorbyId);
-app.get("/getPatientByUsername/:username",searchPatientsByUSername);
+app.get("/getPatientByUsername/:username",searchPatientsByUserame);
 app.get("/getPackage/:id",getHealthPackage);
 app.get("/getLinkedFamilyMembers/:username",getLinkedFamilyMembers);
 app.post("/linkMember",linkMemberByEmail);
+app.post("/payPackage",payByPackage);
 //app.post("/upload",uploadFile);
 app.get("/getMedicalHistory/:username",getMedicalHistory);
 app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);

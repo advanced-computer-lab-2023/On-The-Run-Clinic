@@ -10,6 +10,10 @@ const PatientSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  wallet:{
+    default:0,
+    type:Number
+  },
   name: {
     type: String,
     required: true,
@@ -77,10 +81,7 @@ const PatientSchema = new mongoose.Schema({
       type: String,
     }
   }]
-  ,wallet:{
-    default:0,
-    type:Number
-  },medicalHistory: [{
+  ,medicalHistory: [{
     filename: String,
     path: String,
     mimetype: String,

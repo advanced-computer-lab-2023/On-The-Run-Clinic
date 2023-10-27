@@ -1,45 +1,84 @@
-import React, { useEffect } from 'react';
-import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+import React, { useState } from 'react';
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import './Stripe.css';
+import axios from 'axios';
 
-function PaymentForm() {
-  const stripe = useStripe();
-  const elements = useElements();
 
-  useEffect(() => {
-    // Perform any initialization or setup here.
-  }, []);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    // Handle form submission (not necessary for your use case).
-    // You can display a success message or alert here.
-
-    // Clear the form.
-    elements.getElement(CardElement).clear();
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="payment-form">
-      <label className="form-group">
-        Card Details:
-        <CardElement
-          options={{
-            style: {
-              base: {
-                fontSize: '16px', // Adjust the font size
-              },
-            },
-          }}
-          className="card-element"
-        />
-      </label>
-      <button type="submit" className="submit-button">
-        Pay
-      </button>
-    </form>
-  );
+const CARD_OPTIONS = {
+	iconStyle: "solid",
+	style: {
+		base: {
+			iconColor: "#c4f0ff",
+			color: "#fff",
+			fontWeight: 500,
+			fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
+			fontSize: "16px",
+			fontSmoothing: "antialiased",
+			":-webkit-autofill": { color: "#fce883" },
+			"::placeholder": { color: "#87bbfd" }
+		},
+		invalid: {
+			iconColor: "#ffc7ee",
+			color: "#ffc7ee"
+		}
+	}
 }
 
-export default PaymentForm;
+
+
+
+
+
+
+
+
+
+
+export default function PaymentForm() {
+  const [success,setSuccess]=useState(false);
+  const stripe = useStripe();
+  const elements = useElements();
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    const {error,paymentMethod}=await stripe.createPaymentMethod({
+      type:'card',
+      card:elements.getElement(CardElement)})
+  
+  if(!error){
+    try{
+      const {id}=paymentMethod;
+      const response=await axios.post('http://localhost:4000/subscribe',{
+        amount:1000,
+        id
+      })
+      if (response.data.success){
+        console.log('Successful payment')
+        setSuccess(true)
+      }
+
+    }catch{
+      console.log('Error',error)
+
+    }
+  }else{
+    console.log(error.message)
+  }
+}
+  return(
+    <>
+    {!success?
+    <form onSubmit={handleSubmit}>
+      <fieldset className="FormGroup">
+        <div className="FormRow">
+          <CardElement options={CARD_OPTIONS} />
+        </div>
+      </fieldset>
+     
+      </form>
+    : <div>
+      <h2>Payment Successful</h2>
+    </div>
+    }
+    </>
+  )
+  }
