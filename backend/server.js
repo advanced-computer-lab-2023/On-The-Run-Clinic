@@ -5,8 +5,8 @@ const express= require("express")
 const mongoose=require('mongoose')
 const Patient = require('./models/PatientModel');
 
-const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage} = require("./controllers/patientController")
+const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor} = require("./controllers/doctorController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient} = require("./controllers/patientController")
 const {createAdmin,getAdmin,getAdmins,deleteAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
@@ -14,7 +14,7 @@ const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatie
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
-
+const{loginUser}=require("./controllers/userController")
 const multer=require("multer");
 
 //express app
@@ -130,9 +130,11 @@ app.get("/getPackage/:id",getHealthPackage);
 app.get("/getLinkedFamilyMembers/:username",getLinkedFamilyMembers);
 app.post("/linkMember",linkMemberByEmail);
 app.post("/payPackage",payByPackage);
-//app.post("/upload",uploadFile);
+app.post("/updatePassPatient",updatePasswordPatient);
+app.post("/updatePassDoctor",updatePasswordDoctor);
 app.get("/getMedicalHistory/:username",getMedicalHistory);
 app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
+app.post("/login",loginUser);
 
 
 //app.put("/updateUser", updateUser);

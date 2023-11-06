@@ -69,6 +69,12 @@ const PatientDashboard = () => {
             Subscribe to Health Packages
           </Link>
         </li>
+        <li>
+          <Link to={`/changePatientPassword/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            change my password
+          </Link>
+        </li>
       </ul>
     </div>
   );

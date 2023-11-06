@@ -19,6 +19,11 @@ const UserSelection = () => {
                 <Link to="/dashboard/admin" className="btn btn-success btn-lg btn-block">
                  Admin Login
                 </Link>
+
+
+                <Link to="/login" className="btn btn-success btn-lg btn-block">
+                 Login
+                </Link>
               </div>
             </div>
           </div>

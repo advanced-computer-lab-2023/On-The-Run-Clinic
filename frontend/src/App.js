@@ -27,9 +27,10 @@ import FilterAppointmentsPatient from './pages/FilterAppointmentsPatient';
 import DoctorDetails from './pages/doctorDetails';
 import LinkPatientPage from './pages/linkPatient';
 import HealthPackageSubscriptionPage from './pages/SelectHealthPackages';
-
+import ChangePatientPass from './pages/changePatientPass';
 import MedicalHistoryList from './pages/deleteMedicalHistory';
-
+import ChangeDoctortPass from './pages/changeDoctorPass';
+import Login from './pages/login';
 
 
 // Import your components
@@ -42,8 +43,11 @@ function App() {
         <Navbar/>
         <Routes>
           <Route path="/" element={<UserSelection/>}/>
+          <Route path="/changePatientPassword/:username" element={<ChangePatientPass/>}/>
+          <Route path="/changeDoctorPassword/:username" element={<ChangeDoctortPass/>}/>
           <Route path="/subHealthPackages/:username" element={<HealthPackageSubscriptionPage/>}/>
           <Route path="/deleteMedicalHistory/:username" element={<MedicalHistoryList/>}/>
+          <Route path="/login" element={<Login/>}/>
 
           
 

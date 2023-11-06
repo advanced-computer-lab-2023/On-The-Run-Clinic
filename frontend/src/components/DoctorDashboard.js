@@ -48,6 +48,12 @@ const DoctorDashboard = () => {
             My appointments
           </Link>
         </li>
+        <li>
+          <Link to={`/changeDoctorPassword/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            Change my password
+          </Link>
+        </li>
         
       </ul>
     </div>

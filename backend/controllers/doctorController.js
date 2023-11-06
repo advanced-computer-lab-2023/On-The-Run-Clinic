@@ -201,9 +201,36 @@ const getDoctorbyId=async(req,res)=>{
     res.status(500).json({ message: 'Internal Server Error' });
   }
 }
+const updatePasswordDoctor = async (req, res) => {
+  try {
+    const { username, currentPassword, newPassword } = req.body;
+    const dr = await Doctor.findOne({ username });
+
+    if (!dr) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, dr.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid current password' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    dr.password = hashedPassword;
+    await dr.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).json({ message: 'Error updating password' });
+  }
+};
  
 
 
 // Implement other controllers (e.g., update profile, view profile, list patients, etc.) following a similar structure
 
-module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId}
+module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor}
