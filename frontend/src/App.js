@@ -1,6 +1,7 @@
 
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes,Navigate} from 'react-router-dom';
 import Navbar from './components/Navbar';
+import { useAuthContext } from './hooks/useAuthContext';
 
 import DoctorRegistrationForm  from './pages/DoctorRegPage';
 import DoctorDashboard from './components/DoctorDashboard';
@@ -37,6 +38,7 @@ import Login from './pages/login';
 
 
 function App() {
+  const { user } = useAuthContext()
   return (
     <Router>
       <div className="App">
@@ -72,7 +74,7 @@ function App() {
           <Route path="/deletePatient" element={<DeletePatient/>} />
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-          <Route path="/dashboard/patient/:username" element={<PatientDashboard/>} />
+          <Route path="/dashboard/patient/:username" element={user&& user.role === 'patient' ? <Home /> : <Navigate to="/login" />}  />
           <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
           <Route path="/filterAppointments/:username" element={<FilterAppointments/>} />
