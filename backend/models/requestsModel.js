@@ -32,7 +32,12 @@ const requestSchema = new mongoose.Schema({
   educational_background: {
     type: String,
     required: true, // Set to true if educational background is required
-  }
+  },
+  reqDocs: {
+    type: Buffer,
+    required: false, // Set to true if reqDocs is required
+  },
+  
 });
 
 const Request = mongoose.model('Request', requestSchema);

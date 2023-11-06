@@ -12,6 +12,7 @@ const[date_of_birth,setDateOfBirth]=useState('')
 const[hourly_rate,setHourlyRate]=useState('')
 const[affiliation,setAffiliation]=useState('')
 const[educational_background,setEducational_background]=useState('')
+const [reqDocs, setReqDocs] = useState([]); // New state variable for the file
 
 const[error,setError]=useState(null)
 const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
@@ -22,7 +23,7 @@ const [isRequestPending, setIsRequestPending] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
           
-          const dr={username,name,email,password,date_of_birth,hourly_rate,affiliation,educational_background}
+          const dr={username,name,email,password,date_of_birth,hourly_rate,affiliation,educational_background,reqDocs}
     try{const response = await axios.post('http://localhost:4000/createRequest', dr);
     
     if (response.status === 201) {
@@ -35,6 +36,7 @@ const [isRequestPending, setIsRequestPending] = useState(false);
       setHourlyRate('')
       setAffiliation('')
       setEducational_background('')
+      setReqDocs([])
      
       setIsDoctorRegistered(true); // Set registration success
       setIsRequestPending(true); // Set request as pending
@@ -158,7 +160,10 @@ const [isRequestPending, setIsRequestPending] = useState(false);
                 }}
                 required
               />
-            </div>     
+            </div>    
+            <div >
+            <input type="file" multiple onChange={e => setReqDocs(Array.from(e.target.files))} />
+            </div>
            
             
             <button type="submit">Register as Doctor</button>
