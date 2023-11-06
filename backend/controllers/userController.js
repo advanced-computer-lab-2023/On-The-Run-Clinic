@@ -39,14 +39,14 @@ const loginUser = async (req, res) => {
     }
 
     // Create and sign JWT
-    const payload = { user: { id: user._id,role: role } };
+    const payload = { username: user.username, role: role };
     jwt.sign(
       payload,
       "bV5uN2x1ZjM5cDR0YzJWeU9uTjJZaTV0YjI5bmJHVjJaUzF3Y205a2N5",
       { expiresIn: '1h' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token,role,email });
+        res.json({ token,role,email,username });
       }
     );
   } catch (err) {

@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link,useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../hooks/useAuthContext'
 import './Dashboard.css'; // Import your CSS file for styling
 import axios from 'axios';
 const PatientDashboard = () => {
   const { username } = useParams();
   const [doctor,setDoctor]=useState('')
+  const { user } = useAuthContext()
+  const navigate = useNavigate();
   useEffect(() => {
     // Fetch available health packages from the backend when the component mounts
+    if (username !== user.username) {
+      navigate('/unauthorized');
+    }
+    if ( user.role!="patient") {
+      navigate('/unauthorized');
+    }
     async function fetchWallet() {
       try {
         const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);

@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Route, Routes,Navigate} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes,Navigate,useParams} from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { useAuthContext } from './hooks/useAuthContext';
 
@@ -39,6 +39,9 @@ import Login from './pages/login';
 
 function App() {
   const { user } = useAuthContext()
+
+  
+  console.log("inApp:",user);
   return (
     <Router>
       <div className="App">
@@ -74,7 +77,7 @@ function App() {
           <Route path="/deletePatient" element={<DeletePatient/>} />
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-          <Route path="/dashboard/patient/:username" element={user&& user.role === 'patient' ? <Home /> : <Navigate to="/login" />}  />
+          <Route path="/dashboard/patient/:username" element={ user?<PatientDashboard />:<Login/> }  />
           <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
           <Route path="/filterAppointments/:username" element={<FilterAppointments/>} />
