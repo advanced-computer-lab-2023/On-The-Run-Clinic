@@ -39,7 +39,7 @@ export const useLogin = () => {
 
       }
        else {
-        navigate('/dashboard/admin');
+        navigate(`/dashboard/admin/${username}`);
       }
 
       // update loading state

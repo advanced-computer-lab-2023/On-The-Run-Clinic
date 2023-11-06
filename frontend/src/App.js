@@ -47,7 +47,7 @@ function App() {
       <div className="App">
         <Navbar/>
         <Routes>
-          <Route path="/" element={<UserSelection/>}/>
+          <Route path="/" element={<Login/>}/>
           <Route path="/changePatientPassword/:username" element={<ChangePatientPass/>}/>
           <Route path="/changeDoctorPassword/:username" element={<ChangeDoctortPass/>}/>
           <Route path="/subHealthPackages/:username" element={<HealthPackageSubscriptionPage/>}/>
@@ -57,7 +57,7 @@ function App() {
           
 
         
-          <Route path="/dashboard/admin" element={<AdminDashboard/>}/>
+          <Route path="/dashboard/admin/:username" element={<AdminDashboard/>}/>
           <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>
           <Route path="/linkFamilyMember/:username" element={<LinkPatientPage/>}/>
