@@ -73,11 +73,12 @@ function App() {
           <Route path="/addAdmin" element={<AdminRegistrationForm/>}/>
           <Route path="/viewRequests" element={<ViewRequests/>}/>
           
-         <Route path="/getDoctors" element={<getDoctors/>}/>
+          <Route path="/getDoctors" element={<getDoctors/>}/>
           <Route path="/deleteDoctor" element={<DeleteDoctorPage/>} />
           <Route path="/deleteAdmin" element={<DeleteAdmin/>} />
           <Route path="/deletePatient" element={<DeletePatient/>} />
-          <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />          <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
+          <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />         
+          <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
           <Route path="/dashboard/patient/:username" element={user&& user.role === 'patient' ? <PatientDashboard /> : <Navigate to="/login" />}  />
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />

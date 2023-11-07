@@ -137,15 +137,12 @@ app.post("/updatePassPatient",updatePasswordPatient);
 app.get("/getMedicalHistory/:username",getMedicalHistory);
 app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
 app.post("/login",loginUser);
-<<<<<<< HEAD
 app.put("/rejectRequest/:id",rejectrequest);
 app.post("/acceptRequest/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createDoctor1)
 app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:description",createAppointment1);
 app.get("/getDoctorByUsername/:username",getDoctorByUsername);
-=======
 app.post("/forgetPassword",forgetPassword);
 app.post("/resetPassword",resetPassword);
 
->>>>>>> cd5b690d566c237f27a00284158f65bbd206fff2
-//app.put("/updateUser", updateUser);
+
 
