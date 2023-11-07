@@ -36,7 +36,12 @@ const requestSchema = new mongoose.Schema({
   status1: {
     type: String,
     required: false,
+  },
+  reqDocs: {
+    type: Buffer,
+    required: false, // Set to true if reqDocs is required
   }
+  
 });
 
 const Request = mongoose.model('Request', requestSchema);

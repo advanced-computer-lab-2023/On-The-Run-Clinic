@@ -1,16 +1,17 @@
 import { useState } from "react"
 import { useLogin } from "../hooks/useLogin"
+import { useAuthContext } from '../hooks/useAuthContext'
 
 const Login = () => {
-  const [username, setUsername] = useState('')
+  const { user } = useAuthContext()
+  const [usernamee, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const {login, error, isLoading} = useLogin()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    console.log(username, password)
-    await login(username, password);
+    await login(usernamee, password);
   }
 
   return (
@@ -19,9 +20,9 @@ const Login = () => {
       
       <label>Username:</label>
       <input 
-        type="username" 
+        type="usernamee" 
         onChange={(e) => setUsername(e.target.value)} 
-        value={username} 
+        value={usernamee} 
       />
       <label>Password:</label>
       <input 

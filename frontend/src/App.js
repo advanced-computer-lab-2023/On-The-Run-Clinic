@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Route, Routes,Navigate} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes,Navigate,useParams} from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { useAuthContext } from './hooks/useAuthContext';
 
@@ -41,12 +41,15 @@ import Login from './pages/login';
 
 function App() {
   const { user } = useAuthContext()
+
+  
+  console.log("inApp:",user);
   return (
     <Router>
       <div className="App">
         <Navbar/>
         <Routes>
-          <Route path="/" element={<UserSelection/>}/>
+          <Route path="/" element={<Login/>}/>
           <Route path="/changePatientPassword/:username" element={<ChangePatientPass/>}/>
           <Route path="/changeDoctorPassword/:username" element={<ChangeDoctortPass/>}/>
           <Route path="/subHealthPackages/:username" element={<HealthPackageSubscriptionPage/>}/>
@@ -56,7 +59,7 @@ function App() {
           
 
         
-          <Route path="/dashboard/admin" element={<AdminDashboard/>}/>
+          <Route path="/dashboard/admin/:username" element={<AdminDashboard/>}/>
           <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>
           <Route path="/linkFamilyMember/:username" element={<LinkPatientPage/>}/>
@@ -76,6 +79,9 @@ function App() {
           <Route path="/deletePatient" element={<DeletePatient/>} />
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />          <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
           <Route path="/dashboard/patient/:username" element={user&& user.role === 'patient' ? <PatientDashboard /> : <Navigate to="/login" />}  />
+          <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
+          <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
+          <Route path="/dashboard/patient/:username" element={ user?<PatientDashboard />:<Login/> }  />
           <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
           <Route path="/filterAppointments/:username" element={<FilterAppointments/>} />

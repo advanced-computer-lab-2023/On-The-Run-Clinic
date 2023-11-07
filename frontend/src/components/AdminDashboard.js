@@ -1,7 +1,16 @@
 import React from 'react';
 import './Dashboard.css'; // Import your CSS file for styling
+import { useAuthContext } from '../hooks/useAuthContext'
+import {useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const { user } = useAuthContext()
+  if(!user){
+    navigate('/unauthorized');
+  }else if(user.role!="admin"){
+    navigate('/unauthorized');
+  }
   return (
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>
