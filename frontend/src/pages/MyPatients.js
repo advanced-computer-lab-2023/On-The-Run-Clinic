@@ -11,6 +11,31 @@ const MyPatients = () => {
   const [loading, setLoading] = useState(true);
   const [searchName, setSearchName] = useState('');
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [date, setDate] = useState('');
+  const [description1, setDescription] = useState('');
+
+  const [dates, setDates] = useState({});
+const [descriptions, setDescriptions] = useState({});
+  const getDoctorByUsername = async (username) => {
+    try {
+      const response = await axios.get(`http://localhost:4000/getDoctorByUsername/${username}`);
+      if (response.status === 200) {
+        return response.data;
+      }
+    } catch (error) {
+      console.error('Error fetching doctor:', error);
+    }
+  };
+  const [doctor1, setDoctor] = useState(null);
+
+useEffect(() => {
+  const fetchDoctor = async () => {
+    const doctorData = await getDoctorByUsername(username); // replace 'username' with the actual username
+    setDoctor(doctorData);
+  };
+
+  fetchDoctor();
+}, []);
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -44,6 +69,25 @@ const MyPatients = () => {
     const filteredPatients = searchName ? handleSearchByName() : originalPatients; // Use original patients for filtering
     setPatients(filteredPatients);
   };
+
+
+
+
+
+
+  
+  const handleScheduleFollowUp = async (patientId, doctorId, date, status, description) => {
+    try {
+      const response = await axios.post(`http://localhost:4000/newAppointment/${username}/${patientId}/${doctorId}/${date}/${status}/${description}`);
+  
+      if (response.status === 200) {
+        console.log('Appointment created successfully');
+      }
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+    }
+  };
+
 
   const handleResetFilterButton = () => {
     setSearchName('');
@@ -83,7 +127,18 @@ const MyPatients = () => {
                       Username: {patient.username}
                       <br />
                     </Link>
-                  </li>
+                    <input 
+                    type="date" 
+                    value={dates[patient._id] || ''} 
+                    onChange={e => setDates({...dates, [patient._id]: e.target.value})} />
+                    <input 
+                    type="text" 
+                    value={descriptions[patient._id] || ''} 
+                    onChange={e => setDescriptions({...descriptions, [patient._id]: e.target.value})} 
+                    placeholder="Description" />
+                    <button 
+                    onClick={() => handleScheduleFollowUp(patient._id, doctor1._id, dates[patient._id], 'Scheduled', descriptions[patient._id])}>Schedule Follow Up</button>
+                    </li>
                 );
               })}
             </ul>

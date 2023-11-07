@@ -50,6 +50,44 @@ const createDoctor = async(req,res) => {
     res.status(500).json({ error: 'An error occurred while registering the doctor.' });
   }
 };
+const createDoctor1 = async(req,res) => {
+  try {
+    // Extract data from the request body
+    const {
+      username,
+      name,
+      email,
+      password,
+      date_of_birth,
+      hourly_rate,
+      Affiliation,
+      speciality,
+      educational_background
+    } = req.params;
+
+    // Create a new doctor record
+    const newDoctor = new Doctor({
+      username,
+      name,
+      email,
+      password, // Hash the password before saving (use a library like bcrypt)
+      date_of_birth,
+      hourly_rate,
+      Affiliation,
+      speciality,
+      educational_background,
+      patients:[]
+    });
+
+    // Save the new doctor to the database
+    await newDoctor.save();
+
+    res.status(201).json({ message: 'Doctor registered successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while registering the doctor.' });
+  }
+};
 const getDocPatients = async (req, res) => {
   try {
     const { username } = req.params;
@@ -233,4 +271,4 @@ const updatePasswordDoctor = async (req, res) => {
 
 // Implement other controllers (e.g., update profile, view profile, list patients, etc.) following a similar structure
 
-module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor}
+module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor,createDoctor1}

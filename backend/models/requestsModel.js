@@ -32,6 +32,10 @@ const requestSchema = new mongoose.Schema({
   educational_background: {
     type: String,
     required: true, // Set to true if educational background is required
+  },
+  status1: {
+    type: String,
+    required: false,
   }
 });
 
