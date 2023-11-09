@@ -1,10 +1,12 @@
 import React from 'react';
+import { Link,useParams } from 'react-router-dom';
 import './Dashboard.css'; // Import your CSS file for styling
 import { useAuthContext } from '../hooks/useAuthContext'
 import {useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { username } = useParams();
   const { user } = useAuthContext()
   if(!user){
     navigate('/unauthorized');
@@ -50,6 +52,12 @@ const AdminDashboard = () => {
             <i className="fas fa-clipboard-list"></i>
             Manage Health Packages
           </a>
+        </li>
+        <li>
+          <Link to={`/changeAdminPassword/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            change my password
+          </Link>
         </li>
       </ul>
     </div>
