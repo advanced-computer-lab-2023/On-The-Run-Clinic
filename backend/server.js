@@ -7,7 +7,7 @@ const Patient = require('./models/PatientModel');
 
 const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,createDoctor1} = require("./controllers/doctorController")
 const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient} = require("./controllers/patientController")
-const {createAdmin,getAdmin,getAdmins,deleteAdmin} = require("./controllers/adminController")
+const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
 const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,createAppointment1}=require("./controllers/appointmentsController")
@@ -143,6 +143,9 @@ app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:descript
 app.get("/getDoctorByUsername/:username",getDoctorByUsername);
 app.post("/forgetPassword",forgetPassword);
 app.post("/resetPassword",resetPassword);
+
+app.get("/getAdminByUsername/:username",getDoctorByUsername);
+app.post("/updatePassAdmin",updatePasswordAdmin);
 
 
 

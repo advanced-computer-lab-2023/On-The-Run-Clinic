@@ -34,6 +34,7 @@ import ChangePatientPass from './pages/changePatientPass';
 import MedicalHistoryList from './pages/deleteMedicalHistory';
 import ChangeDoctortPass from './pages/changeDoctorPass';
 import Login from './pages/login';
+import ChangeAdminPass from './pages/changeAdminPass';
 
 
 // Import your components
@@ -90,6 +91,7 @@ function App() {
           <Route path="/patient-details/:username" element = {<PatientDetails />} />
           <Route path="/doctor-details/:username" element = {<DoctorDetails />} />
 
+          <Route path="/changeAdminPassword/:username" element={<ChangeAdminPass/>}/>
 
 
   

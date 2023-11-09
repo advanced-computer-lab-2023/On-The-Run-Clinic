@@ -66,4 +66,63 @@ const deleteAdmin = async(req,res) => {
     res.status(500).json({ error: 'An error occurred while deleting the doctor' });
   }
 };
-module.exports={createAdmin,getAdmin,getAdmins,deleteAdmin}
+
+const getAdminByUsername = async (req, res) => {
+  const { username } = req.params; // Get the username from the URL parameter
+
+  try {
+    // Find the admin by username
+    const admin = await Admin.findOne({ username:username });
+
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found.' });
+    }
+
+    res.status(200).json(admin);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const updatePasswordAdmin = async (req, res) => {
+  try {
+    const { username, currentPassword, newPassword } = req.body;
+    const admin = await Admin.findOne({ username });
+
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, admin.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid current password' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await Admin.updateOne(
+      {
+        username: username,
+      },
+      {
+        $set: {
+          password: hashedPassword,
+        },
+      }
+    );
+    await admin.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).json({ message: 'Error updating password' });
+  }
+};
+
+
+
+
+
+module.exports={createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin}
