@@ -144,8 +144,8 @@ app.get("/getDoctorByUsername/:username",getDoctorByUsername);
 app.post("/forgetPassword",forgetPassword);
 app.post("/resetPassword",resetPassword);
 
-app.get("/getAdminByUsername/:username",getDoctorByUsername);
-app.post("/updatePassAdmin",updatePasswordAdmin);
+app.get("/getAdminByUsername/:username",getAdminByUsername);
+app.put("/updatePassAdmin",updatePasswordAdmin);
 
 
 

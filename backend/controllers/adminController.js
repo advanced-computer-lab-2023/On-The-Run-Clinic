@@ -1,5 +1,6 @@
 // Import necessary modules and models
 const express = require('express');
+const bcrypt = require('bcrypt');
 
 const Admin= require('../models/AdmiModel'); // Import your Admin model
 const Doctor = require('../models/DoctorModel'); // Import your Doctor model
