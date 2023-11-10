@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuthContext } from './useAuthContext'
 import { useNavigate } from 'react-router-dom';
-
+import Cookies from 'js-cookie';
 
 export const useLogin = () => {
   const [error, setError] = useState(null)
@@ -19,16 +19,14 @@ export const useLogin = () => {
       body: JSON.stringify({ username, password })
     })
     const json = await response.json()
-    const usernamee=json.username;
-    const role=json.role;
 
     if (!response.ok) {
       setIsLoading(false)
       setError(json.error)
     }
     if (response.ok) {
-      // save the user to local storage
-      localStorage.setItem('user', JSON.stringify(json))
+      // save the user to a cookie
+      Cookies.set('token', json.token)
 
       // update the auth context
       dispatch({type: 'LOGIN', payload: json})
@@ -36,7 +34,6 @@ export const useLogin = () => {
         navigate(`/dashboard/patient/${username}`);
       }else if(json.role === 'doctor'){
         navigate(`/dashboard/doctor/${username}`);
-
       }
        else {
         navigate(`/dashboard/admin/${username}`);
@@ -44,7 +41,6 @@ export const useLogin = () => {
 
       // update loading state
       setIsLoading(false)
-
     }
   }
 

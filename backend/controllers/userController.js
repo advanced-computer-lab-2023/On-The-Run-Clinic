@@ -17,40 +17,34 @@ const createToken = (username,role) => {
 };
 
 
-
 const login = async (req, res) => {
-    const { username, password } = req.body;
-    try {
-        const user = await Patient.findOne({ username });
-        let role="patient"
-        if(!user){
-            const user = await Doctor.findOne({ username });
-            role="doctor"
-        }
-        if(!user){
-            const user = await Admin.findOne({ username });
-            role="admin"
-        }
-        if(!user){
-            res.status(404).json({ error: 'User not found' });
-        }
-        if (user) {
+  const { username, password } = req.body;
+  try {
+      let user = await Patient.findOne({ username });
+      let role="patient"
+      if(!user){
+          user = await Doctor.findOne({ username });
+          role="doctor"
+      }
+      if(!user){
+          user = await Admin.findOne({ username });
+          role="admin"
+      }
+      if(!user){
+          return res.status(404).json({ error: 'User not found' });
+      }
 
-
-            const auth = await bcrypt.compare(password, user.password);
-            if (auth) {
-                const token = createToken(user.username,role);
-                res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: false });
-                res.status(200).json({ user: user.username, role: role });
-            } else {
-                res.status(401).json({ error: 'Incorrect password' });
-            }
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+      const auth = await bcrypt.compare(password, user.password);
+      if (auth) {
+          const token = createToken(user.username,role);
+          res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: false });
+          return res.status(200).json({ user: user.username, role: role });
+      } else {
+          return res.status(401).json({ error: 'Incorrect password' });
+      }
+  } catch (error) {
+      return res.status(500).json({ error: error.message });
+  }
 }
 
 const logout = async (req, res) => {
