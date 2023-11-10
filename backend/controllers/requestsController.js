@@ -77,10 +77,45 @@ const getRequests=async(req,res) =>{
       }
       res.status(200).json(users)
 }
+const deleteRequest = async(req,res) => {
+  try {
+    // Extracts the doctor ID from the request parameters
+    const { id } = req.params;
+
+    // Finds the doctor by ID and delete them from the database
+    const deletedUser = await Request.findByIdAndDelete({ _id:id });
+
+    res.status(200).json({ message: 'Request deleted successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while deleting the doctor.' });
+  }
+};
+const rejectrequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Finds the request by ID and updates the status to "rejected"
+    const updatedRequest = await Request.findByIdAndUpdate(
+      { _id: id },
+      { status1: 'rejected' },
+      { new: true }
+    );
+
+    if (!updatedRequest) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    res.status(200).json({ message: 'Request rejected successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while rejecting the request.' });
+  }
+};
 
 
 
-module.exports = { createRequest,getOneRequest,getRequests };
+module.exports = { createRequest,getOneRequest,getRequests,deleteRequest,rejectrequest };
 
 
 

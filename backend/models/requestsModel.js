@@ -33,10 +33,14 @@ const requestSchema = new mongoose.Schema({
     type: String,
     required: true, // Set to true if educational background is required
   },
+  status1: {
+    type: String,
+    required: false,
+  },
   reqDocs: {
     type: Buffer,
     required: false, // Set to true if reqDocs is required
-  },
+  }
   
 });
 

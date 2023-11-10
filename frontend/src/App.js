@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes,Navigate,useParams} from 'react-
 import Navbar from './components/Navbar';
 import { useAuthContext } from './hooks/useAuthContext';
 
+
+
 import DoctorRegistrationForm  from './pages/DoctorRegPage';
 import DoctorDashboard from './components/DoctorDashboard';
 import PatientRegistrationForm  from './pages/PatientRegPage';
@@ -71,10 +73,13 @@ function App() {
           <Route path="/addAdmin" element={<AdminRegistrationForm/>}/>
           <Route path="/viewRequests" element={<ViewRequests/>}/>
           
-         <Route path="/getDoctors" element={<getDoctors/>}/>
+          <Route path="/getDoctors" element={<getDoctors/>}/>
           <Route path="/deleteDoctor" element={<DeleteDoctorPage/>} />
           <Route path="/deleteAdmin" element={<DeleteAdmin/>} />
           <Route path="/deletePatient" element={<DeletePatient/>} />
+          <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />         
+          <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
+          <Route path="/dashboard/patient/:username" element={user&& user.role === 'patient' ? <PatientDashboard /> : <Navigate to="/login" />}  />
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
           <Route path="/dashboard/patient/:username" element={ user?<PatientDashboard />:<Login/> }  />

@@ -56,6 +56,57 @@ const createAppointment = async (req, res) => {
   }
 };
 
+const createAppointment1 = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const { patientId, doctorId, date, status, description } = req.params;
+
+    const existingAppointment = await Appointment.findOne({ patientId, doctorId, date });
+
+    if (existingAppointment) {
+      return res.status(409).json({ message: 'Duplicate appointment found' });
+    }
+
+    const appointment = new Appointment({ patientId, doctorId, date, status, description });
+    await appointment.save();
+
+    // Fetch the doctor and patient objects
+    const doctor = await Doctor.findById(doctorId);
+    const patient = await Patient.findById(patientId);
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    if (!doctor.patients.includes(patientId)) {
+      const doctorUsername = doctor.username;
+      const patientUsername = patient.username;
+  
+      if (Array.isArray(doctor.patients) && !doctor.patients.includes(patientUsername)) {
+        console.log('Before:', doctor.patients);
+        doctor.patients.push(patient._id);
+        await doctor.save();
+        console.log('After:', doctor.patients);
+      }
+  
+      if (Array.isArray(patient.myDoctors) && !patient.myDoctors.includes(doctorUsername)) {
+        patient.myDoctors.push(doctor._id);
+        await patient.save();
+      }
+    }
+
+
+    res.status(201).json({ message: 'Appointment created successfully', appointment });
+  } catch (error) {
+    console.error('Error creating appointment:', error);
+    res.status(500).json({ error: 'An error occurred while creating the appointment' });
+  }
+};
+
 const getAllAppointments = async (req, res) => {
     try {
         const appointments = await Appointment.find();
@@ -117,4 +168,4 @@ const getPatientAppointments = async (req, res) => {
 
 
 
-module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments}
+module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,createAppointment1}
