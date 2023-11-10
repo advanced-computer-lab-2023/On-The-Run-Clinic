@@ -16,7 +16,7 @@ const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest}=requ
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 
 
-const{login,logout}=require("./controllers/userController")
+const{login,logout,forgetPassword,resetPassword}=require("./controllers/userController")
 const multer=require("multer");
 
 //express app
