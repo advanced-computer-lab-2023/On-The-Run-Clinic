@@ -16,7 +16,7 @@ const{createRequest, getOneRequest,getRequests}=require("./controllers/requestsC
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 
 
-const{loginUser,forgetPassword,resetPassword}=require("./controllers/userController")
+const{login}=require("./controllers/userController")
 const multer=require("multer");
 
 //express app
@@ -136,9 +136,8 @@ app.post("/updatePassPatient",updatePasswordPatient);
 app.post("/updatePassDoctor",updatePasswordDoctor);
 app.get("/getMedicalHistory/:username",getMedicalHistory);
 app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
-app.post("/login",loginUser);
-app.post("/forgetPassword",forgetPassword);
-app.post("/resetPassword",resetPassword);
+app.post("/login",login);
+
 
 //app.put("/updateUser", updateUser);
 
