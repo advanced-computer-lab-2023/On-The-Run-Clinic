@@ -108,6 +108,7 @@ const resetPassword= async (req, res) => {
         {
           $set: {
             password: hashedPassword,
+            passwordReset: undefined,
           },
         }
       );
