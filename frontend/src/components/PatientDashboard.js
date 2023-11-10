@@ -10,12 +10,7 @@ const PatientDashboard = () => {
   const navigate = useNavigate();
   useEffect(() => {
     // Fetch available health packages from the backend when the component mounts
-    if (username !== user.username) {
-      navigate('/unauthorized');
-    }
-    if ( user.role!="patient") {
-      navigate('/unauthorized');
-    }
+    
     async function fetchWallet() {
       try {
         const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
@@ -24,11 +19,11 @@ const PatientDashboard = () => {
           
         }
       } catch (error) {
-        console.error('Error fetching health packages:', error);
+        console.error('Error fetching Wallet:', error);
       }
     }
     fetchWallet();
-  }, []);
+  }, [username]);
 
   return (
     <div className="admin-dashboard">

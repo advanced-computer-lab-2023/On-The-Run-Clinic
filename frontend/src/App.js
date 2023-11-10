@@ -81,10 +81,10 @@ function App() {
           <Route path="/deletePatient" element={<DeletePatient/>} />
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />         
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-          <Route path="/dashboard/patient/:username" element={user&& user.role === 'patient' ? <PatientDashboard /> : <Navigate to="/login" />}  />
+          <Route path="/dashboard/patient/:username"  element={<PatientDashboard/>} />
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-          <Route path="/dashboard/patient/:username" element={ user?<PatientDashboard />:<Login/> }  />
+
           <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
           <Route path="/filterAppointments/:username" element={<FilterAppointments/>} />

@@ -1,7 +1,10 @@
+// #Task route solution
 const Patient = require('../models/PatientModel');
 const Doctor = require('../models/DoctorModel');
 const Admin = require('../models/AdmiModel');
-const bcrypt = require('bcrypt');
+const { default: mongoose } = require('mongoose');
+const express = require("express");
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto'); // For generating OTP
 const nodemailer = require('nodemailer'); // For sending emails
@@ -10,7 +13,7 @@ const nodemailer = require('nodemailer'); // For sending emails
 
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Example: 'Gmail'
+  service: 'Gmail', // Example: 'Gmail'
   auth: {
     user: 'ontherunclinic@gmail.com',
     pass: '0ntherunClinc',
@@ -38,15 +41,15 @@ const sendOTPByEmail = async (email, otp) => {
 };
 
 // Route to initiate password reset
-const forgetPassword = async (req, res) => {
-  const { username, email } = req.body;
+const forgetPassword= async (req, res) => {
+  const { email } = req.body;
   try {
-    let user = await Patient.findOne({ username });
+    const user = await Patient.findOne({ email });
     if (!user) {
-       user = await Doctor.findOne({ username });
+      const user = await Doctor.findOne({ email });
     }
     if (!user) {
-       user = await Admin.findOne({ username });
+      const user = await Admin.findOne({ email });
     }
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -72,62 +75,28 @@ const forgetPassword = async (req, res) => {
 
 // Route to reset the password
 const resetPassword= async (req, res) => {
-  const { username } = req.params;
   const { email, otp, newPassword } = req.body;
   try {
-    let user = await Patient.findOne({ username });
+    const user = await Patient.findOne({ email });
     if (!user) {
-       user = await Doctor.findOne({ username });
+      const user = await Doctor.findOne({ email });
     }
     if (!user) {
-       user = await Admin.findOne({ username });
+      const user = await Admin.findOne({ email });
     }
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    
+
+
     if (user.passwordReset!== otp) {
       return res.status(400).json({ message: 'Invalid OTP' });
     }
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
     // Update password
-    if(user = await Patient.findOne({ username })){
-      await Patient.updateOne(
-        {
-          username: username,
-        },
-        {
-          $set: {
-            password: hashedPassword,
-          },
-        }
-      );
-    }
-    else if(user = await Doctor.findOne({ username })){
-      await Doctor.updateOne(
-        {
-          username: username,
-        },
-        {
-          $set: {
-            password: hashedPassword,
-          },
-        }
-      );
-    } 
-    else if(user = await Admin.findOne({ username })){
-      await Admin.updateOne(
-        {
-          username: username,
-        },
-        {
-          $set: {
-            password: hashedPassword,
-          },
-        }
-      );
-    }
+    user.password = newPassword;
 
     // Clear the password reset data
     user.passwordReset = undefined;
@@ -143,7 +112,12 @@ const resetPassword= async (req, res) => {
 };
 
 
-
+const maxAge = 3 * 24 * 60 * 60;
+const createToken = (username,role) => {
+    return jwt.sign({ username,role }, 'supersecret', {
+        expiresIn: maxAge
+    });
+};
 
 
 

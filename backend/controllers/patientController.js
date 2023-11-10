@@ -166,7 +166,7 @@ const searchPatientsByUserame = async (req, res) => {
     // Use a case-insensitive regular expression to search for patients by name
     const patients = await Patient.findOne({ username:username });
 
-    if (patients.length === 0) {
+    if (!patients) {
       return res.status(404).json({ message: 'No patients found with the provided name.' });
     }
 

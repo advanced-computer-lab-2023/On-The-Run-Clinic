@@ -22,7 +22,7 @@ const DoctorDashboard = () => {
       }
     }
     fetchWallet();
-  }, []);
+  }, [username]);
 
   return (
     <div className="admin-dashboard">

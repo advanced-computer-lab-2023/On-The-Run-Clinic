@@ -16,7 +16,7 @@ const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest}=requ
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 
 
-const{loginUser,forgetPassword,resetPassword}=require("./controllers/userController")
+const{login,logout}=require("./controllers/userController")
 const multer=require("multer");
 
 //express app
@@ -136,7 +136,9 @@ app.post("/updatePassPatient",updatePasswordPatient);
 //app.post("/updatePassDoctor",updatePasswordDoctor);
 app.get("/getMedicalHistory/:username",getMedicalHistory);
 app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
-app.post("/login",loginUser);
+app.post("/login",login);
+app.get("/logout",logout);
+
 app.put("/rejectRequest/:id",rejectrequest);
 app.post("/acceptRequest/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createDoctor1)
 app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:description",createAppointment1);
@@ -146,6 +148,7 @@ app.post("/resetPassword/:username",resetPassword);
 
 app.get("/getAdminByUsername/:username",getAdminByUsername);
 app.put("/updatePassAdmin",updatePasswordAdmin);
+
 
 
 
