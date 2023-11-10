@@ -10,7 +10,7 @@ const nodemailer = require('nodemailer'); // For sending emails
 
 
 const transporter = nodemailer.createTransport({
-  service: 'Gmail', // Example: 'Gmail'
+  service: 'gmail', // Example: 'Gmail'
   auth: {
     user: 'ontherunclinic@gmail.com',
     pass: '0ntherunClinc',
@@ -38,15 +38,15 @@ const sendOTPByEmail = async (email, otp) => {
 };
 
 // Route to initiate password reset
-const forgetPassword= async (req, res) => {
-  const { email } = req.body;
+const forgetPassword = async (req, res) => {
+  const { username, email } = req.body;
   try {
-    const user = await Patient.findOne({ email });
+    let user = await Patient.findOne({ username });
     if (!user) {
-      const user = await Doctor.findOne({ email });
+       user = await Doctor.findOne({ username });
     }
     if (!user) {
-      const user = await Admin.findOne({ email });
+       user = await Admin.findOne({ username });
     }
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -72,28 +72,62 @@ const forgetPassword= async (req, res) => {
 
 // Route to reset the password
 const resetPassword= async (req, res) => {
+  const { username } = req.params;
   const { email, otp, newPassword } = req.body;
   try {
-    const user = await Patient.findOne({ email });
+    let user = await Patient.findOne({ username });
     if (!user) {
-      const user = await Doctor.findOne({ email });
+       user = await Doctor.findOne({ username });
     }
     if (!user) {
-      const user = await Admin.findOne({ email });
+       user = await Admin.findOne({ username });
     }
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    
-
-
     if (user.passwordReset!== otp) {
       return res.status(400).json({ message: 'Invalid OTP' });
     }
-
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
     // Update password
-    user.password = newPassword;
+    if(user = await Patient.findOne({ username })){
+      await Patient.updateOne(
+        {
+          username: username,
+        },
+        {
+          $set: {
+            password: hashedPassword,
+          },
+        }
+      );
+    }
+    else if(user = await Doctor.findOne({ username })){
+      await Doctor.updateOne(
+        {
+          username: username,
+        },
+        {
+          $set: {
+            password: hashedPassword,
+          },
+        }
+      );
+    } 
+    else if(user = await Admin.findOne({ username })){
+      await Admin.updateOne(
+        {
+          username: username,
+        },
+        {
+          $set: {
+            password: hashedPassword,
+          },
+        }
+      );
+    }
 
     // Clear the password reset data
     user.passwordReset = undefined;

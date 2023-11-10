@@ -142,7 +142,7 @@ app.post("/acceptRequest/:username/:name/:email/:password/:date_of_birth/:hourly
 app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:description",createAppointment1);
 app.get("/getDoctorByUsername/:username",getDoctorByUsername);
 app.post("/forgetPassword",forgetPassword);
-app.post("/resetPassword",resetPassword);
+app.post("/resetPassword/:username",resetPassword);
 
 app.get("/getAdminByUsername/:username",getAdminByUsername);
 app.put("/updatePassAdmin",updatePasswordAdmin);

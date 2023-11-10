@@ -35,7 +35,8 @@ import MedicalHistoryList from './pages/deleteMedicalHistory';
 import ChangeDoctortPass from './pages/changeDoctorPass';
 import Login from './pages/login';
 import ChangeAdminPass from './pages/changeAdminPass';
-
+import ForgetPassword from './pages/ForgetPassword';
+import ResetPassword from './pages/ResetPassword';
 
 // Import your components
 
@@ -92,8 +93,8 @@ function App() {
           <Route path="/doctor-details/:username" element = {<DoctorDetails />} />
 
           <Route path="/changeAdminPassword/:username" element={<ChangeAdminPass/>}/>
-
-
+          <Route path="/forgetPassword" element={<ForgetPassword/>}/>
+          <Route path="/resetPassword/:username" element={<ResetPassword/>}/>
   
 
           {/* Add other routes as needed */}

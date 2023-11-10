@@ -257,7 +257,16 @@ const updatePasswordDoctor = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    dr.password = hashedPassword;
+    await Doctor.updateOne(
+      {
+        username: username,
+      },
+      {
+        $set: {
+          password: hashedPassword,
+        },
+      }
+    );
     await dr.save();
 
     res.status(200).json({ message: 'Password updated successfully' });
