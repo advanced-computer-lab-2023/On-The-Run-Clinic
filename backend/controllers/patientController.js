@@ -62,6 +62,7 @@ const getPatient=async(req,res)=>{
   try {
     // Get the patient ID from the URL parameters
     const { id } = req.params;
+   
 
     // Fetch the patient from the database using the ID
     const patient = await Patient.findById(id);
@@ -185,25 +186,48 @@ const linkMemberByEmail=async(req,res)=>{
       if (!patientToBeLinked||!patient) {
         return res.status(404).json({ message: 'No patients found with the provided email.' });
       }
-      patient.linkedPatients.push({
-        linkedPatientId: patientToBeLinked._id,
-        linkedPatientRelation: relation,
-        linkedPatientName:patientToBeLinked.name
+      const p = await Patient.findOne({
+        linkedPatients: {
+          $elemMatch: {
+            linkedPatientId: patientToBeLinked._id
+          }
+        }
       });
-      await patient.save();
+
+      if(!p){
+        patient.linkedPatients.push({
+          linkedPatientId: patientToBeLinked._id,
+          linkedPatientRelation: relation,
+          linkedPatientName:patientToBeLinked.name
+        });
+        await patient.save();
+      }
 
     }
     else if(email&&mobileNumber){
       const patientToBeLinked = await Patient.findOne({ mobileNumber:mobileNumber,email:email });
+     
+
       if (!patientToBeLinked||!patient) {
         return res.status(404).json({ message: 'No patients found with the provided email.' });
       }
-      patient.linkedPatients.push({
-        linkedPatientId: patientToBeLinked._id,
-        linkedPatientRelation: relation,
-        linkedPatientName:patientToBeLinked.name
+      const p = await Patient.findOne({
+        linkedPatients: {
+          $elemMatch: {
+            linkedPatientId: patientToBeLinked._id
+          }
+        }
       });
-      await patient.save();
+
+      if(!p){
+        patient.linkedPatients.push({
+          linkedPatientId: patientToBeLinked._id,
+          linkedPatientRelation: relation,
+          linkedPatientName:patientToBeLinked.name
+        });
+        await patient.save();
+      }
+      
 
     }
     else{

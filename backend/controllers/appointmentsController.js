@@ -7,7 +7,15 @@ const Patient = require('../models/PatientModel'); // Import your Patient model
 
 const createAppointment = async (req, res) => {
   try {
+
     const { patientId, doctorId, date, status, description , hour } = req.body;
+    const doctor = await Doctor.findById(doctorId);
+    if(patientId==null){
+      const appointment = new Appointment({ patientId:null,doctorId, date ,status:"Available",description : "empty", hour });
+      await appointment.save();
+      res.status(201).json({ message: 'Appointment created successfully', appointment });
+
+    }else{
 
     const existingAppointment = await Appointment.findOne({ doctorId, date , hour });
 
@@ -16,7 +24,7 @@ const createAppointment = async (req, res) => {
     }
 
     // Fetch the doctor and patient objects
-    const doctor = await Doctor.findById(doctorId);
+   
     const patient = await Patient.findById(patientId);
 
     if (!doctor) {
@@ -50,7 +58,7 @@ const createAppointment = async (req, res) => {
     }
 
 
-    res.status(201).json({ message: 'Appointment created successfully', appointment });
+    res.status(201).json({ message: 'Appointment created successfully', appointment });}
   } catch (error) {
     console.error('Error creating appointment:', error);
     res.status(500).json({ error: 'An error occurred while creating the appointment' });

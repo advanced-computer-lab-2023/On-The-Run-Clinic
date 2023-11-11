@@ -10,6 +10,11 @@ const DoctorAppointments = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedUpcoming, setSelectedUpcoming] = useState(false); // New state for upcoming filter
+  const [newAppointmentDate, setNewAppointmentDate] = useState('');
+
+const [newAppointmentHour, setNewAppointmentHour] = useState('');
+
+
   const { username } = useParams();
   const [doctor, setDoctor] = useState(null);
 
@@ -24,6 +29,7 @@ const DoctorAppointments = () => {
         // Then, fetch all appointments based on the doctor's ID
         if (response1.data) {
           const response2 = await axios.get(`http://localhost:4000/getDoctorAppointments/${response1.data._id}`);
+          console.log(response2.data)
           if (response2.status === 200) {
             const doctorAppointments = response2.data;
   
@@ -33,6 +39,7 @@ const DoctorAppointments = () => {
             // Loop through the doctor's appointments
             for (const appointment of doctorAppointments) {
               try {
+                if(appointment.patientId!=null){
                 const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`);
                 if (response.status === 200) {
                   const patientData = response.data;
@@ -40,11 +47,16 @@ const DoctorAppointments = () => {
                   // Combine appointment and patient details
                   const appointmentWithPatient = { ...appointment, patientInfo: patientData };
                   appointmentsWithPatients.push(appointmentWithPatient);
+                }}
+                else{
+                  const appointmentWithPatient = { ...appointment, patientInfo: "empty" };
+                  appointmentsWithPatients.push(appointmentWithPatient);
                 }
               } catch (error) {
                 console.error('Error fetching patient details:', error);
               }
             }
+            console.log("Appointments with Patients:", appointmentsWithPatients)
   
             // Set the state with the combined data
             setAppointments(appointmentsWithPatients);
@@ -64,6 +76,28 @@ const DoctorAppointments = () => {
     const selectedDate = event.target.value;
     setSelectedDate(selectedDate);
     filterAppointments(selectedDate, selectedStatus, selectedUpcoming);
+  };
+  const handleNewAppointmentSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.post('http://localhost:4000/createAppointment', {
+        patientId:null,
+        doctorId: doctor._id,
+        date: newAppointmentDate,
+        description: 'empty',
+        staus:"Available",
+        hour:newAppointmentHour,
+      });
+  
+      if (response.status === 200) {
+        // If the appointment was created successfully, add it to the appointments list
+        setAppointments([...appointments, response.data]);
+        setFilteredAppointments([...filteredAppointments, response.data]);
+      }
+    } catch (error) {
+      console.error('Error creating new appointment:', error);
+    }
   };
 
   const handleStatusFilterChange = (event) => {
@@ -140,18 +174,22 @@ const DoctorAppointments = () => {
     const appointmentsWithPatients = await Promise.all(
       filtered.map(async (appointment) => {
         try {
-          const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`);
-          if (response.status === 200) {
-            const patientData = response.data;
-            console.log("Appointment Data:", appointment);
-            console.log("Patient Data:", patientData);
-  
-            // Combine appointment and patient details
-            const appointmentWithPatient = { ...appointment, patientInfo: patientData };
-            console.log("both:", appointmentWithPatient);
-  
-            return appointmentWithPatient;
+          if(appointment.patientId!=null){
+            const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`);
+            if (response.status === 200) {
+              const patientData = response.data;
+              console.log("Appointment Data:", appointment);
+              console.log("Patient Data:", patientData);
+    
+              // Combine appointment and patient details
+              const appointmentWithPatient = { ...appointment, patientInfo: patientData };
+              console.log("both:", appointmentWithPatient);
+    
+              return appointmentWithPatient;
+            }
+
           }
+         
         } catch (error) {
           console.error('Error fetching patient details:', error);
         }
@@ -166,6 +204,27 @@ const DoctorAppointments = () => {
   return (
     <div>
       <h1>Doctor Appointments</h1>
+      <form onSubmit={handleNewAppointmentSubmit}>
+      <label>
+        New Appointment Date:
+        <input
+          type="datetime-local"
+          value={newAppointmentDate}
+          onChange={(e) => setNewAppointmentDate(e.target.value)}
+          required
+        />
+      </label>
+      <label>
+        New Appointment Hour:
+        <textarea
+          value={newAppointmentHour}
+          onChange={(e) => setNewAppointmentHour(e.target.value)}
+          required
+        />
+      </label>
+      <button type="submit">Create New Appointment</button>
+    </form>
+
       <div>
         <label>Date Filter:</label>
         <input
@@ -184,6 +243,7 @@ const DoctorAppointments = () => {
           <option value="Scheduled">Scheduled</option>
           <option value="Cancelled">Cancelled</option>
           <option value="Completed">Completed</option>
+          <option value="Available">Available</option>
         </select>
       </div>
       <div>
@@ -199,7 +259,7 @@ const DoctorAppointments = () => {
         {filteredAppointments.map((appointment) => (
           <li key={appointment._id}>
             Date: {appointment.date}, Status: {appointment.status}, Description: {appointment.description} {appointment.patientInfo && (
-        <span>, Email: <Link to={`/patient-details/${appointment.patientInfo.username}`}>{appointment.patientInfo.name}</Link></span>
+        <span>, Patient Email: <Link to={`/patient-details/${appointment.patientInfo.username}`}>{appointment.patientInfo.name}</Link></span>
       )}
           </li>
         ))}

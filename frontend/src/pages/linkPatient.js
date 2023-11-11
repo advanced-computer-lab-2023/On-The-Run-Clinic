@@ -13,23 +13,24 @@ function LinkPatientPage() {
   });
   const [familyMembers, setFamilyMembers] = useState([]);
   const navigate = useNavigate();
+  async function fetchFamilyMembers() {
+    try {
+      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+      if (response.status === 200) {
+        setFamilyMembers(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching family members:', error);
+      // You can set an error state or display an error message to the user here.
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     // Fetch family members when the component mounts
-    async function fetchFamilyMembers() {
-      try {
-        const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
-        if (response.status === 200) {
-          setFamilyMembers(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching family members:', error);
-        // You can set an error state or display an error message to the user here.
-      }
-      finally {
-        setLoading(false);
-      }
-    }
-  
+   
     fetchFamilyMembers();
   }, [username]);
   
@@ -59,7 +60,7 @@ function LinkPatientPage() {
     try {
       const response = await axios.post('http://localhost:4000/linkMember', requestData);
       if (response.status === 200) {
-        alert('Patient linked successfully.');
+    fetchFamilyMembers();
         // You can navigate to another page or update the UI as needed.
       }
     } catch (error) {
