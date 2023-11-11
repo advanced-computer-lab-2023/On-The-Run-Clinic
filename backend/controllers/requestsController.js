@@ -1,10 +1,8 @@
 const Request = require('../models/requestsModel'); 
 const multer = require('multer');
-const upload=multer() // This will save files to an 'uploads' directory. You can change this to any directory you want.
 
 
-
-
+const upload = multer({ storage: multer.memoryStorage() });
 const createRequest = async (req, res) => {
     try {
         // Extract request data from the request body
@@ -20,9 +18,15 @@ const createRequest = async (req, res) => {
         } = req.body;
 
         let reqDocs = [];
-if (req.files) {
-  reqDocs = req.files.map(file => ({ data: file.buffer, contentType: file.mimetype }));
-}
+        if (req.files) {
+          reqDocs = req.files.map(file => ({
+            data: file.buffer,
+            mimetype: file.mimetype,
+            name: file.originalname,
+          }));
+        }
+    
+    
     
         // Create a new request object
         const request = new Request({

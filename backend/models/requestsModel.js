@@ -37,10 +37,11 @@ const requestSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  reqDocs: {
-    type: Buffer,
-    required: false, // Set to true if reqDocs is required
-  }
+  reqDocs: [{
+    data: Buffer,
+    mimetype: String,
+    name: String,
+  }],
   
 });
 

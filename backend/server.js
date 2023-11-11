@@ -132,7 +132,7 @@ app.get("/getPackage/:id",getHealthPackage);
 app.get("/getLinkedFamilyMembers/:username",getLinkedFamilyMembers);
 app.post("/linkMember",linkMemberByEmail);
 app.post("/payPackage",payByPackage);
-app.post("/updatePassPatient",updatePasswordPatient);
+app.put("/updatePassPatient",updatePasswordPatient);
 //app.post("/updatePassDoctor",updatePasswordDoctor);
 app.get("/getMedicalHistory/:username",getMedicalHistory);
 app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);

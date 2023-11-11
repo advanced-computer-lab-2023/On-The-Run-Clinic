@@ -8,11 +8,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { username } = useParams();
   const { user } = useAuthContext()
-  if(!user){
-    navigate('/unauthorized');
-  }else if(user.role!="admin"){
-    navigate('/unauthorized');
-  }
+  
   return (
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>

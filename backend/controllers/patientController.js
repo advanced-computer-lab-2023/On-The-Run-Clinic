@@ -4,7 +4,7 @@ const { default: mongoose } = require('mongoose');
 const Doctor = require('../models/DoctorModel'); // Import your Doctor model
 const Patient = require('../models/PatientModel');
 const Admin = require('../models/AdmiModel');
-
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const HealthPackage = require('../models/HealthPackages');
 const multer = require('multer');
@@ -325,7 +325,7 @@ const payByPackage = async (req, res) => {
 const updatePasswordPatient = async (req, res) => {
   try {
     const { username, currentPassword, newPassword } = req.body;
-    const patient = await Patient.findOne({ username });
+    const patient = await Patient.findOne({ username:username });
 
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
