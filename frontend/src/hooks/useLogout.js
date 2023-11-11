@@ -8,7 +8,7 @@ export const useLogout = () => {
 
   const logout = () => {
     // remove user from cookie
-    Cookies.remove('user')
+    Cookies.remove('token')
 
     // dispatch logout action
     dispatch({ type: 'LOGOUT' })

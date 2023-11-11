@@ -86,8 +86,10 @@ const PatientSchema = new mongoose.Schema({
     path: String,
     mimetype: String,
     data: Buffer
-  }]
-
+  }],
+  passwordReset: {
+    type: String,
+  }
  
 });
 

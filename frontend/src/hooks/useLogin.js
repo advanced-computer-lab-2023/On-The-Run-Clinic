@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuthContext } from './useAuthContext'
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 export const useLogin = () => {
   const [error, setError] = useState(null)
@@ -13,33 +14,31 @@ export const useLogin = () => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch(`http://localhost:4000/login`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ username, password })
-    })
-    const json = await response.json()
+    try {
+      const response = await axios.post('http://localhost:4000/login', { username, password });
+      const json = response.data;
+      console.log("hereeee",json)
 
-    if (!response.ok) {
-      setIsLoading(false)
-      setError(json.error)
-    }
-    if (response.ok) {
-      // save the user to a cookie
-      Cookies.set('token', json.token)
+      if (response.status === 200) {
+        // save the user to a cookie
+        Cookies.set('token', json.token, { expires: 3 })
 
-      // update the auth context
-      dispatch({type: 'LOGIN', payload: json})
-      if (json.role === 'patient') {
-        navigate(`/dashboard/patient/${username}`);
-      }else if(json.role === 'doctor'){
-        navigate(`/dashboard/doctor/${username}`);
+        // update the auth context
+        dispatch({type: 'LOGIN', payload: json})
+        if (json.role === 'patient') {
+          navigate(`/dashboard/patient/${username}`);
+        }else if(json.role === 'doctor'){
+          navigate(`/dashboard/doctor/${username}`);
+        }
+        else {
+          navigate(`/dashboard/admin/${username}`);
+        }
+      } else {
+        setError(json.error)
       }
-       else {
-        navigate(`/dashboard/admin/${username}`);
-      }
-
-      // update loading state
+    } catch (error) {
+      setError('Login error')
+    } finally {
       setIsLoading(false)
     }
   }

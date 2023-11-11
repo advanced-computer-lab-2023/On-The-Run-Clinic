@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 const requireAuthDoctor = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.cookies.token;
+
+
     
   // check json web token exists & is verified
   if (token) {
@@ -12,8 +14,12 @@ const requireAuthDoctor = (req, res, next) => {
         res.status(401).json({message:"You are not logged in."})
         // res.redirect('/login');
       } else {
-        console.log(decodedToken);
-        next();
+        if (decodedToken.role === 'doctor') {
+          
+          next();
+        } else {
+          res.status(403).json({message:"You are not authorized."})
+        }
       }
     });
   } else {
@@ -21,19 +27,25 @@ const requireAuthDoctor = (req, res, next) => {
   }
 };
 const requireAuthPatient = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.cookies.token;
+  
+
     
   // check json web token exists & is verified
   if (token) {
+ 
     jwt.verify(token, 'supersecret', (err, decodedToken) => {
       if (err) {
-        // console.log('You are not logged in.');
-        // res send status 401 you are not logged in
+       
         res.status(401).json({message:"You are not logged in."})
         // res.redirect('/login');
       } else {
-        console.log(decodedToken);
-        next();
+        if (decodedToken.role === 'patient') {
+          
+          next();
+        } else {
+          res.status(403).json({message:"You are not authorized."})
+        }
       }
     });
   } else {
@@ -41,7 +53,8 @@ const requireAuthPatient = (req, res, next) => {
   }
 };
 const requireAuthAdmin = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.cookies.token;
+  console.log(token.role)
     
   // check json web token exists & is verified
   if (token) {
@@ -52,8 +65,12 @@ const requireAuthAdmin = (req, res, next) => {
         res.status(401).json({message:"You are not logged in."})
         // res.redirect('/login');
       } else {
-        console.log(decodedToken);
-        next();
+        if (decodedToken.role === 'admin') {
+          
+          next();
+        } else {
+          res.status(403).json({message:"You are not authorized."})
+        }
       }
     });
   } else {

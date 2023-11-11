@@ -46,6 +46,8 @@ const doctorSchema = new mongoose.Schema({
   wallet:{
     default:0,
     type:Number
+  },  passwordReset: {
+    type: String,
   }
 });
 
