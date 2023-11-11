@@ -153,7 +153,7 @@ const Doctorz = () => {
               onClick={() => handleDoctorClick(m)} // Add this click handler
             >
               <div className="medicine-details">
-                <strong>Name:</strong> <Link to={`/doctor-details/${m.username}`}> {m.name} </Link><br />
+                <strong>Name:</strong> <Link to={`/doctor-details/${m.username}/${username}`}> {m.name} </Link><br />
                 <strong>Speciality:</strong> {m.speciality}<br />
                 <strong>Username:</strong> {m.username}<br />
                 <strong>Price:</strong> {m.hourly_rate} - {discount} = {m.hourly_rate - discount}

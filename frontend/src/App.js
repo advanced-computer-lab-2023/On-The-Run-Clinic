@@ -32,6 +32,9 @@ import ChangePatientPass from './pages/changePatientPass';
 import MedicalHistoryList from './pages/deleteMedicalHistory';
 import ChangeDoctortPass from './pages/changeDoctorPass';
 import Login from './pages/login';
+//import HealthPackage from '../../backend/models/HealthPackages';
+import HealthPackagesDetails from'./pages/HealthPackageDetails';
+import ViewAppointments from './pages/viewAppointments';
 
 
 // Import your components
@@ -74,13 +77,17 @@ function App() {
           <Route path="/deletePatient" element={<DeletePatient/>} />
           <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
           <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-          <Route path="/dashboard/patient/:username" element={user&& user.role === 'patient' ? <Home /> : <Navigate to="/login" />}  />
+          <Route path="/dashboard/patient/:username" element={user&& user.role === 'patient' ? <PatientDashboard /> : <PatientDashboard />} />
           <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
           <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
           <Route path="/filterAppointments/:username" element={<FilterAppointments/>} />
           <Route path="/filterAppointmentsPatient/:username" element={<FilterAppointmentsPatient/>} />
           <Route path="/patient-details/:username" element = {<PatientDetails />} />
-          <Route path="/doctor-details/:username" element = {<DoctorDetails />} />
+          <Route path="/doctor-details/:doctorUsername/:patientUsername" element = {<DoctorDetails />} />
+          <Route path="/viewHealthPackagesDetails/:username" element = {<HealthPackagesDetails />} />
+          <Route path="/ViewAppointments/:doctorUsername/:patientUsername" element = {<ViewAppointments />} />
+
+
 
 
 

@@ -77,7 +77,7 @@ function LinkPatientPage() {
           <input
             type="text"
             id="patientId"
-            name="patientId"
+            name="mobileNumber"
             value={formData.mobileNumber}
             onChange={handleChange}
             required
@@ -88,7 +88,7 @@ function LinkPatientPage() {
           <input
             type="text"
             id="linkedPatientInput"
-            name="linkedPatientInput"
+            name="email"
             value={formData.email}
             onChange={handleChange}
             required

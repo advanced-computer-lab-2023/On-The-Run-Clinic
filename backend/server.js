@@ -6,11 +6,11 @@ const mongoose=require('mongoose')
 const Patient = require('./models/PatientModel');
 
 const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient} = require("./controllers/patientController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage} = require("./controllers/patientController")
 const {createAdmin,getAdmin,getAdmins,deleteAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
-const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments}=require("./controllers/appointmentsController")
+const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
@@ -137,6 +137,10 @@ app.post("/updatePassDoctor",updatePasswordDoctor);
 app.get("/getMedicalHistory/:username",getMedicalHistory);
 app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
 app.post("/login",loginUser);
+app.get("/mypackage/:username",viewHealthPackages);
+app.post("/CancelPackage/:username",CancelPackage);
+app.get("/getAvailableDoctorAppointments/:id",getAvailableDoctorAppointments);
+app.post("/reserveAppointment/:appointmentId",reserveAppointment);
 
 
 //app.put("/updateUser", updateUser);
