@@ -10,7 +10,13 @@ const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchP
 const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
-const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,createAppointment1}=require("./controllers/appointmentsController")
+const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,reserveAppointment}=require("./controllers/appointmentsController")
+const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor} = require("./controllers/doctorController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage} = require("./controllers/patientController")
+const {createAdmin,getAdmin,getAdmins,deleteAdmin} = require("./controllers/adminController")
+const {createMember,getFamilyMembers} = require("./controllers/familymemController")
+const cors = require('cors');
+const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
@@ -141,7 +147,6 @@ app.get("/logout",logout);
 
 app.put("/rejectRequest/:id",rejectrequest);
 app.post("/acceptRequest/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createDoctor1)
-app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:description",createAppointment1);
 app.get("/getDoctorByUsername/:username",getDoctorByUsername);
 app.post("/forgetPassword",forgetPassword);
 app.post("/resetPassword/:username",resetPassword);
@@ -149,6 +154,11 @@ app.post("/resetPassword/:username",resetPassword);
 app.get("/getAdminByUsername/:username",getAdminByUsername);
 app.put("/updatePassAdmin",updatePasswordAdmin);
 
+app.post("/login",loginUser);
+app.get("/mypackage/:username",viewHealthPackages);
+app.post("/CancelPackage/:username",CancelPackage);
+app.get("/getAvailableDoctorAppointments/:id",getAvailableDoctorAppointments);
+app.post("/reserveAppointment/:appointmentId",reserveAppointment);
 
 
 

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const DoctorDetails = () => {
-  const { username } = useParams();
+  const { doctorUsername , patientUsername } = useParams();
   const navigate = useNavigate();
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,12 +18,12 @@ const DoctorDetails = () => {
           const allDoctors = response.data;
 
           // Find the doctor with the matching username
-          const matchingDoctor = allDoctors.find((doc) => doc.username === username);
+          const matchingDoctor = allDoctors.find((doc) => doc.username === doctorUsername);
           if (matchingDoctor) {
             setDoctor(matchingDoctor);
           } else {
             // Handle the case where no doctor with the username is found
-            console.error('Doctor not found:', username);
+            console.error('Doctor not found:', doctorUsername);
           }
         }
       } catch (error) {
@@ -36,7 +36,7 @@ const DoctorDetails = () => {
 
     // Call the fetchDoctorData function when the component mounts
     fetchDoctorData();
-  }, [username]);
+  }, [doctorUsername]);
 
   if (loading) {
     return <div>Loading doctor details...</div>;
@@ -60,11 +60,11 @@ const DoctorDetails = () => {
 
       {/* Display additional doctor information and appointments here */}
       <button onClick={() => navigate(-1)}>Back</button>
+      <Link to={`/viewAppointments/${doctorUsername}/${patientUsername}`}>
+        <button>View Appointments</button>
+      </Link>
     </div>
   );
 };
 
 export default DoctorDetails;
-
-
-//  this is a doctor page

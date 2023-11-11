@@ -164,13 +164,10 @@ const searchPatientsByUserame = async (req, res) => {
     const { username } = req.params;
     
     // Use a case-insensitive regular expression to search for patients by name
-    const patients = await Patient.findOne({ username:username });
+    const patient = await Patient.findOne({ username:username });
 
-    if (!patients) {
-      return res.status(404).json({ message: 'No patients found with the provided name.' });
-    }
 
-    res.status(200).json(patients);
+    res.status(200).json(patient);
   } catch (error) {
     console.error('Error searching for patients by name:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -295,7 +292,10 @@ const payByPackage = async (req, res) => {
   try {
     const { username, paymentMethod, selectedPackage } = req.body;
     const packagee = await HealthPackage.findById(selectedPackage);
+    console.log("pp" + packagee);
     const patient = await Patient.findOne({ username: username });
+    patient.healthpackage=null;
+    patient.packageBoughtDate = null;
     const myfamily=patient.linkedPatients;
     if(paymentMethod==='wallet'){
       if (packagee.price > patient.wallet) {
@@ -307,10 +307,15 @@ const payByPackage = async (req, res) => {
 
     }
     patient.healthpackage = packagee;
+    patient.packageCancelledDate = null;
+    patient.packageBoughtDate = new Date();
+    console.log("date " + patient.packageBoughtDate);
       for (let i = 0; i < myfamily.length; i++) {
         const familyMember = myfamily[i];
         const familyMemberObject = await Patient.findById(familyMember.linkedPatientId);
         familyMemberObject.healthpackage = packagee;
+        familyMemberObject.packageCancelledDate = null;
+        familyMemberObject.packageBoughtDate = new Date();
         await familyMemberObject.save();
         // Do something with the family member object
       }
@@ -322,6 +327,27 @@ const payByPackage = async (req, res) => {
     res.status(500).json({ error: 'Error making wallet payment' });
   }
 };
+
+const CancelPackage = async (req,res) => {
+  const {username} = req.params;
+  try {
+  const patient = await Patient.findOne({username});
+  if (patient.packageCancelledDate != null) {
+    return res.status(400).json({error : 'No Subscription Found'});
+  }
+  patient.packageBoughtDate = null;
+  console.log(patient.packageBoughtDate);
+  patient.packageCancelledDate = new Date();
+  console.log(patient.packageCancelledDate);
+  console.log('Cancelled');
+  await patient.save();
+  res.status(201).json({message :"cancelled"});
+  }
+  catch(error) {
+    console.error('Error fetching Patient');
+  }
+}
+
 const updatePasswordPatient = async (req, res) => {
   try {
     const { username, currentPassword, newPassword } = req.body;
@@ -359,5 +385,27 @@ const updatePasswordPatient = async (req, res) => {
   }
 };
 
+const viewHealthPackages = async (req, res) => {
+  const { username } = req.params;
+  console.log("hereee");
+  try {
+    // Find the patient based on the provided username
+    const patient = await Patient.findOne({ username }).populate('healthpackage');
 
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient}
+    if (!patient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    // Collect the health package for the patient
+    const healthPackage = patient.healthpackage;
+
+    return res.status(200).json({ healthPackage });
+  } catch (error) {
+    console.error('Error fetching health package:', error);
+    return res.status(500).json({ error: 'Error fetching health package' });
+  }
+};
+
+
+
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage}
