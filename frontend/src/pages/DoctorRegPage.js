@@ -10,8 +10,9 @@ const[email,setEmail]=useState('')
 const[password,setPassword]=useState('')
 const[date_of_birth,setDateOfBirth]=useState('')
 const[hourly_rate,setHourlyRate]=useState('')
-const[affiliation,setAffiliation]=useState('')
+const[Affiliation,setAffiliation]=useState('')
 const[educational_background,setEducational_background]=useState('')
+const[speciality,setSpeciality]=useState('')
 const [reqDocs, setReqDocs] = useState([]); // New state variable for the file
 
 const[error,setError]=useState(null)
@@ -23,8 +24,9 @@ const [isRequestPending, setIsRequestPending] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
           
-          const dr={username,name,email,password,date_of_birth,hourly_rate,affiliation,educational_background,reqDocs}
-    try{const response = await axios.post('http://localhost:4000/createRequest', dr);
+          const dr={username,name,email,password,date_of_birth,hourly_rate,speciality,Affiliation,educational_background,reqDocs}
+    
+          try{const response = await axios.post('http://localhost:4000/createRequest', dr);
     
     if (response.status === 201) {
       console.log('Registration successful:', response.data);
@@ -136,12 +138,12 @@ const [isRequestPending, setIsRequestPending] = useState(false);
               />
             </div>
             <div>
-              <label htmlFor="affiliation">affiliation</label>
+              <label htmlFor="Affiliation">affiliation</label>
               <input
                 type="text"
-                id="affiliation"
-                name="affiliation"
-                value={affiliation}
+                id="Affiliation"
+                name="Affiliation"
+                value={Affiliation}
                 onChange={(e) => {
                   setAffiliation(e.target.value);
                 }}
@@ -157,6 +159,19 @@ const [isRequestPending, setIsRequestPending] = useState(false);
                 value={educational_background}
                 onChange={(e) => {
                   setEducational_background(e.target.value);
+                }}
+                required
+              />
+            </div>  
+            <div>
+              <label htmlFor="speciality">Speciality</label>
+              <input
+                type="text"
+                id="speciality"
+                name="speciality"
+                value={speciality}
+                onChange={(e) => {
+                  setSpeciality(e.target.value);
                 }}
                 required
               />

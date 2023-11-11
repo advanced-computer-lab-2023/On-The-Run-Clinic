@@ -70,7 +70,7 @@ const ChangeDoctortPass = () => {
   };
   return (
     <div>
-      <h1>Welcome, {doctor.name}!</h1>
+      <h1>Welcome!</h1>
       <h2>Change Password</h2>
       {errors && errors.server && (
         <p style={{ color: 'red' }}>{errors.server}</p>

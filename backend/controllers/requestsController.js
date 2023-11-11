@@ -1,5 +1,6 @@
 const Request = require('../models/requestsModel'); 
 const multer = require('multer');
+const Doctor = require('../models/DoctorModel');
 
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -14,7 +15,9 @@ const createRequest = async (req, res) => {
           date_of_birth,
           hourly_rate,
           speciality,
-          educational_background,
+          Affiliation,
+          educational_background
+          
         } = req.body;
 
         let reqDocs = [];
@@ -37,8 +40,11 @@ const createRequest = async (req, res) => {
           date_of_birth,
           hourly_rate,
           speciality,
+          Affiliation,
+          status1: 'pending',
           educational_background,
-          reqDocs,
+          reqDocs
+
           
         });
     
@@ -116,10 +122,48 @@ const rejectrequest = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while rejecting the request.' });
   }
 };
+const acceptrequest = async (req, res) => {
+  try {
+    const { username,name,email,password,date_of_birth,hourly_rate,Affiliation,speciality,educational_background,id } = req.params;
+    const newDoctor = new Doctor({
+      username,
+      name,
+      email,
+      password, // Hash the password before saving (use a library like bcrypt)
+      date_of_birth,
+      hourly_rate,
+      speciality,
+      Affiliation,
+      educational_background,
+      patients:[],
+      reqDocs:[]
+    });
+
+    // Save the new doctor to the database
+    await newDoctor.save();
+
+    // Finds the request by ID and updates the status to "rejected"
+    const updatedRequest = await Request.findByIdAndUpdate(
+      { _id: id },
+      { status1: 'accepted' },
+      { new: true }
+    );
+
+    if (!updatedRequest) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    res.status(200).json({ message: 'Request rejected successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while rejecting the request.' });
+  }
+};
 
 
 
-module.exports = { createRequest,getOneRequest,getRequests,deleteRequest,rejectrequest };
+
+module.exports = { createRequest,getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest };
 
 
 

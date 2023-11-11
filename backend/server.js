@@ -5,14 +5,14 @@ const express= require("express")
 const mongoose=require('mongoose')
 const Patient = require('./models/PatientModel');
 
-const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,createDoctor1} = require("./controllers/doctorController")
+const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,createDoctor1,updatePasswordDoctor} = require("./controllers/doctorController")
 const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient} = require("./controllers/patientController")
 const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
 const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,createAppointment1}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
-const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest}=require("./controllers/requestsController")
+const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 
 
@@ -133,14 +133,14 @@ app.get("/getLinkedFamilyMembers/:username",getLinkedFamilyMembers);
 app.post("/linkMember",linkMemberByEmail);
 app.post("/payPackage",payByPackage);
 app.put("/updatePassPatient",updatePasswordPatient);
-//app.post("/updatePassDoctor",updatePasswordDoctor);
+app.put("/updatePassDoctor",updatePasswordDoctor);
 app.get("/getMedicalHistory/:username",getMedicalHistory);
 app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
 app.post("/login",login);
 app.get("/logout",logout);
 
 app.put("/rejectRequest/:id",rejectrequest);
-app.post("/acceptRequest/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createDoctor1)
+app.post("/acceptRequest/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background/:id",acceptrequest)
 app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:description",createAppointment1);
 app.get("/getDoctorByUsername/:username",getDoctorByUsername);
 app.post("/forgetPassword",forgetPassword);
@@ -148,7 +148,6 @@ app.post("/resetPassword/:username",resetPassword);
 
 app.get("/getAdminByUsername/:username",getAdminByUsername);
 app.put("/updatePassAdmin",updatePasswordAdmin);
-
 
 
 

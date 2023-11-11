@@ -1,5 +1,6 @@
 // Import necessary modules and models
 const express = require('express');
+const bcrypt = require('bcrypt');
 
 const Doctor = require('../models/DoctorModel'); // Import your Doctor model
 const Patient = require('../models/PatientModel');
@@ -60,8 +61,8 @@ const createDoctor1 = async(req,res) => {
       password,
       date_of_birth,
       hourly_rate,
-      Affiliation,
       speciality,
+      Affiliation,
       educational_background
     } = req.params;
 
@@ -73,8 +74,8 @@ const createDoctor1 = async(req,res) => {
       password, // Hash the password before saving (use a library like bcrypt)
       date_of_birth,
       hourly_rate,
-      Affiliation,
       speciality,
+      Affiliation,
       educational_background,
       patients:[]
     });

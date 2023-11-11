@@ -9,7 +9,7 @@ const[name,setName]=useState('')
 const[email,setEmail]=useState('')
 const[password,setPassword]=useState('')
 const[date_of_birth,setDateOfBirth]=useState('')
-const[gender,setGender]=useState('')
+const[gender,setGender]=useState('Male')
 const[mobileNumber,setMobileNumber]=useState('')
 const [emergencyContact, setEmergencyContact] = useState({
     fullName: '',

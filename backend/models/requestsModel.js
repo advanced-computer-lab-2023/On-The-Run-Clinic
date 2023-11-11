@@ -35,6 +35,7 @@ const requestSchema = new mongoose.Schema({
   },
   status1: {
     type: String,
+    enum: ['pending', 'accepted', 'rejected'],
     required: false,
   },
   reqDocs: [{
@@ -42,6 +43,10 @@ const requestSchema = new mongoose.Schema({
     mimetype: String,
     name: String,
   }],
+  Affiliation:{
+    type:String,
+    required:false
+  }
   
 });
 
