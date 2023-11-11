@@ -44,12 +44,12 @@ const sendOTPByEmail = async (email, otp) => {
 const forgetPassword= async (req, res) => {
   const { username, email } = req.body;
   try {
-    const user = await Patient.findOne({ username });
+    let user = await Patient.findOne({ username });
     if (!user) {
-      const user = await Doctor.findOne({ username });
+       user = await Doctor.findOne({ username });
     }
     if (!user) {
-      const user = await Admin.findOne({ username });
+       user = await Admin.findOne({ username });
     }
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -78,12 +78,12 @@ const resetPassword= async (req, res) => {
   const { username } = req.params;
   const { email, otp, newPassword } = req.body;
   try {
-    const user = await Patient.findOne({ username });
+    let user = await Patient.findOne({ username });
     if (!user) {
-      const user = await Doctor.findOne({ username });
+       user = await Doctor.findOne({ username });
     }
     if (!user) {
-      const user = await Admin.findOne({ username });
+       user = await Admin.findOne({ username });
     }
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -108,6 +108,7 @@ const resetPassword= async (req, res) => {
         {
           $set: {
             password: hashedPassword,
+            passwordReset: undefined,
           },
         }
       );
