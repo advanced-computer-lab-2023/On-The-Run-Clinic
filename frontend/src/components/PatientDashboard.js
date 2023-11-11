@@ -74,6 +74,12 @@ const PatientDashboard = () => {
           </Link>
         </li>
         <li>
+          <Link to={`/viewHealthPackagesDetails/${username}`} className="menu-link">
+            <i className="fas fa-users"></i>
+            View my Health Packages
+          </Link>
+        </li>
+        <li>
           <Link to={`/changePatientPassword/${username}`} className="menu-link">
             <i className="fas fa-edit"></i>
             change my password

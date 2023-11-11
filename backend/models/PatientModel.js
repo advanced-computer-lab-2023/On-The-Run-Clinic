@@ -59,6 +59,16 @@ const PatientSchema = new mongoose.Schema({
     ref: 'HealthPackage',
     required: false
   },
+
+  packageBoughtDate : {
+    type : Date,
+    required : false
+  },
+  
+  packageCancelledDate : {
+    type : Date,
+    required : false
+  },
   
   myDoctors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' }],
   myfamilymembers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FamilyMem' }],
