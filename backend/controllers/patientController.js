@@ -392,6 +392,7 @@ const CancelPackage = async (req,res) => {
   patient.packageCancelledDate = new Date();
   console.log(patient.packageCancelledDate);
   console.log('Cancelled');
+  patient.healthpackage=null;
   await patient.save();
   res.status(201).json({message :"cancelled"});
   }

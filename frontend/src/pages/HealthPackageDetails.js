@@ -11,7 +11,33 @@ function HealthPackageList() {
   const [Patient, setPatient] = useState(null);
   const [linkedPatients, setLinkedPatients] = useState([]);
   const [status, setStatus] = useState('');
-  
+  const fetchLinkedPatients = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+      if (response.status === 200) {
+        const linkedPatients = response.data;
+        const linkedPatientsWithPackages = [];
+
+        for (let patient of linkedPatients) {
+          const patientResponse = await axios.get(`http://localhost:4000/getPatient/${patient.linkedPatientId}`);
+          const patientUsername = patientResponse.data.username;
+          const packageResponse = await axios.get(`http://localhost:4000/mypackage/${patientUsername}`);
+          console.log("package",packageResponse.data.healthPackage);
+        
+          linkedPatientsWithPackages.push({
+            ...patient,
+            username: patientUsername,
+            healthpackage: packageResponse.data.healthPackage
+          });
+        }
+        setLinkedPatients(linkedPatientsWithPackages);
+      }
+    } catch (error) {
+      console.error('Error fetching linked patients:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     const fetchPackage = async () => {
       try {
@@ -51,29 +77,8 @@ function HealthPackageList() {
     };
 
     fetchPackage();
-    const fetchLinkedPatients = async () => {
-      try {
-        const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
-        if (response.status === 200) {
-          const linkedPatients = response.data;
-          const LinkedPatientUSername= await axios.get(`http://localhost:4000/getPatientByUsername/${linkedPatients.linkedPatientId}`);
-          const linkedPackagesPromises = linkedPatients.map(patient =>
-            axios.get(`http://localhost:4000/mypackage/${LinkedPatientUSername}`)
-          );
-          const linkedPackagesResponses = await Promise.all(linkedPackagesPromises);
-          const linkedPackages = linkedPackagesResponses.map(response => response.data.healthPackage);
-          const linkedPatientsWithPackages = linkedPatients.map((patient, index) => ({
-            ...patient,
-            healthPackage: linkedPackages[index]
-          }));
-          setLinkedPatients(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching linked patients:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+   
+    fetchPackage();
 
     fetchLinkedPatients();
   }, [username]);
@@ -82,7 +87,7 @@ function HealthPackageList() {
     try {
       const response =await axios.post(`http://localhost:4000/CancelPackage/${username}`);
       // You may want to refresh the status after cancelling
-      if(response.status===(4000)){
+      if(response.status===(400)){
         alert("No Subscription Found");
       }
       else{
@@ -93,6 +98,26 @@ function HealthPackageList() {
       console.error('Error cancelling subscription:', error);
     }
   };
+  const handleCancelSubscription2 = async (id) => {
+    try {
+      const patientResponse = await axios.get(`http://localhost:4000/getPatient/${id}`);
+      const patientUsername = patientResponse.data.username;
+      const response =await axios.post(`http://localhost:4000/CancelPackage/${patientUsername}`);
+      // You may want to refresh the status after cancelling
+      if(response.status===(400)){
+        alert("No Subscription Found");
+        fetchLinkedPatients();
+      }
+      else{
+        fetchLinkedPatients();
+      alert('Health Package Subscription Cancelled');
+      
+      }
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+    }
+  };
+  
 
   return (
     <Container>
@@ -129,13 +154,16 @@ function HealthPackageList() {
         </Card>
       </Col>
       <Col md="6">
-        {patient.healthPackage ? (
+        {patient.healthpackage ? (
           <Card style={{ width: '18rem', marginBottom: '1rem' }}>
-            <Card.Header as="h5">{patient.healthPackage.name}</Card.Header>
+            <Card.Header as="h5">{patient.healthpackage.name}</Card.Header>
             <Card.Body>
-              <Card.Text>Price: {patient.healthPackage.price}</Card.Text>
-              <Card.Text>Discount: {patient.healthPackage.discount}</Card.Text>
-              <Card.Text>Services: {patient.healthPackage.services}</Card.Text>
+              <Card.Text>Price: {patient.healthpackage.price}</Card.Text>
+              <Card.Text>Discount: {patient.healthpackage.discount}</Card.Text>
+              <Card.Text>Services: {patient.healthpackage.services}</Card.Text>
+              
+              <Button variant="danger" onClick={() => handleCancelSubscription2(patient.linkedPatientId)}>Cancel Subscription</Button>
+              
             </Card.Body>
           </Card>
         ) : (
