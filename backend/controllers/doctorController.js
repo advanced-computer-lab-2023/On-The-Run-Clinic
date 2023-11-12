@@ -65,6 +65,12 @@ const createDoctor1 = async(req,res) => {
       Affiliation,
       educational_background
     } = req.params;
+    const existingDoctor = await Doctor.findOne({ username });
+    const existingPatient = await Patient.findOne({ username });
+    const existingAdmin= await Admin.findOne({ username });
+    if (existingDoctor||existingPatient||existingAdmin) {
+      return res.status(400).json({ error: 'Username already exists.' });
+    }
 
     // Create a new doctor record
     const newDoctor = new Doctor({
