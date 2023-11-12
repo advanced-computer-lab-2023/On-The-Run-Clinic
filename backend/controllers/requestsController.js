@@ -1,6 +1,7 @@
 const Request = require('../models/requestsModel'); 
 const multer = require('multer');
 const Doctor = require('../models/DoctorModel');
+const PendingDoctor = require('../models/PendingDoctor'); 
 
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -125,7 +126,7 @@ const rejectrequest = async (req, res) => {
 const acceptrequest = async (req, res) => {
   try {
     const { username,name,email,password,date_of_birth,hourly_rate,Affiliation,speciality,educational_background,id } = req.params;
-    const newDoctor = new Doctor({
+    const newPendingDoctor = new PendingDoctor({
       username,
       name,
       email,
@@ -134,13 +135,11 @@ const acceptrequest = async (req, res) => {
       hourly_rate,
       speciality,
       Affiliation,
-      educational_background,
-      patients:[],
-      reqDocs:[]
+      educational_background
     });
 
     // Save the new doctor to the database
-    await newDoctor.save();
+    await newPendingDoctor.save();
 
     // Finds the request by ID and updates the status to "rejected"
     const updatedRequest = await Request.findByIdAndUpdate(

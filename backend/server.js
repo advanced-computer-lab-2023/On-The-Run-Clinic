@@ -5,7 +5,7 @@ const express= require("express")
 const mongoose=require('mongoose')
 const Patient = require('./models/PatientModel');
 
-const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor} = require("./controllers/doctorController")
+const {createDoctor,createDoctor1,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor} = require("./controllers/doctorController")
 
 const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
@@ -17,7 +17,7 @@ const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatie
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
-
+const{createPDoctor,getPDoctors,getPDoctor,deletePDoctor}=require("./controllers/pendingDoctorController") 
 
 const{login,logout,forgetPassword,resetPassword}=require("./controllers/userController")
 const multer=require("multer");
@@ -159,4 +159,8 @@ app.get("/getAvailableDoctorAppointments/:id",getAvailableDoctorAppointments);
 app.post("/reserveAppointment/:appointmentId",reserveAppointment);
 app.get("/getPackageDiscount/:username",getHighestDiscount);
 
-
+app.post("/createPDoctor/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createPDoctor);
+app.delete("/deletePDoctor/:username",deletePDoctor);
+//app.get("/getPDoctors",getPDoctors);
+app.post("/createDoctor1/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createDoctor1);
+app.get("/getPDoctor/:username",getPDoctor);
