@@ -3,12 +3,17 @@ import axios from 'axios';
 import { Elements } from '@stripe/react-stripe-js';
 import PaymentForm from '../components/Stripe';
 import { loadStripe } from '@stripe/stripe-js';
+import { Card, ListGroup, Button, Form, Dropdown, DropdownButton } from 'react-bootstrap';
 
 import { useParams,useNavigate } from 'react-router-dom';
 const stripePromise = loadStripe('your-publishable-key');
 
 function HealthPackageSubscriptionPage() {
   const { username } = useParams();
+  const [discount,setDiscount]=useState(0);
+
+  const [linkedFamilyMembers, setLinkedFamilyMembers] = useState([]); // Add this line
+  
   const [patient,setPatient]=useState('')
   const [healthPackages, setHealthPackages] = useState([]);
   const [formData, setFormData] = useState({
@@ -42,6 +47,37 @@ function HealthPackageSubscriptionPage() {
         console.error('Error fetching health packages:', error);
       }
     }
+    async function fetchDiscount(){
+      try {
+        const response = await axios.get(`http://localhost:4000/getPackageDiscount/${username}`);
+        if (response.status === 200) {
+          setDiscount(response.data);
+          setFormData(prevFormData => ({
+            ...prevFormData,
+            discount: response.data,
+          }));
+          
+          
+        }
+      }
+      catch (error) {
+        console.error('Error fetching discount:', error);
+      }
+    }
+    const fetchFamilyMembers = async () => {
+      try {
+       
+        const linkedResponse = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+        if (linkedResponse.status === 200) {
+          setLinkedFamilyMembers(linkedResponse.data);
+        }
+      } catch (error) {
+        console.error('Error fetching family members:', error);
+      } 
+    };
+
+    fetchFamilyMembers();
+    fetchDiscount();
     fetchWallet();
     fetchHealthPackages();
   }, []);
@@ -52,6 +88,12 @@ function HealthPackageSubscriptionPage() {
       setFormData({ ...formData, selectedPackage: selectedPackage._id });
       setSelectedPackageInfo(selectedPackage);
     }
+  };
+  const handleSelectFamilyMember = (e) => {
+    setFormData({
+      ...formData,
+      LinkedPatientId: e.target.value === 'Me' ? null : e.target.value,
+    });
   };
 
   const handleChange = (e) => {
@@ -92,90 +134,79 @@ function HealthPackageSubscriptionPage() {
   
 
   return (
-    <div>
-
-      <h1>Health Package Subscription</h1>
-      <strong>Wallet:</strong> {patient.wallet}
-    
-      <div>
-        <h2>Select a Health Package:</h2>
-        <ul>
-          {healthPackages.map((packagee) => (
-            <li key={packagee._id}>
-              <button
-                onClick={() => handleSelectPackage(packagee._id)}
-                
-              >
-                <strong>{packagee.name}</strong>
-                <br />
-                Cost: ${packagee.price}
-                <br />
-              </button>
-            </li>
-          ))}
-        </ul>
+    <div className="container">
+      <h1 className="my-4">Health Package Subscription</h1>
+      <p><strong>Wallet:</strong> {patient.wallet}</p>
+      <p><strong>Discount from My family Members:</strong> {discount}</p>
+  
+      <h2 className="my-3">Select a Health Package:</h2>
+      <div className="d-flex flex-wrap justify-content-between">
+        {healthPackages.map((packagee) => (
+          <Card style={{ width: '18rem', marginBottom: '1rem' }} key={packagee._id}>
+            <Card.Header as="h5">{packagee.name}</Card.Header>
+            <ListGroup variant="flush">
+              <ListGroup.Item>Cost: ${packagee.price}</ListGroup.Item>
+            </ListGroup>
+            <Card.Body>
+              <Button variant="primary" onClick={() => handleSelectPackage(packagee._id)}>Select</Button>
+            </Card.Body>
+          </Card>
+        ))}
       </div>
+  
       {selectedPackageInfo && (
-        <div>
-          <h2>Selected Package Details:</h2>
-          <p>
-            <strong>Name:</strong> {selectedPackageInfo.name}
-          </p>
-          <p>
-            <strong>Cost:</strong> ${selectedPackageInfo.price}
-          </p>
-          <p>
-            <strong>Services:</strong> {selectedPackageInfo.services}
-          </p>
-          <p>
-            <strong>Discount:</strong> {selectedPackageInfo.discount}
-          </p>
-        </div>
+        <Card className="my-4">
+          <Card.Header as="h5">Selected Package Details:</Card.Header>
+          <ListGroup variant="flush">
+            <ListGroup.Item><strong>Name:</strong> {selectedPackageInfo.name}</ListGroup.Item>
+            <ListGroup.Item><strong>Cost:</strong> ${selectedPackageInfo.price}</ListGroup.Item>
+            <ListGroup.Item><strong>Services:</strong> {selectedPackageInfo.services}</ListGroup.Item>
+            <ListGroup.Item><strong>Discount:</strong> {selectedPackageInfo.discount}</ListGroup.Item>
+          </ListGroup>
+        </Card>
       )}
-      <form onSubmit={handleSubscribe}>
-        <div>
-          <label>Payment Method:</label>
-          <label>
-            <input
-              type="radio"
-              name="paymentMethod"
-              value="creditCard"
-              checked={formData.paymentMethod === 'creditCard'}
-              onChange={handleChange}
-            />
-            Credit Card
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="paymentMethod"
-              value="wallet"
-              checked={formData.paymentMethod === 'wallet'}
-              onChange={handleChange}
-            />
-            Wallet
-          </label>
-        </div>
-        <button type="submit">Subscribe</button>
-      </form>
-      {formData.paymentMethod === 'creditCard' && (
- <div>
- <h2>Payment Information</h2>
- <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-   <div style={{ flex: 1 }}>
-     <Elements stripe={stripePromise}>
-       <div className="stripe-container">
-         <PaymentForm />
-       </div>
-     </Elements>
-   </div>
-   <div style={{ flex: 1 }}>
-     {/* Add the Wallet form or content here */}
-   </div>
- </div>
-</div>
-)}
-
+  
+      <Form onSubmit={handleSubscribe}>
+        <Form.Group>
+          <Form.Label>Subscribe for:</Form.Label>
+          <Form.Control as="select" onChange={handleSelectFamilyMember}>
+            <option value={username}>Me</option>
+            {linkedFamilyMembers.map((member) => (
+              <option key={member.linkedPatientId} value={member.linkedPatientId}>
+                {member.linkedPatientName}
+              </option>
+            ))}
+          </Form.Control>
+        </Form.Group>
+  
+        <Form.Group>
+          <Form.Label>Payment Method:</Form.Label>
+          <Form.Check
+            type="radio"
+            label="Credit Card"
+            name="paymentMethod"
+            value="creditCard"
+            checked={formData.paymentMethod === 'creditCard'}
+            onChange={handleChange}
+          />
+          <Form.Check
+            type="radio"
+            label="Wallet"
+            name="paymentMethod"
+            value="wallet"
+            checked={formData.paymentMethod === 'wallet'}
+            onChange={handleChange}
+          />
+        </Form.Group>
+  
+        {formData.paymentMethod === 'creditCard' && (
+          <Elements stripe={stripePromise}>
+            <PaymentForm />
+          </Elements>
+        )}
+  
+        <Button variant="primary" type="submit">Subscribe</Button>
+      </Form>
     </div>
   );
 }

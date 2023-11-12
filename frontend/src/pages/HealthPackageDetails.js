@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Spinner, Button, Card } from 'react-bootstrap';
 
 function HealthPackageList() {
   const { username } = useParams();
@@ -8,8 +9,35 @@ function HealthPackageList() {
   const [hPackage, setPackage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [Patient, setPatient] = useState(null);
+  const [linkedPatients, setLinkedPatients] = useState([]);
   const [status, setStatus] = useState('');
-  
+  const fetchLinkedPatients = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+      if (response.status === 200) {
+        const linkedPatients = response.data;
+        const linkedPatientsWithPackages = [];
+
+        for (let patient of linkedPatients) {
+          const patientResponse = await axios.get(`http://localhost:4000/getPatient/${patient.linkedPatientId}`);
+          const patientUsername = patientResponse.data.username;
+          const packageResponse = await axios.get(`http://localhost:4000/mypackage/${patientUsername}`);
+          console.log("package",packageResponse.data.healthPackage);
+        
+          linkedPatientsWithPackages.push({
+            ...patient,
+            username: patientUsername,
+            healthpackage: packageResponse.data.healthPackage
+          });
+        }
+        setLinkedPatients(linkedPatientsWithPackages);
+      }
+    } catch (error) {
+      console.error('Error fetching linked patients:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     const fetchPackage = async () => {
       try {
@@ -49,13 +77,17 @@ function HealthPackageList() {
     };
 
     fetchPackage();
+   
+    fetchPackage();
+
+    fetchLinkedPatients();
   }, [username]);
 
    const handleCancelSubscription = async () => {
     try {
       const response =await axios.post(`http://localhost:4000/CancelPackage/${username}`);
       // You may want to refresh the status after cancelling
-      if(response.status===(4000)){
+      if(response.status===(400)){
         alert("No Subscription Found");
       }
       else{
@@ -66,26 +98,91 @@ function HealthPackageList() {
       console.error('Error cancelling subscription:', error);
     }
   };
+  const handleCancelSubscription2 = async (id) => {
+    try {
+      const patientResponse = await axios.get(`http://localhost:4000/getPatient/${id}`);
+      const patientUsername = patientResponse.data.username;
+      const response =await axios.post(`http://localhost:4000/CancelPackage/${patientUsername}`);
+      // You may want to refresh the status after cancelling
+      if(response.status===(400)){
+        alert("No Subscription Found");
+        fetchLinkedPatients();
+      }
+      else{
+        fetchLinkedPatients();
+      alert('Health Package Subscription Cancelled');
+      
+      }
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+    }
+  };
+  
 
   return (
-    <div>
-      <h1>Health Package Of {username}</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : hPackage ? (
-        <div>
-          <p>Name: {hPackage.name}</p>
-          <p>Price: {hPackage.price}</p>
-          <p>Discount: {hPackage.discount}</p>
-          <p>Services: {hPackage.services}</p>
-          <p>Status: {status}</p>
-            <button onClick={handleCancelSubscription}>Cancel Subscription</button>
-        </div>
-      ) : (
-        <p>No Health Packages Found.</p>
-      )}
-      <button onClick={() => navigate(-1)}>Back</button>
-    </div>
+    <Container>
+      <Row className="justify-content-md-center">
+        <Col md="auto">
+          <h1 className="my-4 text-center">My health Package</h1>
+          {loading ? (
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          ) : hPackage ? (
+            <>
+              <Card style={{ width: '18rem', marginBottom: '1rem' }}>
+                <Card.Header as="h5">{hPackage.name}</Card.Header>
+                <Card.Body>
+                  <Card.Text>Price: {hPackage.price}</Card.Text>
+                  <Card.Text>Discount: {hPackage.discount}</Card.Text>
+                  <Card.Text>Services: {hPackage.services}</Card.Text>
+                  <Card.Text>Status: {status}</Card.Text>
+                  <Button variant="danger" onClick={handleCancelSubscription}>Cancel Subscription</Button>
+                </Card.Body>
+              </Card>
+              <h2 className="my-4 text-center">My Linked Patients Health Packages</h2>
+              {linkedPatients.length > 0 ? (
+  linkedPatients.map(patient => (
+    <Row key={patient.id}>
+      <Col md="6">
+        <Card style={{ width: '18rem', marginBottom: '1rem' }}>
+          <Card.Header as="h5">{patient.linkedPatientId}</Card.Header>
+          <Card.Body>
+            <Card.Text>Name: {patient.linkedPatientName}</Card.Text>
+            <Card.Text>Relation: {patient.linkedPatientRelation}</Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+      <Col md="6">
+        {patient.healthpackage ? (
+          <Card style={{ width: '18rem', marginBottom: '1rem' }}>
+            <Card.Header as="h5">{patient.healthpackage.name}</Card.Header>
+            <Card.Body>
+              <Card.Text>Price: {patient.healthpackage.price}</Card.Text>
+              <Card.Text>Discount: {patient.healthpackage.discount}</Card.Text>
+              <Card.Text>Services: {patient.healthpackage.services}</Card.Text>
+              
+              <Button variant="danger" onClick={() => handleCancelSubscription2(patient.linkedPatientId)}>Cancel Subscription</Button>
+              
+            </Card.Body>
+          </Card>
+        ) : (
+          <p>No Health Package Found for this Patient.</p>
+        )}
+      </Col>
+    </Row>
+  ))
+) : (
+  <p>No Linked Patients Found.</p>
+)}
+            </>
+          ) : (
+            <p>No Health Packages Found.</p>
+          )}
+          <Button variant="primary" onClick={() => navigate(-1)}>Back</Button>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

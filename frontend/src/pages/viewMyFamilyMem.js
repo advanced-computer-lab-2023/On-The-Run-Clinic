@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams,useNavigate } from 'react-router-dom';
+import { Card, ListGroup, Button, Container, Row, Col, Spinner ,OverlayTrigger,Popover} from 'react-bootstrap';
 
 const FamilyMembersList = () => {
   const { username } = useParams();
   const navigate=useNavigate();
   const [familyMembers, setFamilyMembers] = useState([]);
+  const [linkedFamilyMembers, setLinkedFamilyMembers] = useState([]); // Add this line
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +20,10 @@ const FamilyMembersList = () => {
         if (response.status === 200) {
           setFamilyMembers(response.data);
         }
+        const linkedResponse = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+        if (linkedResponse.status === 200) {
+          setLinkedFamilyMembers(linkedResponse.data);
+        }
       } catch (error) {
         console.error('Error fetching family members:', error);
       } finally {
@@ -27,29 +33,65 @@ const FamilyMembersList = () => {
 
     fetchFamilyMembers();
   }, [username]);
-
+  const FamilyMember = ({ member, isLinked }) => (
+    
+    <Card style={{ width: '18rem', marginBottom: '1rem' }} >
+      <Card.Header as="h5">{isLinked ? member.linkedPatientName : member.name}</Card.Header>
+      <ListGroup variant="flush">
+        {!isLinked && (
+          <>
+            <ListGroup.Item>National ID: {member.national_id}</ListGroup.Item>
+            <ListGroup.Item>Age: {member.age}</ListGroup.Item>
+            <ListGroup.Item>Gender: {member.gender}</ListGroup.Item>
+          </>
+        )}
+        <ListGroup.Item>Relation: {isLinked ? member.linkedPatientRelation : member.relation}</ListGroup.Item>
+      </ListGroup>
+    </Card>
+  );
+ 
   return (
-    <div>
-      <h1>Family Members of {username}</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : familyMembers.length > 0 ? (
-        <ul>
-          {familyMembers.map((familyMember) => (
-            <li key={familyMember._id}>
-              Name: {familyMember.name}<br />
-              National ID: {familyMember.national_id}<br />
-              Age: {familyMember.age}<br />
-              Gender: {familyMember.gender}<br />
-              Relation: {familyMember.relation}<br />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No family members found.</p>
-      )}
-      <button onClick={() => navigate(-1)}>Back</button>
-    </div>
+    <Container>
+      <Row className="justify-content-md-center">
+        <Col md="auto">
+          <h1 className="my-4 text-center">Family Members of {username}</h1>
+          {loading ? (
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          ) : (
+            <>
+              <h2 className="my-3">Normal Family Members</h2>
+              <Row>
+                {familyMembers.length > 0 ? (
+                  familyMembers.map(member => (
+                    <Col sm={12} md={6} lg={4} xl={3} key={member._id}>
+                      <FamilyMember member={member} />
+                    </Col>
+                  ))
+                ) : (
+                  <p>No normal family members found.</p>
+                )}
+              </Row>
+
+              <h2 className="my-3">Linked Family Members</h2>
+              <Row>
+                {linkedFamilyMembers.length > 0 ? (
+                  linkedFamilyMembers.map(member => (
+                    <Col sm={12} md={6} lg={4} xl={3} key={member._id}>
+                      <FamilyMember member={member} isLinked />
+                    </Col>
+                  ))
+                ) : (
+                  <p>No linked family members found.</p>
+                )}
+              </Row>
+            </>
+          )}
+          <Button variant="primary" onClick={() => navigate(-1)}>Back</Button>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

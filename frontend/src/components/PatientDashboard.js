@@ -85,6 +85,12 @@ const PatientDashboard = () => {
             change my password
           </Link>
         </li>
+        <li>
+          <Link to={`/filterAppointmentsPatient/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            view my appointments
+          </Link>
+        </li>
       </ul>
     </div>
   );

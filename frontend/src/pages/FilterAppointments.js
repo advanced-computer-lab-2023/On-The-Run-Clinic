@@ -11,6 +11,7 @@ const DoctorAppointments = () => {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedUpcoming, setSelectedUpcoming] = useState(false); // New state for upcoming filter
   const [newAppointmentDate, setNewAppointmentDate] = useState('');
+  const [selectedPast, setSelectedPast] = useState(false);
 
 const [newAppointmentHour, setNewAppointmentHour] = useState('');
 
@@ -70,7 +71,11 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
   
     fetchAppointmentsWithPatients();
   }, [username]);
-  
+  const handlePastFilterChange = () => {
+    const isPast = !selectedPast;
+    setSelectedPast(isPast);
+    filterAppointments(selectedDate, selectedStatus, selectedUpcoming, isPast);
+  };
 
   const handleDateFilterChange = (event) => {
     const selectedDate = event.target.value;
@@ -120,13 +125,13 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
   };
   
 
-  const filterAppointments = async (date, status, upcoming)=> {
+  const filterAppointments = async (date, status, upcoming,past)=> {
     console.log('filterAppointments function called');
     const filtered = appointments.filter((appointment) => {
       const appointmentDate = new Date(appointment.date);
       const currentDate = new Date();
 
-      if (!date && !status && !upcoming) {
+      if (!date && !status && !upcoming&&!past) {
         return true; // No filters applied, return all appointments
       }
       if (date && status && upcoming) {
@@ -134,6 +139,13 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
           appointment.date.substring(0, 10) === date &&
           appointment.status === status &&
           appointmentDate > currentDate
+        );
+      }
+      if (date && status && past) {
+        return (
+          appointment.date.substring(0, 10) === date &&
+          appointment.status === status &&
+          appointmentDate < currentDate
         );
       }
       if (date && status) {
@@ -148,10 +160,22 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
           appointmentDate > currentDate
         );
       }
+      if (date && past) {
+        return (
+          appointment.date.substring(0, 10) === date &&
+          appointmentDate < currentDate
+        );
+      }
       if (status && upcoming) {
         return (
           appointment.status === status &&
           appointmentDate > currentDate
+        );
+      }
+      if (status && past) {
+        return (
+          appointment.status === status &&
+          appointmentDate < currentDate
         );
       }
       if (date) {
@@ -167,6 +191,11 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
       if (upcoming) {
         return (
           appointmentDate > currentDate
+        );
+      }
+      if (past) {
+        return (
+          appointmentDate < currentDate
         );
       }
       return false;
@@ -254,6 +283,14 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
           onChange={handleUpcomingFilterChange}
         />
       </div>
+      <div>
+  <label>Past Filter:</label>
+  <input
+    type="checkbox"
+    checked={selectedPast}
+    onChange={handlePastFilterChange}
+  />
+</div>
       <button onClick={resetFilters}>Reset Filters</button>
       <ul>
         {filteredAppointments.map((appointment) => (

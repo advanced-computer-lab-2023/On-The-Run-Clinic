@@ -1,4 +1,6 @@
 import { createContext, useReducer, useEffect } from 'react'
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 export const AuthContext = createContext()
 
@@ -20,13 +22,14 @@ export const AuthContextProvider = ({ children }) => {
   })
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'))
+    const token = Cookies.get('token');
 
-    if (user) {
+    if (token) {
+      
+        const user = jwtDecode(token);
       dispatch({ type: 'LOGIN', payload: user }) 
     }
   }, [])
-
   console.log('AuthContext state:', state)
   
   return (

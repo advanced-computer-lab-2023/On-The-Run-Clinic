@@ -62,14 +62,10 @@ function App() {
           <Route path="/deleteMedicalHistory/:username" element={<MedicalHistoryList/>}/>
           <Route path="/login" element={<Login/>}/>
 
-          
-
-        
           <Route path="/dashboard/admin/:username" element={<AdminDashboard/>}/>
           <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
           <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>
           <Route path="/linkFamilyMember/:username" element={<LinkPatientPage/>}/>
-
 
           <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
           <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
