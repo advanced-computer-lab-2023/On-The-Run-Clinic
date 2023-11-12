@@ -201,6 +201,12 @@ const linkMemberByEmail=async(req,res)=>{
           linkedPatientName:patientToBeLinked.name
         });
         await patient.save();
+        patientToBeLinked.linkedPatients.push({
+          linkedPatientId: patient._id,
+          linkedPatientRelation: relation,
+          linkedPatientName: patient.name
+        });
+        await patientToBeLinked.save();
       }
 
     }
@@ -226,6 +232,12 @@ const linkMemberByEmail=async(req,res)=>{
           linkedPatientName:patientToBeLinked.name
         });
         await patient.save();
+        patientToBeLinked.linkedPatients.push({
+          linkedPatientId: patient._id,
+          linkedPatientRelation: relation,
+          linkedPatientName: patient.name
+        });
+        await patientToBeLinked.save();
       }
       
 
@@ -241,6 +253,12 @@ const linkMemberByEmail=async(req,res)=>{
         linkedPatientName:patientToBeLinked.name
       });
       await patient.save();
+      patientToBeLinked.linkedPatients.push({
+        linkedPatientId: patient._id,
+        linkedPatientRelation: relation,
+        linkedPatientName: patient.name
+      });
+      await patientToBeLinked.save();
     }
     
     res.status(200).json(patient);
@@ -314,37 +332,47 @@ const deleteMedicalHistory= async (req, res) => {
 }
 const payByPackage = async (req, res) => {
   try {
-    const { username, paymentMethod, selectedPackage } = req.body;
+    const { username, paymentMethod, selectedPackage,discount,LinkedPatientId } = req.body;
     const packagee = await HealthPackage.findById(selectedPackage);
-    console.log("pp" + packagee);
     const patient = await Patient.findOne({ username: username });
-    patient.healthpackage=null;
-    patient.packageBoughtDate = null;
-    const myfamily=patient.linkedPatients;
-    if(paymentMethod==='wallet'){
-      if (packagee.price > patient.wallet) {
-        return res.status(400).json({ error: 'Not enough money in wallet' });
-      }else{
-        patient.wallet = patient.wallet - packagee.price;
-
+    if(LinkedPatientId===null){
+      if(paymentMethod==='wallet'&&patient){
+        if (packagee.price-discount > patient.wallet) {
+          return res.status(400).json({ error: 'Not enough money in wallet' });
+        }else{
+          patient.wallet = patient.wallet - (packagee.price-discount);
+  
+        }
+  
       }
+      patient.healthpackage = packagee;
+      patient.packageCancelledDate = null;
+      patient.packageBoughtDate = new Date();
+      console.log("date " + patient.packageBoughtDate);
+  
+        await patient.save();
+    }
+    else{
+      const p = await Patient.findById(LinkedPatientId);
+      if(paymentMethod==='wallet'&&patient&&p){
+        if (packagee.price-discount > patient.wallet) {
+          return res.status(400).json({ error: 'Not enough money in wallet' });
+        }else{
+          patient.wallet = patient.wallet - (packagee.price-discount);
+  
+        }
+  
+      }
+      p.healthpackage = packagee;
+      p.packageCancelledDate = null;
+      p.packageBoughtDate = new Date();
+      console.log("date " + p.packageBoughtDate);
+  
+        await p.save();
 
     }
-    patient.healthpackage = packagee;
-    patient.packageCancelledDate = null;
-    patient.packageBoughtDate = new Date();
-    console.log("date " + patient.packageBoughtDate);
-      for (let i = 0; i < myfamily.length; i++) {
-        const familyMember = myfamily[i];
-        const familyMemberObject = await Patient.findById(familyMember.linkedPatientId);
-        familyMemberObject.healthpackage = packagee;
-        familyMemberObject.packageCancelledDate = null;
-        familyMemberObject.packageBoughtDate = new Date();
-        await familyMemberObject.save();
-        // Do something with the family member object
-      }
-
-      await patient.save();
+   
+  
       res.status(200).json({ message: 'Payment successful' });
   } catch (error) {
     console.error('Error making wallet payment:', error);
@@ -429,7 +457,31 @@ const viewHealthPackages = async (req, res) => {
     return res.status(500).json({ error: 'Error fetching health package' });
   }
 };
+const getHighestDiscount = async(req,res)=>{
+  try{
+    const {username}=req.params;
+    const patient=await Patient.findOne({username:username});
+    const linkedPatients=patient.linkedPatients;
+    let discount=0;
+
+    // Loop over the linkedPatients array
+    for (const linkedPatient of linkedPatients) {
+      // Access each linked patient here
+      const p=await Patient.findById(linkedPatient.linkedPatientId);
+      if(p.healthpackage){
+        if(p.healthpackage.discount>discount){
+          discount=p.healthpackage.discount;
+        }
+      }
+    }
+    return res.status(200).json(discount );
+  
+  }
+  catch{
+    return res.status(500).json({ error: 'Error fetching discount' });
+  }
+}
 
 
 
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage}
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount}

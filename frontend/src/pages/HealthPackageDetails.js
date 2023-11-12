@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Spinner, Button, Card } from 'react-bootstrap';
 
 function HealthPackageList() {
   const { username } = useParams();
@@ -8,6 +9,7 @@ function HealthPackageList() {
   const [hPackage, setPackage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [Patient, setPatient] = useState(null);
+  const [linkedPatients, setLinkedPatients] = useState([]);
   const [status, setStatus] = useState('');
   
   useEffect(() => {
@@ -49,6 +51,31 @@ function HealthPackageList() {
     };
 
     fetchPackage();
+    const fetchLinkedPatients = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+        if (response.status === 200) {
+          const linkedPatients = response.data;
+          const LinkedPatientUSername= await axios.get(`http://localhost:4000/getPatientByUsername/${linkedPatients.linkedPatientId}`);
+          const linkedPackagesPromises = linkedPatients.map(patient =>
+            axios.get(`http://localhost:4000/mypackage/${LinkedPatientUSername}`)
+          );
+          const linkedPackagesResponses = await Promise.all(linkedPackagesPromises);
+          const linkedPackages = linkedPackagesResponses.map(response => response.data.healthPackage);
+          const linkedPatientsWithPackages = linkedPatients.map((patient, index) => ({
+            ...patient,
+            healthPackage: linkedPackages[index]
+          }));
+          setLinkedPatients(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching linked patients:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLinkedPatients();
   }, [username]);
 
    const handleCancelSubscription = async () => {
@@ -68,24 +95,66 @@ function HealthPackageList() {
   };
 
   return (
-    <div>
-      <h1>Health Package Of {username}</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : hPackage ? (
-        <div>
-          <p>Name: {hPackage.name}</p>
-          <p>Price: {hPackage.price}</p>
-          <p>Discount: {hPackage.discount}</p>
-          <p>Services: {hPackage.services}</p>
-          <p>Status: {status}</p>
-            <button onClick={handleCancelSubscription}>Cancel Subscription</button>
-        </div>
-      ) : (
-        <p>No Health Packages Found.</p>
-      )}
-      <button onClick={() => navigate(-1)}>Back</button>
-    </div>
+    <Container>
+      <Row className="justify-content-md-center">
+        <Col md="auto">
+          <h1 className="my-4 text-center">My health Package</h1>
+          {loading ? (
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          ) : hPackage ? (
+            <>
+              <Card style={{ width: '18rem', marginBottom: '1rem' }}>
+                <Card.Header as="h5">{hPackage.name}</Card.Header>
+                <Card.Body>
+                  <Card.Text>Price: {hPackage.price}</Card.Text>
+                  <Card.Text>Discount: {hPackage.discount}</Card.Text>
+                  <Card.Text>Services: {hPackage.services}</Card.Text>
+                  <Card.Text>Status: {status}</Card.Text>
+                  <Button variant="danger" onClick={handleCancelSubscription}>Cancel Subscription</Button>
+                </Card.Body>
+              </Card>
+              <h2 className="my-4 text-center">My Linked Patients Health Packages</h2>
+              {linkedPatients.length > 0 ? (
+  linkedPatients.map(patient => (
+    <Row key={patient.id}>
+      <Col md="6">
+        <Card style={{ width: '18rem', marginBottom: '1rem' }}>
+          <Card.Header as="h5">{patient.linkedPatientId}</Card.Header>
+          <Card.Body>
+            <Card.Text>Name: {patient.linkedPatientName}</Card.Text>
+            <Card.Text>Relation: {patient.linkedPatientRelation}</Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+      <Col md="6">
+        {patient.healthPackage ? (
+          <Card style={{ width: '18rem', marginBottom: '1rem' }}>
+            <Card.Header as="h5">{patient.healthPackage.name}</Card.Header>
+            <Card.Body>
+              <Card.Text>Price: {patient.healthPackage.price}</Card.Text>
+              <Card.Text>Discount: {patient.healthPackage.discount}</Card.Text>
+              <Card.Text>Services: {patient.healthPackage.services}</Card.Text>
+            </Card.Body>
+          </Card>
+        ) : (
+          <p>No Health Package Found for this Patient.</p>
+        )}
+      </Col>
+    </Row>
+  ))
+) : (
+  <p>No Linked Patients Found.</p>
+)}
+            </>
+          ) : (
+            <p>No Health Packages Found.</p>
+          )}
+          <Button variant="primary" onClick={() => navigate(-1)}>Back</Button>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

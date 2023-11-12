@@ -54,10 +54,7 @@ const getFamilyMembers=async(req,res)=>{
     console.log(familyMembers)
 
     // Check if any family members were found
-    if (familyMembers.length === 0) {
-      return res.status(404).json({ message: 'No family members found for this patient.' });
-    }
-
+    
     // Send the family members as a JSON response
     res.status(200).json(familyMembers);
 
