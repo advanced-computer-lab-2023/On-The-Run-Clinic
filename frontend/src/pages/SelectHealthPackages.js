@@ -20,6 +20,7 @@ function HealthPackageSubscriptionPage() {
     selectedPackage: '', // Store the selected package ID
     paymentMethod: 'creditCard',
     username:username,
+    LinkedPatientId: null,
   });
   const [selectedPackageInfo, setSelectedPackageInfo] = useState(null); // Store the selected package details
 
@@ -92,7 +93,7 @@ function HealthPackageSubscriptionPage() {
   const handleSelectFamilyMember = (e) => {
     setFormData({
       ...formData,
-      LinkedPatientId: e.target.value === 'Me' ? null : e.target.value,
+      LinkedPatientId: e.target.value
     });
   };
 
@@ -110,6 +111,7 @@ function HealthPackageSubscriptionPage() {
       alert('Please select a package');}
       else{
         try {
+          console.log(formData)
           const response = await axios.post('http://localhost:4000/payPackage', formData);
           const response1 = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
         if (response1.status === 200) {
@@ -170,7 +172,7 @@ function HealthPackageSubscriptionPage() {
         <Form.Group>
           <Form.Label>Subscribe for:</Form.Label>
           <Form.Control as="select" onChange={handleSelectFamilyMember}>
-            <option value={username}>Me</option>
+            <option value={null}>Me</option>
             {linkedFamilyMembers.map((member) => (
               <option key={member.linkedPatientId} value={member.linkedPatientId}>
                 {member.linkedPatientName}

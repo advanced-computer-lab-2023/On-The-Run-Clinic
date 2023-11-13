@@ -19,6 +19,55 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
   const { username } = useParams();
   const [doctor, setDoctor] = useState(null);
 
+  const fetchAppointmentsWithPatients = async () => {
+    try {
+      // First, fetch the doctor based on the username
+      const response1 = await axios.get(`http://localhost:4000/getDoctor/${username}`);
+      
+      setDoctor(response1.data);
+
+      // Then, fetch all appointments based on the doctor's ID
+      if (response1.data) {
+        const response2 = await axios.get(`http://localhost:4000/getDoctorAppointments/${response1.data._id}`);
+        console.log(response2.data)
+        if (response2.status === 200) {
+          const doctorAppointments = response2.data;
+
+          // Create an array to store appointments with patient data
+          const appointmentsWithPatients = [];
+
+          // Loop through the doctor's appointments
+          for (const appointment of doctorAppointments) {
+            try {
+              if(appointment.patientId!=null){
+              const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`);
+              if (response.status === 200) {
+                const patientData = response.data;
+
+                // Combine appointment and patient details
+                const appointmentWithPatient = { ...appointment, patientInfo: patientData };
+                appointmentsWithPatients.push(appointmentWithPatient);
+              }}
+              else{
+                const appointmentWithPatient = { ...appointment, patientInfo: "empty" };
+                appointmentsWithPatients.push(appointmentWithPatient);
+              }
+            } catch (error) {
+              console.error('Error fetching patient details:', error);
+            }
+          }
+          console.log("Appointments with Patients:", appointmentsWithPatients)
+
+          // Set the state with the combined data
+          setAppointments(appointmentsWithPatients);
+          setFilteredAppointments(appointmentsWithPatients);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchAppointmentsWithPatients = async () => {
       try {
@@ -96,9 +145,11 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
       });
   
       if (response.status === 200) {
+        
         // If the appointment was created successfully, add it to the appointments list
         setAppointments([...appointments, response.data]);
         setFilteredAppointments([...filteredAppointments, response.data]);
+
       }
     } catch (error) {
       console.error('Error creating new appointment:', error);
@@ -121,7 +172,8 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
     setSelectedDate('');
     setSelectedStatus('');
     setSelectedUpcoming(false);
-    setFilteredAppointments(appointments); // Reset filters to show all appointments
+    setFilteredAppointments(appointments); 
+    setSelectedPast(false)// Reset filters to show all appointments
   };
   
 

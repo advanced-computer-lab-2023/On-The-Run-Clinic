@@ -12,6 +12,7 @@ const PatientAppointments = () => {
   const [selectedUpcoming, setSelectedUpcoming] = useState(false);
   const { username } = useParams();
   const [patient, setPatient] = useState(null);
+  const [selectedPast, setSelectedPast] = useState(false);
 
   useEffect(() => {
     const fetchAppointmentsWithDoctors = async () => {
@@ -73,20 +74,26 @@ const PatientAppointments = () => {
     setSelectedUpcoming(isUpcoming);
     filterAppointments(selectedDate, selectedStatus, isUpcoming);
   };
+  const handlePastFilterChange = () => {
+    const isPast = !selectedPast;
+    setSelectedPast(isPast);
+    filterAppointments(selectedDate, selectedStatus, selectedUpcoming, isPast);
+  };
 
   const resetFilters = () => {
     setSelectedDate('');
     setSelectedStatus('');
     setSelectedUpcoming(false);
     setFilteredAppointments(appointments);
+    setSelectedPast(false); 
   };
 
-  const filterAppointments = (date, status, upcoming) => {
+  const filterAppointments = (date, status, upcoming,past) => {
     const filtered = appointments.filter((appointment) => {
       const appointmentDate = new Date(appointment.date);
       const currentDate = new Date();
 
-      if (!date && !status && !upcoming) {
+      if (!date && !status && !upcoming&&!past) {
         return true;
       }
       if (date && status && upcoming) {
@@ -94,6 +101,13 @@ const PatientAppointments = () => {
           appointment.date.substring(0, 10) === date &&
           appointment.status === status &&
           appointmentDate > currentDate
+        );
+      }
+      if (date && status && past) {
+        return (
+          appointment.date.substring(0, 10) === date &&
+          appointment.status === status &&
+          appointmentDate < currentDate
         );
       }
       if (date && status) {
@@ -108,10 +122,22 @@ const PatientAppointments = () => {
           appointmentDate > currentDate
         );
       }
+      if (date && past) {
+        return (
+          appointment.date.substring(0, 10) === date &&
+          appointmentDate < currentDate
+        );
+      }
       if (status && upcoming) {
         return (
           appointment.status === status &&
           appointmentDate > currentDate
+        );
+      }
+      if (status && past) {
+        return (
+          appointment.status === status &&
+          appointmentDate < currentDate
         );
       }
       if (date) {
@@ -127,6 +153,11 @@ const PatientAppointments = () => {
       if (upcoming) {
         return (
           appointmentDate > currentDate
+        );
+      }
+      if (past) {
+        return (
+          appointmentDate < currentDate
         );
       }
       return false;
@@ -164,6 +195,14 @@ const PatientAppointments = () => {
           type="checkbox"
           checked={selectedUpcoming}
           onChange={handleUpcomingFilterChange}
+        />
+      </div>
+      <div>
+        <label>Past Filter:</label>
+        <input
+          type="checkbox"
+          checked={selectedPast}
+          onChange={handlePastFilterChange}
         />
       </div>
       <button onClick={resetFilters}>Reset Filters</button>

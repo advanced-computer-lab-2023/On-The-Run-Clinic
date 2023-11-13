@@ -14,19 +14,37 @@ const[Affiliation,setAffiliation]=useState('')
 const[educational_background,setEducational_background]=useState('')
 const[speciality,setSpeciality]=useState('')
 const [reqDocs, setReqDocs] = useState([]); // New state variable for the file
-
+const [medicalLicense, setWorkingLicense] = useState(null);
+const [medicalDegree, setPharmacistDegree] = useState(null);
+const [doctorId, setPharmacistId] = useState(null);
 const[error,setError]=useState(null)
 const [isDoctorRegistered, setIsDoctorRegistered] = useState(false);
 const [isRequestPending, setIsRequestPending] = useState(false);
 
-  
+const handleWorkingLicenseChange = (e) => {
+  setWorkingLicense(e.target.files[0]);
+};
+
+const handlePharmacistDegreeChange = (e) => {
+  setPharmacistDegree(e.target.files[0]);
+};
+
+const handlePharmacistIdChange = (e) => {
+  setPharmacistId(e.target.files[0]);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
           
-          const dr={username,name,email,password,date_of_birth,hourly_rate,speciality,Affiliation,educational_background,reqDocs}
+          const dr={username,name,email,password,date_of_birth,hourly_rate,speciality,Affiliation,educational_background,reqDocs,medicalLicense,medicalDegree,doctorId }
     
-          try{const response = await axios.post('http://localhost:4000/createRequest', dr);
+          try{const response = await axios.post('http://localhost:4000/createRequest', dr,{
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },{
+            withCredentials: true
+          });;
     
     if (response.status === 201) {
       console.log('Registration successful:', response.data);
@@ -39,6 +57,9 @@ const [isRequestPending, setIsRequestPending] = useState(false);
       setAffiliation('')
       setEducational_background('')
       setReqDocs([])
+      setPharmacistDegree(null)
+      setPharmacistId(null)
+      setWorkingLicense(null)
      
       setIsDoctorRegistered(true); // Set registration success
       setIsRequestPending(true); // Set request as pending
@@ -176,13 +197,45 @@ const [isRequestPending, setIsRequestPending] = useState(false);
                 required
               />
             </div>    
-            <div >
-            <input type="file" multiple onChange={e => setReqDocs(Array.from(e.target.files))} />
-            </div>
-           
             
-            <button type="submit">Register as Doctor</button>
-          </form>
+                {/* Working License PDF */}
+                <div className="form-group">
+                  <label htmlFor="workingLicense">Working License PDF</label>
+                  <input
+                    type="file"
+                    id="workingLicense"
+                    accept=".pdf"
+                    onChange={handleWorkingLicenseChange}
+                  />
+                </div>
+
+                
+                  
+                 {/* Pharmacist Degree PDF */}
+                 <div className="form-group">
+                  <label htmlFor="pharmacistDegree">Pharmacist Degree PDF</label>
+                  <input
+                    type="file"
+                    id="pharmacistDegree"
+                    accept=".pdf"
+                    onChange={handlePharmacistDegreeChange}
+                  />
+                </div>
+               {/* Pharmacist ID PDF */}
+               <div className="form-group">
+                  <label htmlFor="pharmacistId">Pharmacist ID PDF</label>
+                  <input
+                    type="file"
+                    id="pharmacistId"
+                    accept=".pdf"
+                    onChange={handlePharmacistIdChange}
+                  />
+                </div>
+
+                <button type="submit" className="btn btn-primary">
+                  Register
+                </button>
+              </form>
         </div>
       )}
     </div>

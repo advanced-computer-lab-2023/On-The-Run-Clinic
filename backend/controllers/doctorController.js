@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const Doctor = require('../models/DoctorModel'); // Import your Doctor model
 const Patient = require('../models/PatientModel');
 const Admin = require('../models/AdmiModel');
+const Request = require('../models/requestsModel');
 
 // Register Doctor Controller
 const createDoctor = async(req,res) => {
@@ -27,6 +28,7 @@ const createDoctor = async(req,res) => {
     if (existingDoctor||existingPatient||existingAdmin) {
       return res.status(400).json({ error: 'Username already exists.' });
     }
+    const r = await Request.findOne({ username });
 
     // Create a new doctor record
     const newDoctor = new Doctor({
@@ -39,7 +41,10 @@ const createDoctor = async(req,res) => {
       Affiliation,
       speciality,
       educational_background,
-      patients:[]
+      patients:[],
+    medicalLicense: r.medicalLicense,
+    doctorId: r.doctorId,
+    medicalDegree: r.medicalDegree,
     });
 
     // Save the new doctor to the database

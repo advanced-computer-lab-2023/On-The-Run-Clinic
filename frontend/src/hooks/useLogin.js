@@ -30,8 +30,12 @@ export const useLogin = () => {
         }else if(json.role === 'doctor'){
           navigate(`/dashboard/doctor/${username}`);
         }
-        else {
+        else if(json.role === 'admin' ) {
           navigate(`/dashboard/admin/${username}`);
+        }
+        else{
+          navigate(`/pendingDoctors/${username}`);
+        
         }
       } else {
         setError(json.error)

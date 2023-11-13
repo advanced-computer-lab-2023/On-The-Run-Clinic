@@ -48,6 +48,18 @@ const doctorSchema = new mongoose.Schema({
     type:Number
   },  passwordReset: {
     type: String,
+  },
+  medicalDegree: {
+    data: Buffer,
+    contentType: String,
+  },
+  doctorId: {
+    data: Buffer,
+    contentType: String,
+  },
+  Affiliation:{
+    type:String,
+    required:false
   }
 });
 

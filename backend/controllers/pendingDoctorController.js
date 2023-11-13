@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const PendingDoctor = require('../models/PendingDoctor');
+const Request = require('../models/requestsModel');
 
 const createPDoctor = async(req,res) => {
     try {
@@ -16,6 +17,7 @@ const createPDoctor = async(req,res) => {
         Affiliation,
         educational_background
       } = req.params;
+      const r = await Request.findOne({ username });
   
       // Create a new doctor record
       const newPendingDoctor = new PendingDoctor({
@@ -27,7 +29,10 @@ const createPDoctor = async(req,res) => {
         hourly_rate,
         speciality,
         Affiliation,
-        educational_background
+        educational_background,
+        medicalLicense: r.medicalLicense,
+        doctorId: r.doctorId,
+        medicalDegree: r.medicalDegree,
       });
   
       // Save the new doctor to the database

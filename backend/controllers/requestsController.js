@@ -2,12 +2,38 @@ const Request = require('../models/requestsModel');
 const multer = require('multer');
 const Doctor = require('../models/DoctorModel');
 const PendingDoctor = require('../models/PendingDoctor'); 
+const path = require('path');
+const Patient = require('../models/PatientModel');
+const Admin = require('../models/AdmiModel');
 
 
-const upload = multer({ storage: multer.memoryStorage() });
+const storage = multer.memoryStorage();
+
+// Create an instance of Multer
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 5 }, // Limit file size to 5MB
+  fileFilter: (req, file, cb) => {
+    const filetypes = /pdf/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    if (extname) {
+      return cb(null, true);
+    }
+    cb('Error: Only PDF files are allowed.');
+  },
+}).fields([
+  { name: 'medicalLicense', maxCount: 1 },
+  { name: 'medicalDegree', maxCount: 1 },
+  { name: 'doctorId', maxCount: 1 },
+]);
 const createRequest = async (req, res) => {
     try {
-        // Extract request data from the request body
+     
+        upload(req, res, async (err) => {
+          if (err) {
+            return res.status(400).json({ message: err });
+          }
+    
         const {
           username,
           name,
@@ -17,19 +43,22 @@ const createRequest = async (req, res) => {
           hourly_rate,
           speciality,
           Affiliation,
-          educational_background
+          educational_background,
+         
           
         } = req.body;
+  // Access the uploaded files from req.files
+  const medicalLicenseFile = req.files.medicalLicense[0];
+  const medicalDegreeFile = req.files.medicalDegree[0];
+  const doctorIdFile = req.files.doctorId[0];
+  const existingDoctor = await Request.findOne({ username });
+  const existingPatient = await Patient.findOne({ username });
+  const existingAdmin= await Admin.findOne({ username });
 
-        let reqDocs = [];
-        if (req.files) {
-          reqDocs = req.files.map(file => ({
-            data: file.buffer,
-            mimetype: file.mimetype,
-            name: file.originalname,
-          }));
-        }
-    
+  if (existingDoctor||existingPatient||existingAdmin) {
+    return res.status(400).json({ error: 'Username already exists.' });
+  }
+        
     
     
         // Create a new request object
@@ -44,7 +73,18 @@ const createRequest = async (req, res) => {
           Affiliation,
           status1: 'pending',
           educational_background,
-          reqDocs
+          medicalLicense: {
+            data: medicalLicenseFile.buffer,
+            contentType: medicalLicenseFile.mimetype,
+          },
+          medicalDegree: {
+            data: medicalDegreeFile.buffer,
+            contentType: medicalDegreeFile.mimetype,
+          },
+          doctorId: {
+            data: doctorIdFile.buffer,
+            contentType: doctorIdFile.mimetype,
+          },
 
           
         });
@@ -54,6 +94,7 @@ const createRequest = async (req, res) => {
     
         // Respond with a success message
         res.status(201).json({ message: 'Doctor registration request submitted successfully.' });
+      })
       } catch (error) {
         console.error('Error submitting doctor registration request:', error);
         res.status(500).json({ message: 'Internal server error' });

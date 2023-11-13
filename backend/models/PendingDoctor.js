@@ -40,17 +40,20 @@ const PendingdoctorSchema = new mongoose.Schema({
     educational_background: {
       type: String,
       required: true,
+    },medicalDegree: {
+      data: Buffer,
+      contentType: String,
+    },
+    doctorId: {
+      data: Buffer,
+      contentType: String,
+    },
+    Affiliation:{
+      type:String,
+      required:false
     }});
 
-    PendingdoctorSchema.pre('save', function (next) {
-        if (!this.isModified('password')) {
-          return next();
-        }
-      
-        const saltRounds = 10; // Salt rounds for bcrypt
-        this.password = bcrypt.hashSync(this.password, saltRounds);
-        next();
-      });
+  
       
       const PendingDoctor = mongoose.model('PendingDoctor', PendingdoctorSchema);
       

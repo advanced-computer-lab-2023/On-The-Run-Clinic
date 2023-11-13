@@ -11,9 +11,7 @@ const multer = require('multer');
 const path = require('path');
 
 
-const createToken=(_id)=>{
-  jwt.sign({_id:_id},process.env.SECRET,{expiresIn:'3d'})
-}
+
 
 const createPatient = async(req,res) => {
    try{ const {
@@ -49,9 +47,8 @@ const createPatient = async(req,res) => {
 
       });
       await newPatient.save();
-      const token=createToken(newPatient._id)
 
-    res.status(201).json({newPatient,token});
+    res.status(201).json({newPatient});
 
   } catch (error) {
     console.error(error);
@@ -195,6 +192,7 @@ const linkMemberByEmail=async(req,res)=>{
       });
 
       if(!p){
+        console.log("hena");
         patient.linkedPatients.push({
           linkedPatientId: patientToBeLinked._id,
           linkedPatientRelation: relation,

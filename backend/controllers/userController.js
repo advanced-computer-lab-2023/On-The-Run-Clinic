@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto'); // For generating OTP
 const nodemailer = require('nodemailer'); // For sending emails
+const Pending= require('../models/PendingDoctor')
 
 
 // create json web token
@@ -34,10 +35,24 @@ const login = async (req, res) => {
           role="admin"
       }
       if(!user){
+        user = await Pending.findOne({ username });
+        role="pending"
+    }
+
+      if(!user){
           return res.status(404).json({ error: 'User not found' });
       }
+      let auth=false;
+      if(role==="pending"){
+        auth=(password===user.password)
+      }
+      else{
+        auth = await bcrypt.compare(password, user.password);
+      }
 
-      const auth = await bcrypt.compare(password, user.password);
+    
+
+     
       if (auth) {
         const token = createToken(user.username,role);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: false });
@@ -86,11 +101,11 @@ const transporter = nodemailer.createTransport({
   // Route to initiate password reset
   const forgetPassword= async (req, res) => {
     const { username } = req.body;
-    const email=""
+    let email=""
     try {
       let user = await Patient.findOne({ username });
       if (!user) {
-         user = await Pharmacist.findOne({ username });
+         user = await Doctor.findOne({ username });
       }
       if (!user) {
          user = await Admin.findOne({ username });
@@ -125,7 +140,7 @@ const transporter = nodemailer.createTransport({
     try {
       let user = await Patient.findOne({ username });
       if (!user) {
-         user = await Pharmacist.findOne({ username });
+         user = await Doctor.findOne({ username });
       }
       if (!user) {
          user = await Admin.findOne({ username });
@@ -160,8 +175,8 @@ const transporter = nodemailer.createTransport({
         );
         await user.save();
       }
-      if(user = await Pharmacist.findOne({ username })){
-        await Pharmacist.updateOne(
+      if(user = await Doctor.findOne({ username })){
+        await Doctor.updateOne(
           {
             username: username,
           },

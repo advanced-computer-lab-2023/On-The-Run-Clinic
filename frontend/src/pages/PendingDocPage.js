@@ -30,19 +30,15 @@ const PendingDoctorPage = () => {
 
     const handleAccept = async() => {
         try {
-            const response = await axios.post(`http://localhost:4000/createDoctor1/${username}/${PDoctor.name}/${PDoctor.email}/${PDoctor.password}/${PDoctor.date_of_birth}/${PDoctor.hourly_rate}/${PDoctor.speciality}/${PDoctor.Affiliation}/${PDoctor.educational_background}`);
-           
+          const r={username,name:PDoctor.name,email:PDoctor.email,password:PDoctor.password,date_of_birth:PDoctor.date_of_birth,hourly_rate:PDoctor.hourly_rate,speciality:PDoctor.speciality,Affiliation:PDoctor.Affiliation,educational_background:PDoctor.educational_background }
+            const response = await axios.post(`http://localhost:4000/register/doctor`, r);
+            const response1=await axios.delete(`http://localhost:4000/deletePDoctor/${username}`);
+            navigate('/login');
             
           } catch (error) {
             console.error('Error accepting employmentcontract', error);
           }
-        try{
-            const response1=await axios.delete(`http://localhost:4000/deletePDoctor/${username}`);
-            navigate('/login');
-        }
-        catch (error) {
-            console.error('Error accepting employmentcontract', error);
-          } 
+
         
     }
 
