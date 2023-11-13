@@ -142,6 +142,8 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
         description: 'empty',
         staus:"Available",
         hour:newAppointmentHour,
+      },{
+        withCredentials: true
       });
   
       if (response.status === 200) {
@@ -256,7 +258,9 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
       filtered.map(async (appointment) => {
         try {
           if(appointment.patientId!=null){
-            const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`);
+            const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`,{
+              withCredentials: true
+            });
             if (response.status === 200) {
               const patientData = response.data;
               console.log("Appointment Data:", appointment);

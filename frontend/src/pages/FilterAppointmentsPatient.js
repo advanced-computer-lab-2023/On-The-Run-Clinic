@@ -17,12 +17,16 @@ const PatientAppointments = () => {
   useEffect(() => {
     const fetchAppointmentsWithDoctors = async () => {
       try {
-        const response1 = await axios.get(`http://localhost:4000/search/${username}`);
+        const response1 = await axios.get(`http://localhost:4000/search/${username}`,{
+          withCredentials: true
+        });
         console.log("und"+response1.data._id);
         setPatient(response1.data);
 
         if (response1.data) {
-          const response2 = await axios.get(`http://localhost:4000/getPatientAppointments/${response1.data._id}`);
+          const response2 = await axios.get(`http://localhost:4000/getPatientAppointments/${response1.data._id}`,{
+            withCredentials: true
+          });
 
           if (response2.status === 200) {
             const patientAppointments = response2.data;
@@ -32,7 +36,9 @@ const PatientAppointments = () => {
 
             for (const appointment of patientAppointments) {
               try {
-                const response = await axios.get(`http://localhost:4000/getDoc/${appointment.doctorId}`);
+                const response = await axios.get(`http://localhost:4000/getDoc/${appointment.doctorId}`,{
+                  withCredentials: true
+                });
 
                 if (response.status === 200) {
                   const doctorData = response.data;

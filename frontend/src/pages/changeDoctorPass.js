@@ -14,7 +14,9 @@ const ChangeDoctortPass = () => {
 
   useEffect(() => {
     const fetchDoctor = async () => {
-      const response = await axios.get(`http://localhost:4000/getDoctor/${username}`);
+      const response = await axios.get(`http://localhost:4000/getDoctor/${username}`,{
+        withCredentials: true
+      });
       setDoctor(response.data);
     };
 
@@ -56,6 +58,8 @@ const ChangeDoctortPass = () => {
       username,  
        currentPassword,
         newPassword,
+      },{
+        withCredentials: true
       });
   
       setSuccess(true);

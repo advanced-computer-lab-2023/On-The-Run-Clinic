@@ -18,7 +18,9 @@ const DoctorListPage = () => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/getDoctors`);
+      const response = await axios.get(`http://localhost:4000/getDoctors`,{
+        withCredentials: true
+      });
 
       if (response.status === 200) {
         setDoctors(response.data);
@@ -31,7 +33,9 @@ const DoctorListPage = () => {
   };
   const fetchAppointments = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/getAllAppointments`);
+      const response = await axios.get(`http://localhost:4000/getAllAppointments`,{
+        withCredentials: true
+      });
 
       if (response.status === 200) {
         setAppointments(response.data);
@@ -42,7 +46,9 @@ const DoctorListPage = () => {
   };
   const fetchPatient = async (patientId) => { // Add this function
     try {
-      const response = await axios.get(`http://localhost:4000/getPatient/${patientId}`);
+      const response = await axios.get(`http://localhost:4000/getPatient/${patientId}`,{
+        withCredentials: true
+      });
 
       if (response.status === 200) {
         setPatient(response.data);

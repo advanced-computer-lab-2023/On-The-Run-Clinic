@@ -13,15 +13,21 @@ function HealthPackageList() {
   const [status, setStatus] = useState('');
   const fetchLinkedPatients = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`,{
+        withCredentials: true
+      });
       if (response.status === 200) {
         const linkedPatients = response.data;
         const linkedPatientsWithPackages = [];
 
         for (let patient of linkedPatients) {
-          const patientResponse = await axios.get(`http://localhost:4000/getPatient/${patient.linkedPatientId}`);
+          const patientResponse = await axios.get(`http://localhost:4000/getPatient/${patient.linkedPatientId}`,{
+            withCredentials: true
+          });
           const patientUsername = patientResponse.data.username;
-          const packageResponse = await axios.get(`http://localhost:4000/mypackage/${patientUsername}`);
+          const packageResponse = await axios.get(`http://localhost:4000/mypackage/${patientUsername}`,{
+            withCredentials: true
+          });
           console.log("package",packageResponse.data.healthPackage);
         
           linkedPatientsWithPackages.push({
@@ -41,8 +47,12 @@ function HealthPackageList() {
   useEffect(() => {
     const fetchPackage = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/mypackage/${username}`);
-        const pat = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+        const response = await axios.get(`http://localhost:4000/mypackage/${username}`,{
+          withCredentials: true
+        });
+        const pat = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setPackage(response.data.healthPackage); // Assuming the response contains the health package or null if not found
           console.log(response.data);
@@ -85,7 +95,9 @@ function HealthPackageList() {
 
    const handleCancelSubscription = async () => {
     try {
-      const response =await axios.post(`http://localhost:4000/CancelPackage/${username}`);
+      const response =await axios.post(`http://localhost:4000/CancelPackage/${username}`,{},{
+        withCredentials: true
+      });
       // You may want to refresh the status after cancelling
       if(response.status===(400)){
         alert("No Subscription Found");
@@ -100,9 +112,13 @@ function HealthPackageList() {
   };
   const handleCancelSubscription2 = async (id) => {
     try {
-      const patientResponse = await axios.get(`http://localhost:4000/getPatient/${id}`);
+      const patientResponse = await axios.get(`http://localhost:4000/getPatient/${id}`,{
+        withCredentials: true
+      });
       const patientUsername = patientResponse.data.username;
-      const response =await axios.post(`http://localhost:4000/CancelPackage/${patientUsername}`);
+      const response =await axios.post(`http://localhost:4000/CancelPackage/${patientUsername}`,{},{
+        withCredentials: true
+      });
       // You may want to refresh the status after cancelling
       if(response.status===(400)){
         alert("No Subscription Found");

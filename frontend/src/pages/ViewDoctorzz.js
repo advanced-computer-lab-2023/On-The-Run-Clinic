@@ -18,7 +18,9 @@ const Doctorz = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/getDoctors`);
+        const response = await axios.get(`http://localhost:4000/getDoctors`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setDoctors(response.data);
           setFilteredDoctors(response.data);
@@ -27,7 +29,9 @@ const Doctorz = () => {
         console.error('Error fetching doctors:', error);
       }
       try {
-        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setPatient(response.data);
           
@@ -40,7 +44,9 @@ const Doctorz = () => {
 
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/getAllAppointments`);
+        const response = await axios.get(`http://localhost:4000/getAllAppointments`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setAppointments(response.data);
           if (response.data.healthPackage) {
@@ -56,7 +62,9 @@ const Doctorz = () => {
     };
     const fetchHealthPackage = async (healthPackageId) => {
         try {
-          const response = await axios.get(`http://localhost:4000/getPackage/${healthPackageId}`);
+          const response = await axios.get(`http://localhost:4000/getPackage/${healthPackageId}`,{
+            withCredentials: true
+          });
           if (response.status === 200) {
             setDiscount(response.data.discount);
           }
@@ -71,7 +79,9 @@ const Doctorz = () => {
   }, [username]);
   const fetchHealthPackage = async (healthPackageId) => {
       try {
-        const response = await axios.get(`http://localhost:4000/getHealthPackageById/${healthPackageId}`);
+        const response = await axios.get(`http://localhost:4000/getHealthPackageById/${healthPackageId}`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setDiscount(response.data.discount);
         }

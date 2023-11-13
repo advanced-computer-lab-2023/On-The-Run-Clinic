@@ -13,7 +13,9 @@ const PatientDashboard = () => {
     
     async function fetchWallet() {
       try {
-        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setDoctor(response.data);
           

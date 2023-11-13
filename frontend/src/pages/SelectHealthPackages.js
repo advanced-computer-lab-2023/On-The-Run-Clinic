@@ -28,7 +28,9 @@ function HealthPackageSubscriptionPage() {
     // Fetch available health packages from the backend when the component mounts
     async function fetchHealthPackages() {
       try {
-        const response = await axios.get('http://localhost:4000/getPackages');
+        const response = await axios.get('http://localhost:4000/getPackages',{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setHealthPackages(response.data);
         }
@@ -38,7 +40,9 @@ function HealthPackageSubscriptionPage() {
     }
     async function fetchWallet() {
       try {
-        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setPatient(response.data);
           console.log("patient:",patient);
@@ -50,7 +54,9 @@ function HealthPackageSubscriptionPage() {
     }
     async function fetchDiscount(){
       try {
-        const response = await axios.get(`http://localhost:4000/getPackageDiscount/${username}`);
+        const response = await axios.get(`http://localhost:4000/getPackageDiscount/${username}`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setDiscount(response.data);
           setFormData(prevFormData => ({
@@ -68,7 +74,9 @@ function HealthPackageSubscriptionPage() {
     const fetchFamilyMembers = async () => {
       try {
        
-        const linkedResponse = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+        const linkedResponse = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`,{
+          withCredentials: true
+        });
         if (linkedResponse.status === 200) {
           setLinkedFamilyMembers(linkedResponse.data);
         }
@@ -112,8 +120,12 @@ function HealthPackageSubscriptionPage() {
       else{
         try {
           console.log(formData)
-          const response = await axios.post('http://localhost:4000/payPackage', formData);
-          const response1 = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+          const response = await axios.post('http://localhost:4000/payPackage', formData,{
+            withCredentials: true
+          });
+          const response1 = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`,{
+            withCredentials: true
+          });
         if (response1.status === 200) {
           setPatient(response1.data);
           console.log("patient:",patient);

@@ -20,7 +20,6 @@ const createToken = (username,role) => {
 };
 
 
-
 const login = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -55,6 +54,7 @@ const login = async (req, res) => {
      
       if (auth) {
         const token = createToken(user.username,role);
+        console.log(token);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: false });
         res.status(200).json({ user: user.username, role: role, token: token });
     } else {

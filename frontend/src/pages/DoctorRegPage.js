@@ -44,7 +44,7 @@ const handlePharmacistIdChange = (e) => {
             },
           },{
             withCredentials: true
-          });;
+          });
     
     if (response.status === 201) {
       console.log('Registration successful:', response.data);

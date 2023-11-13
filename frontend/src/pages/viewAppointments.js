@@ -26,7 +26,9 @@ const ViewAppointments = () => {
   const fetchAppointments = async () => {
     try {
       if (doctorId) {
-        const response = await axios.get(`http://localhost:4000/getAvailableDoctorAppointments/${doctorId}`);
+        const response = await axios.get(`http://localhost:4000/getAvailableDoctorAppointments/${doctorId}`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setAppointments(response.data);
         }
@@ -41,7 +43,9 @@ const ViewAppointments = () => {
   useEffect(() => {
     const fetchDoctorId = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/getDoctors');
+        const response = await axios.get('http://localhost:4000/getDoctors',{
+          withCredentials: true
+        });
         if (response.status === 200) {
           const doctor = response.data.find((doc) => doc.username === doctorUsername);
           if (doctor) {
@@ -57,7 +61,9 @@ const ViewAppointments = () => {
 
     const fetchPatientId = async () => {
         try {
-            const response = await axios.get(`http://localhost:4000/getPatientByUsername/${patientUsername}`);
+            const response = await axios.get(`http://localhost:4000/getPatientByUsername/${patientUsername}`,{
+              withCredentials: true
+            });
             if (response.status === 200) {
                 setPatientId(response.data._id);
                 setPatient(response.data);
@@ -72,7 +78,9 @@ const ViewAppointments = () => {
     const fetchAppointments = async () => {
       try {
         if (doctorId) {
-          const response = await axios.get(`http://localhost:4000/getAvailableDoctorAppointments/${doctorId}`);
+          const response = await axios.get(`http://localhost:4000/getAvailableDoctorAppointments/${doctorId}`,{
+            withCredentials: true
+          });
           if (response.status === 200) {
             setAppointments(response.data);
           }
@@ -87,7 +95,9 @@ const ViewAppointments = () => {
     const fetchFamilyMembers = async () => {
         try {
          
-          const response = await axios.get(`http://localhost:4000/getFamilyMem/${patientUsername}`);
+          const response = await axios.get(`http://localhost:4000/getFamilyMem/${patientUsername}`,{
+            withCredentials: true
+          });
           console.log(response.data);
   
           if (response.status === 200) {
@@ -111,6 +121,8 @@ const ViewAppointments = () => {
         status: 'Scheduled',
         description: 'Checkup',
         paymentMethod : formData.paymentMethod
+      },{
+        withCredentials: true
       });
       if (response.status === 200) {
         // Handle success, maybe show a success message or update the UI
@@ -139,6 +151,8 @@ const ViewAppointments = () => {
             description: 'Checkup',
             familyMemberId : selectedFamilyMember,
             paymentMethod : formData.paymentMethod
+          },{
+            withCredentials: true
           });
           if (response.status===200) {
             alert("Appointment reserved successfully");
@@ -168,6 +182,8 @@ const ViewAppointments = () => {
         description: 'Checkup',
         linkedPatientId: selectedLinkedPatient,
         paymentMethod: formData.paymentMethod,
+      },{
+        withCredentials: true
       });
 
       if (response.status === 200) {

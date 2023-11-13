@@ -1,13 +1,13 @@
 
-import { BrowserRouter as Router, Route, Routes,Navigate,useParams} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useParams } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { useAuthContext } from './hooks/useAuthContext';
 
 
 
-import DoctorRegistrationForm  from './pages/DoctorRegPage';
+import DoctorRegistrationForm from './pages/DoctorRegPage';
 import DoctorDashboard from './components/DoctorDashboard';
-import PatientRegistrationForm  from './pages/PatientRegPage';
+import PatientRegistrationForm from './pages/PatientRegPage';
 import PatientDashboard from './components/PatientDashboard';
 import UserSelection from './components/UserSelection';
 import AdminRegistrationForm from "./components/AdminRegistrationForm"
@@ -38,7 +38,7 @@ import ChangeAdminPass from './pages/changeAdminPass';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 //import HealthPackage from '../../backend/models/HealthPackages';
-import HealthPackagesDetails from'./pages/HealthPackageDetails';
+import HealthPackagesDetails from './pages/HealthPackageDetails';
 import ViewAppointments from './pages/viewAppointments';
 import PendingDoctorPage from './pages/PendingDocPage';
 
@@ -47,57 +47,140 @@ import PendingDoctorPage from './pages/PendingDocPage';
 
 function App() {
   const { user } = useAuthContext()
+  if (user) {
+    console.log(user.role)
+  }
 
-  
-  console.log("inApp:",user);
+
+  console.log("inApp:", user);
   return (
     <Router>
       <div className="App">
-        <Navbar/>
+        <Navbar />
         <Routes>
-          <Route path="/" element={<Login/>}/>
-          <Route path="/changePatientPassword/:username" element={<ChangePatientPass/>}/>
-          <Route path="/changeDoctorPassword/:username" element={<ChangeDoctortPass/>}/>
-          <Route path="/subHealthPackages/:username" element={<HealthPackageSubscriptionPage/>}/>
-          <Route path="/deleteMedicalHistory/:username" element={<MedicalHistoryList/>}/>
-          <Route path="/login" element={<Login/>}/>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/changePatientPassword/:username"
+            element={user && user.role === 'patient' ? <ChangePatientPass /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/subHealthPackages/:username"
+            element={user && user.role === 'patient' ? <HealthPackageSubscriptionPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/deleteMedicalHistory/:username"
+            element={user && user.role === 'patient' ? <MedicalHistoryList /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/viewFamilyMembers/:username"
+            element={user && user.role === 'patient' ? <FamilyMembersList /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/linkFamilyMember/:username"
+            element={user && user.role === 'patient' ? <LinkPatientPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/dashboard/admin/:username"
+            element={user && user.role === 'admin' ? <AdminDashboard /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/healthPackages"
+            element={user && user.role === 'admin' ? <AdminHealthPackages /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/addAdmin"
+            element={user && user.role === 'admin' ? <AdminRegistrationForm /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/viewRequests"
+            element={user && user.role === 'admin' ? <ViewRequests /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/changeDoctorPassword/:username"
+            element={user && user.role === 'doctor' ? <ChangeDoctortPass /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/updateDoctor/:username"
+            element={user && user.role === 'doctor' ? <UpdateDoctorInfo /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/viewMyPatients/:username"
+            element={user && user.role === 'doctor' ? <MyPatients /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/viewMyPrescription/:username"
+            element={user && user.role === 'patient' ? <MyPrescription /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/deleteDoctor"
+            element={user && user.role === 'admin' ? <DeleteDoctorPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/deleteAdmin"
+            element={user && user.role === 'admin' ? <DeleteAdmin /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/deletePatient"
+            element={user && user.role === 'admin' ? <DeletePatient /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/dashboard/patient/:username"
+            element={user && user.role === 'patient' ? <PatientDashboard /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/dashboard/doctor/:username"
+            element={user && user.role === 'patient' ? <DoctorDashboard /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/pendingDoctors/:username"
+            element={user && user.role === 'pending' ? <PendingDoctorPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/viewDoctors/:username"
+            element={user && user.role === 'patient' ? <Doctorz /> : <Navigate to="/login" />}
+          />
 
-          <Route path="/dashboard/admin/:username" element={<AdminDashboard/>}/>
-          <Route path="/updateDoctor/:username" element={<UpdateDoctorInfo/>}/>
-          <Route path="/viewFamilyMembers/:username" element={<FamilyMembersList/>}/>
-          <Route path="/linkFamilyMember/:username" element={<LinkPatientPage/>}/>
+          <Route path="/getDoctors" element={<getDoctors />} />
 
-          <Route path="/healthPackages" element={<AdminHealthPackages/>}/>
-          <Route path="/viewMyPatients/:username" element={<MyPatients/>}/>
-          <Route path="/viewMyPrescription/:username" element={<MyPrescription/>}/>
-          <Route path="/viewDoctors/:username" element={<Doctorz/>}/>
+          <Route path="/register/doctor" element={<DoctorRegistrationForm />} />
+          <Route path="/register/patient" element={<PatientRegistrationForm />} />
 
-          <Route path="/addAdmin" element={<AdminRegistrationForm/>}/>
-          <Route path="/viewRequests" element={<ViewRequests/>}/>
-          
-          <Route path="/getDoctors" element={<getDoctors/>}/>
-          <Route path="/deleteDoctor" element={<DeleteDoctorPage/>} />
-          <Route path="/deleteAdmin" element={<DeleteAdmin/>} />
-          <Route path="/deletePatient" element={<DeletePatient/>} />
-          <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />         
-          <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
-          <Route path="/dashboard/patient/:username"  element={<PatientDashboard/>} />
-          <Route path="/register/doctor"  element={<DoctorRegistrationForm/>} />
-          <Route path="/register/patient"  element={<PatientRegistrationForm/>} />
+          <Route
+            path="/addFamilyMember/:username"
+            element={user && user.role === 'patient' ? <FamilyMemberForm /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/filterAppointments/:username"
+            element={user && user.role === 'doctor' ? <FilterAppointments /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/filterAppointmentsPatient/:username"
+            element={user && user.role === 'patient' ? <FilterAppointmentsPatient /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/patient-details/:doctorUsername/:patientUsername"
+            element={user && (user.role === 'doctor' || user.role === 'patient' || user.role === 'admin') ? <DoctorDetails /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/doctor-details/:doctorUsername/:patientUsername"
+            element={user && (user.role === 'doctor' || user.role === 'patient' || user.role === 'admin') ? <DoctorDetails /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/viewHealthPackagesDetails/:username"
+            element={user && user.role === 'patient' ? <HealthPackagesDetails /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/ViewAppointments/:doctorUsername/:patientUsername"
+            element={user && (user.role === 'doctor' || user.role === 'patient') ? <ViewAppointments /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/changeAdminPassword/:username"
+            element={user && user.role === 'admin' ? <ChangeAdminPass /> : <Navigate to="/login" />}
+          />
+          <Route path="/forgetPassword" element={<ForgetPassword />} />
+          <Route path="/resetPassword/:username" element={<ResetPassword />} />
 
-          <Route path="/dashboard/patient/:username" element={user&& user.role === 'patient' ? <PatientDashboard /> : <PatientDashboard />} />
-          <Route path="/dashboard/doctor/:username" element={<DoctorDashboard/>} />
-          <Route path="/addFamilyMember/:username"  element={<FamilyMemberForm/>} />
-          <Route path="/filterAppointments/:username" element={<FilterAppointments/>} />
-          <Route path="/filterAppointmentsPatient/:username" element={<FilterAppointmentsPatient/>} />
-          <Route path="/patient-details/:username" element = {<PatientDetails />} />
-          <Route path="/doctor-details/:doctorUsername/:patientUsername" element = {<DoctorDetails />} />
-          <Route path="/viewHealthPackagesDetails/:username" element = {<HealthPackagesDetails />} />
-          <Route path="/ViewAppointments/:doctorUsername/:patientUsername" element = {<ViewAppointments />} />
-          <Route path="/changeAdminPassword/:username" element={<ChangeAdminPass/>}/>
-          <Route path="/forgetPassword" element={<ForgetPassword/>}/>
-          <Route path="/resetPassword/:username" element={<ResetPassword/>}/>
-          <Route path="/pendingDoctors/:username" element={<PendingDoctorPage/>}/>
 
           {/* Add other routes as needed */}
         </Routes>

@@ -17,7 +17,9 @@ const ViewRequests = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/getRequests`);
+      const response = await axios.get(`http://localhost:4000/getRequests`,{
+        withCredentials: true
+      });
 
       if (response.status === 200) {
         setRequests(response.data);
@@ -30,7 +32,9 @@ const ViewRequests = () => {
   };
   const handleAccept = async (username,name,email,password,date_of_birth,hourly_rate,speciality,Affiliation,educational_background,id) => {
     try {
-      const response = await axios.post(`http://localhost:4000/acceptRequest/${username}/${name}/${email}/${password}/${date_of_birth}/${hourly_rate}/${speciality}/${Affiliation}/${educational_background}/${id}`);
+      const response = await axios.post(`http://localhost:4000/acceptRequest/${username}/${name}/${email}/${password}/${date_of_birth}/${hourly_rate}/${speciality}/${Affiliation}/${educational_background}/${id}`,{},{
+        withCredentials: true
+      });
      
       if (response.status === 200) {
         setRequests(requests.filter((r) => r._id !== id));
@@ -44,7 +48,9 @@ const ViewRequests = () => {
   const handleReject = async (reqid) => {
     try {
       // Make a DELETE request to the backend to delete the patient
-      await axios.put(`http://localhost:4000/rejectRequest/${reqid}`);
+      await axios.put(`http://localhost:4000/rejectRequest/${reqid}`,{
+        withCredentials: true
+      });
 
       // After successful deletion, refresh the patient list by re-fetching
       fetchRequests();

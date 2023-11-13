@@ -12,7 +12,9 @@ const PendingDoctorPage = () => {
         const fetchPDoctor = async () => {
           try {
            
-            const response = await axios.get(`http://localhost:4000/getPDoctor/${username}`);
+            const response = await axios.get(`http://localhost:4000/getPDoctor/${username}`,{
+              withCredentials: true
+            });
             console.log(response.data);
     
             if (response.status === 200) {
@@ -31,8 +33,12 @@ const PendingDoctorPage = () => {
     const handleAccept = async() => {
         try {
           const r={username,name:PDoctor.name,email:PDoctor.email,password:PDoctor.password,date_of_birth:PDoctor.date_of_birth,hourly_rate:PDoctor.hourly_rate,speciality:PDoctor.speciality,Affiliation:PDoctor.Affiliation,educational_background:PDoctor.educational_background }
-            const response = await axios.post(`http://localhost:4000/register/doctor`, r);
-            const response1=await axios.delete(`http://localhost:4000/deletePDoctor/${username}`);
+            const response = await axios.post(`http://localhost:4000/register/doctor`, r,{
+              withCredentials: true
+            });
+            const response1=await axios.delete(`http://localhost:4000/deletePDoctor/${username}`,{
+              withCredentials: true
+            });
             navigate('/login');
             
           } catch (error) {
@@ -44,7 +50,9 @@ const PendingDoctorPage = () => {
 
     const handleReject = () => {
         try{
-            const response1=axios.delete(`http://localhost:4000/deletePDoctor/${username}`);
+            const response1=axios.delete(`http://localhost:4000/deletePDoctor/${username}`,{
+              withCredentials: true
+            });
             navigate('/login');
         }
         catch (error) {

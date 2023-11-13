@@ -17,7 +17,9 @@ const AdminHealthPackages = () => {
 
   useEffect(() => {
     // Fetch the list of health packages from the server
-    axios.get('http://localhost:4000/getPackages')
+    axios.get('http://localhost:4000/getPackages',{
+      withCredentials: true
+    })
       .then((response) => {
         setPackages(response.data);
       })
@@ -39,7 +41,9 @@ const AdminHealthPackages = () => {
 
   const handleUpdatePackage = () => {
     // Send a PUT request to update the selected package
-    axios.put(`http://localhost:4000/updatePackage?id=${selectedPackage._id}`, updatedPackage)
+    axios.put(`http://localhost:4000/updatePackage?id=${selectedPackage._id}`, updatedPackage,{
+      withCredentials: true
+    })
       .then((response) => {
         console.log('Package updated successfully:', response.data);
         // Reset the selected package and updated package state
@@ -50,7 +54,9 @@ const AdminHealthPackages = () => {
           services: '',
         });
         // Fetch the updated list of health packages
-        axios.get('http://localhost:4000/getPackages')
+        axios.get('http://localhost:4000/getPackages',{
+          withCredentials: true
+        })
           .then((response) => {
             setPackages(response.data);
           })
@@ -65,11 +71,15 @@ const AdminHealthPackages = () => {
 
   const handleDeletePackage = (packageId) => {
     // Send a DELETE request to delete the selected package
-    axios.delete(`http://localhost:4000/deletePackage?id=${packageId}`)
+    axios.delete(`http://localhost:4000/deletePackage?id=${packageId}`,{
+      withCredentials: true
+    })
       .then((response) => {
         console.log('Package deleted successfully:', response.data);
         // Fetch the updated list of health packages after deletion
-        axios.get('http://localhost:4000/getPackages')
+        axios.get('http://localhost:4000/getPackages',{
+          withCredentials: true
+        })
           .then((response) => {
             setPackages(response.data);
           })
@@ -83,9 +93,13 @@ const AdminHealthPackages = () => {
   };
   const handleCreatePackage = () => {
     // Send a POST request to create the new health package
-    axios.post('http://localhost:4000/createPackage', newPackage)
+    axios.post('http://localhost:4000/createPackage', newPackage,{
+      withCredentials: true
+    })
       .then((response) => {
-        console.log('Package created successfully:', response.data);
+        console.log('Package created successfully:', response.data,{
+          withCredentials: true
+        });
         // Reset the new package form
         setNewPackage({
           name: '',
@@ -93,7 +107,9 @@ const AdminHealthPackages = () => {
           services: '',
         });
         // Fetch the updated list of health packages
-        axios.get('http://localhost:4000/getPackages')
+        axios.get('http://localhost:4000/getPackages',{
+          withCredentials: true
+        })
           .then((response) => {
             setPackages(response.data);
           })

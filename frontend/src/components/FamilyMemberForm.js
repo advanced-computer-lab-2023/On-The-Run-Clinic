@@ -18,7 +18,9 @@ const FamilyMemberFormForm = () => {
     e.preventDefault();
     const mem = { name, national_id, age, gender, relation, patientUsername: username };
     try {
-      const response = await axios.post('http://localhost:4000/addFamilyMember', mem);
+      const response = await axios.post('http://localhost:4000/addFamilyMember', mem,{
+        withCredentials: true
+      });
 
       if (response.status === 201) {
         console.log('Family member added successfully:', response.data);

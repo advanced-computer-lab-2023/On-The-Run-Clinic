@@ -19,7 +19,9 @@ const MyPatients = () => {
   const [descriptions, setDescriptions] = useState({});
   const getDoctorByUsername = async (username) => {
     try {
-      const response = await axios.get(`http://localhost:4000/getDoctorByUsername/${username}`);
+      const response = await axios.get(`http://localhost:4000/getDoctorByUsername/${username}`,{
+        withCredentials: true
+      });
       if (response.status === 200) {
         return response.data;
       }
@@ -41,7 +43,9 @@ const MyPatients = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/getDocpatients/${username}`);
+        const response = await axios.get(`http://localhost:4000/getDocpatients/${username}`,{
+          withCredentials: true
+        });
         //console.log(response.data);
 
         if (response.status === 200) {
@@ -81,7 +85,9 @@ const MyPatients = () => {
     try {
 
       const f = { patientId, doctorId, date, status, description, hour }
-      const response = await axios.post(`http://localhost:4000/createAppointment`, f);
+      const response = await axios.post(`http://localhost:4000/createAppointment`, f,{
+        withCredentials: true
+      });
       if (response.status === 200) {
         console.log('Appointment created successfully');
       }

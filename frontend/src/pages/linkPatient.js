@@ -15,7 +15,9 @@ function LinkPatientPage() {
   const navigate = useNavigate();
   async function fetchFamilyMembers() {
     try {
-      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`,{
+        withCredentials: true
+      });
       if (response.status === 200) {
         setFamilyMembers(response.data);
       }
@@ -58,7 +60,9 @@ function LinkPatientPage() {
       }
 
     try {
-      const response = await axios.post('http://localhost:4000/linkMember', requestData);
+      const response = await axios.post('http://localhost:4000/linkMember', requestData,{
+        withCredentials: true
+      });
       if (response.status === 200) {
     fetchFamilyMembers();
         // You can navigate to another page or update the UI as needed.

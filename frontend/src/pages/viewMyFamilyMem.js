@@ -14,13 +14,17 @@ const FamilyMembersList = () => {
     const fetchFamilyMembers = async () => {
       try {
        
-        const response = await axios.get(`http://localhost:4000/getFamilyMem/${username}`);
+        const response = await axios.get(`http://localhost:4000/getFamilyMem/${username}`,{
+          withCredentials: true
+        });
         console.log(response.data);
 
         if (response.status === 200) {
           setFamilyMembers(response.data);
         }
-        const linkedResponse = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`);
+        const linkedResponse = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`,{
+          withCredentials: true
+        });
         if (linkedResponse.status === 200) {
           setLinkedFamilyMembers(linkedResponse.data);
         }

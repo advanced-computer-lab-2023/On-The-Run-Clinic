@@ -11,7 +11,9 @@ function MedicalHistoryList() {
   useEffect(() => {
     async function fetchMedicalHistory() {
       try {
-        const response = await axios.get(`http://localhost:4000/getMedicalHistory/${username}`);
+        const response = await axios.get(`http://localhost:4000/getMedicalHistory/${username}`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setMedicalHistory(response.data);
         }
@@ -28,8 +30,12 @@ function MedicalHistoryList() {
   };
   const handleDelete = async (filename) => {
     try {
-      const response = await axios.delete(`http://localhost:4000/deleteMedicalRecord/${username}/${filename}`);
-      const response1 = await axios.get(`http://localhost:4000/getMedicalHistory/${username}`);
+      const response = await axios.delete(`http://localhost:4000/deleteMedicalRecord/${username}/${filename}`,{
+        withCredentials: true
+      });
+      const response1 = await axios.get(`http://localhost:4000/getMedicalHistory/${username}`,{
+        withCredentials: true
+      });
         if (response.status === 200) {
           setMedicalHistory(response1.data);
         }
