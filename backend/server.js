@@ -13,7 +13,10 @@ const cors = require('cors');
 
 
 const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount} = require("./controllers/patientController")
-const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment}=require("./controllers/appointmentsController")
+const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
+const {createMember,getFamilyMembers} = require("./controllers/familymemController")
+const cors = require('cors');
+const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
@@ -164,3 +167,7 @@ app.delete("/deletePDoctor/:username",deletePDoctor);
 //app.get("/getPDoctors",getPDoctors);
 app.post("/createDoctor1/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createDoctor1);
 app.get("/getPDoctor/:username",getPDoctor);
+app.post("/reserveFamilyMemberAppointment/:appointmentId",reserveFamilyMemberAppointment);
+app.post("/reserveLinkedPatientAppointment/:appointmentId",reserveLinkedPatientAppointment);
+
+

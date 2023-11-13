@@ -2,7 +2,8 @@
 const express = require('express');
 const Appointment = require('../models/appointments');
 const Doctor = require('../models/DoctorModel');
-const Patient = require('../models/PatientModel'); // Import your Patient model
+const Patient = require('../models/PatientModel');
+const FamilyMember = require ('../models/FamilyMemberModel'); // Import your Patient model
 
 
 const createAppointment = async (req, res) => {
@@ -68,12 +69,28 @@ const createAppointment = async (req, res) => {
 const reserveAppointment = async(req,res) => {
   try {
     const { appointmentId } = req.params;
-    const { patientId, status, description } = req.body;
+    const { patientId, status, description , paymentMethod} = req.body;
     const appointment = await Appointment.findById(appointmentId);
     console.log(patientId + " pid"+ status) ;
+    const doctor = await Doctor.findById(appointment.doctorId);
+    console.log("d"+doctor);
+    const patient = await Patient.findById(patientId);
+    console.log("P"+patient);
 
     if (!appointment) {
       console.log(" app not found");
+    }
+
+    if(paymentMethod=="wallet") {
+      console.log("wallet " + patient.wallet); 
+      if(patient.wallet<doctor.hourly_rate) {
+        return res.status(400).json({ error: 'Not enough money in wallet' });
+      }
+      else {
+        patient.wallet = patient.wallet - doctor.hourly_rate;
+      console.log("wallet " + patient.wallet); 
+
+      }
     }
 
     appointment.patientId = patientId;
@@ -81,10 +98,6 @@ const reserveAppointment = async(req,res) => {
     appointment.description = description;
     await appointment.save();
 
-    const doctor = await Doctor.findById(appointment.doctorId);
-    console.log("d"+doctor);
-    const patient = await Patient.findById(patientId);
-    console.log("P"+patient);
 
 
     if (!doctor.patients.includes(patientId)) {
@@ -110,6 +123,152 @@ const reserveAppointment = async(req,res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+const reserveFamilyMemberAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.params;
+    const { patientId ,status, description, familyMemberId , paymentMethod } = req.body;
+
+    // Check if the family member ID is provided
+    if (!familyMemberId) {
+      return res.status(400).json({ error: 'Family member ID is required' });
+    }
+
+    const familyMember = await FamilyMember.findById(familyMemberId);
+    
+    if (!familyMember) {
+      return res.status(404).json({ error: 'Family member not found' });
+    }
+
+    const patient = await Patient.findById(patientId);
+    if(!patient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    const appointment = await Appointment.findById(appointmentId);
+
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+    // Use the family member ID to find the family member
+    
+    const doctor = await Doctor.findById(appointment.doctorId);
+    if(!doctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+
+    if(paymentMethod=="wallet") {
+      if(patient.wallet<doctor.hourly_rate) {
+        return res.status(400).json({ error: 'Not enough money in wallet' });
+      }
+      else {
+        patient.wallet = patient.wallet - doctor.hourly_rate;
+      }
+    }
+    // Update the appointment details
+    appointment.patientId = patientId; // Assign the family member ID
+    appointment.status = status;
+    appointment.description = description;
+    await appointment.save();
+
+
+    // Update the doctor's patient list if necessary
+    if (!doctor.patients.includes(familyMemberId)) {
+      const doctorUsername = doctor.username;
+      const familyMemberUsername = familyMember.username;
+  
+      if (Array.isArray(doctor.patients) && !doctor.patients.includes(familyMemberUsername)) {
+        console.log('Before:', doctor.patients);
+        doctor.patients.push(familyMemberId);
+        await doctor.save();
+        console.log('After:', doctor.patients);
+      }
+  
+      if (Array.isArray(familyMember.myDoctors) && !familyMember.myDoctors.includes(doctorUsername)) {
+        familyMember.myDoctors.push(doctor._id);
+        await familyMember.save();
+      }
+    }
+
+    return res.status(200).json({ message: 'Appointment reserved successfully' });
+  } catch (error) {
+    console.error('Error reserving family member appointment:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const reserveLinkedPatientAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.params;
+    const { patientId, status, description, linkedPatientId, paymentMethod } = req.body;
+
+    // Check if the linked patient ID is provided
+    if (!linkedPatientId) {
+      return res.status(400).json({ error: 'Linked patient ID is required' });
+    }
+
+    const linkedPatient = await Patient.findById(linkedPatientId);
+    const patient = await Patient.findById(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    const appointment = await Appointment.findById(appointmentId);
+
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+
+    const doctor = await Doctor.findById(appointment.doctorId);
+
+    if (!doctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+
+    if (!linkedPatient) {
+      return res.status(404).json({ error: 'Linked patient not found' });
+    }
+
+    if (paymentMethod === 'wallet') {
+      if (patient.wallet < doctor.hourly_rate) {
+        return res.status(400).json({ error: 'Not enough money in the wallet' });
+      } else {
+        patient.wallet = patient.wallet - doctor.hourly_rate;
+      }
+    }
+
+    // Update the appointment details
+    appointment.patientId = linkedPatientId; // Assign the linked patient ID
+    appointment.status = status;
+    appointment.description = description;
+    await appointment.save();
+
+    // Update the doctor's patient list if necessary
+    if (!doctor.patients.includes(linkedPatientId)) {
+      const doctorUsername = doctor.username;
+      const linkedPatientUsername = linkedPatient.username;
+
+      if (Array.isArray(doctor.patients) && !doctor.patients.includes(linkedPatientUsername)) {
+        console.log('Before:', doctor.patients);
+        doctor.patients.push(linkedPatientId);
+        await doctor.save();
+        console.log('After:', doctor.patients);
+      }
+
+      if (Array.isArray(linkedPatient.myDoctors) && !linkedPatient.myDoctors.includes(doctorUsername)) {
+        linkedPatient.myDoctors.push(doctor._id);
+        await linkedPatient.save();
+      }
+    }
+
+    return res.status(200).json({ message: 'Appointment reserved successfully' });
+  } catch (error) {
+    console.error('Error reserving linked patient appointment:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 const getAllAppointments = async (req, res) => {
     try {
@@ -189,4 +348,4 @@ const getPatientAppointments = async (req, res) => {
 
 
 
-module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment}
+module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment}
