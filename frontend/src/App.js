@@ -130,7 +130,7 @@ function App() {
           />
           <Route
             path="/dashboard/doctor/:username"
-            element={user && user.role === 'patient' ? <DoctorDashboard /> : <Navigate to="/login" />}
+            element={user && user.role === 'doctor' ? <DoctorDashboard /> : <Navigate to="/login" />}
           />
           <Route
             path="/pendingDoctors/:username"
