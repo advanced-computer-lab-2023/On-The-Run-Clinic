@@ -12,13 +12,13 @@ const DoctorDashboard = () => {
     // Fetch available health packages from the backend when the component mounts
     async function fetchWallet() {
       try {
-        const response = await axios.get(`http://localhost:4000/getdoctor/${username}`);
+        const response = await axios.get(`http://localhost:4000/getdoctor/${username}`, { withCredentials: true });
         if (response.status === 200) {
           setDoctor(response.data);
           
         }
       } catch (error) {
-        console.error('Error fetching health packages:', error);
+        console.error('Error fetching wallet:', error);
       }
     }
     fetchWallet();
