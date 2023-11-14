@@ -22,13 +22,13 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
   const fetchAppointmentsWithPatients = async () => {
     try {
       // First, fetch the doctor based on the username
-      const response1 = await axios.get(`http://localhost:4000/getDoctor/${username}`);
+      const response1 = await axios.get(`http://localhost:4000/getDoctor/${username}`,{withCredentials: true});
       
       setDoctor(response1.data);
 
       // Then, fetch all appointments based on the doctor's ID
       if (response1.data) {
-        const response2 = await axios.get(`http://localhost:4000/getDoctorAppointments/${response1.data._id}`);
+        const response2 = await axios.get(`http://localhost:4000/getDoctorAppointments/${response1.data._id}`, {withCredentials: true});
         console.log(response2.data)
         if (response2.status === 200) {
           const doctorAppointments = response2.data;
@@ -40,7 +40,7 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
           for (const appointment of doctorAppointments) {
             try {
               if(appointment.patientId!=null){
-              const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`);
+              const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`,{withCredentials: true});
               if (response.status === 200) {
                 const patientData = response.data;
 
@@ -72,13 +72,13 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
     const fetchAppointmentsWithPatients = async () => {
       try {
         // First, fetch the doctor based on the username
-        const response1 = await axios.get(`http://localhost:4000/getDoctor/${username}`);
+        const response1 = await axios.get(`http://localhost:4000/getDoctor/${username}`,{withCredentials: true});
         
         setDoctor(response1.data);
   
         // Then, fetch all appointments based on the doctor's ID
         if (response1.data) {
-          const response2 = await axios.get(`http://localhost:4000/getDoctorAppointments/${response1.data._id}`);
+          const response2 = await axios.get(`http://localhost:4000/getDoctorAppointments/${response1.data._id}`,{withCredentials: true});
           console.log(response2.data)
           if (response2.status === 200) {
             const doctorAppointments = response2.data;
@@ -90,7 +90,7 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
             for (const appointment of doctorAppointments) {
               try {
                 if(appointment.patientId!=null){
-                const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`);
+                const response = await axios.get(`http://localhost:4000/getPatient/${appointment.patientId}`,{withCredentials: true});
                 if (response.status === 200) {
                   const patientData = response.data;
   
@@ -146,11 +146,10 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
         withCredentials: true
       });
   
-      if (response.status === 200) {
+      if (response.status === 201) {
         
         // If the appointment was created successfully, add it to the appointments list
-        setAppointments([...appointments, response.data]);
-        setFilteredAppointments([...filteredAppointments, response.data]);
+       fetchAppointmentsWithPatients();
 
       }
     } catch (error) {
