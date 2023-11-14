@@ -4,6 +4,7 @@ const Appointment = require('../models/appointments');
 const Doctor = require('../models/DoctorModel');
 const Patient = require('../models/PatientModel');
 const FamilyMember = require ('../models/FamilyMemberModel'); // Import your Patient model
+const HealthPackage = require('../models/HealthPackages');
 
 
 const createAppointment = async (req, res) => {
@@ -76,6 +77,11 @@ const reserveAppointment = async(req,res) => {
     console.log("d"+doctor);
     const patient = await Patient.findById(patientId);
     console.log("P"+patient);
+    let discount =0
+    if(patient.healthpackage) {
+      const h=await HealthPackage.findById(patient.healthpackage);
+      discount =h.discount;
+    }
 
     if (!appointment) {
       console.log(" app not found");
@@ -83,11 +89,11 @@ const reserveAppointment = async(req,res) => {
 
     if(paymentMethod=="wallet") {
       console.log("wallet " + patient.wallet); 
-      if(patient.wallet<doctor.hourly_rate) {
+      if(patient.wallet<doctor.hourly_rate-discount) {
         return res.status(400).json({ error: 'Not enough money in wallet' });
       }
       else {
-        patient.wallet = patient.wallet - doctor.hourly_rate;
+        patient.wallet = patient.wallet - doctor.hourly_rate+discount;
       console.log("wallet " + patient.wallet); 
 
       }
