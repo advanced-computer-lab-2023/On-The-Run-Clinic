@@ -48,7 +48,7 @@ const ViewRequests = () => {
   const handleReject = async (reqid) => {
     try {
       // Make a DELETE request to the backend to delete the patient
-      await axios.put(`http://localhost:4000/rejectRequest/${reqid}`,{
+      await axios.put(`http://localhost:4000/rejectRequest/${reqid}`,{},{
         withCredentials: true
       });
 
