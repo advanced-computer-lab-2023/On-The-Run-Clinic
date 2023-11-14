@@ -164,7 +164,7 @@ app.post("/reserveAppointment/:appointmentId",requireAuth,reserveAppointment);
 app.get("/getPackageDiscount/:username",requireAuth,getHighestDiscount);
 
 app.post("/createPDoctor/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",requireAuthAdmin,createPDoctor);
-app.delete("/deletePDoctor/:username",requireAuthAdmin,deletePDoctor);
+app.delete("/deletePDoctor/:username",requireAuthPending,deletePDoctor);
 //app.get("/getPDoctors",getPDoctors);
 app.post("/createDoctor1/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createDoctor1);
 app.get("/getPDoctor/:username",requireAuth,getPDoctor);
