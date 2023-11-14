@@ -15,6 +15,8 @@ const Doctorz = () => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const[patient,setPatient]= useState(null);
   const[discount,setDiscount]= useState(null);
+  
+
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -34,6 +36,12 @@ const Doctorz = () => {
         });
         if (response.status === 200) {
           setPatient(response.data);
+          if (response.data.healthpackage) {
+            const healthPackageId = response.data.healthpackage;
+            fetchHealthPackage(healthPackageId);
+          }else{
+            setDiscount(0);
+          }
           
         }
       } catch (error) {
@@ -49,37 +57,21 @@ const Doctorz = () => {
         });
         if (response.status === 200) {
           setAppointments(response.data);
-          if (response.data.healthPackage) {
-            const healthPackageId = response.data.healthPackage;
-            fetchHealthPackage(healthPackageId);
-          }else{
-            setDiscount(0);
-          }
+          
         }
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
     };
-    const fetchHealthPackage = async (healthPackageId) => {
-        try {
-          const response = await axios.get(`http://localhost:4000/getPackage/${healthPackageId}`,{
-            withCredentials: true
-          });
-          if (response.status === 200) {
-            setDiscount(response.data.discount);
-          }
-        } catch (error) {
-          console.error('Error fetching health package:', error);
-        }
-      };
-
+   
     fetchDoctors();
-    fetchHealthPackage();
+   
     fetchAppointments();
   }, [username]);
   const fetchHealthPackage = async (healthPackageId) => {
       try {
-        const response = await axios.get(`http://localhost:4000/getHealthPackageById/${healthPackageId}`,{
+        if(!healthPackageId) return setDiscount(0);
+        const response = await axios.get(`http://localhost:4000/getPackage/${healthPackageId}`,{
           withCredentials: true
         });
         if (response.status === 200) {
