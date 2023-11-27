@@ -48,7 +48,8 @@ const doctorSchema = new mongoose.Schema({
     type:Number
   },  passwordReset: {
     type: String,
-  }
+  },
+  notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification' }]
 });
 
 // Hash the password before saving to the database

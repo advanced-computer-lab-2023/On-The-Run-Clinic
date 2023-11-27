@@ -50,9 +50,7 @@ const PatientSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-   
-
-    
+  
   },
   healthpackage: {
     type: mongoose.Schema.Types.ObjectId,
@@ -99,7 +97,9 @@ const PatientSchema = new mongoose.Schema({
   }],
   passwordReset: {
     type: String,
-  }
+  },
+
+  notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification' }]
  
 });
 

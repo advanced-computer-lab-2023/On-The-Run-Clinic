@@ -40,7 +40,7 @@ import ResetPassword from './pages/ResetPassword';
 //import HealthPackage from '../../backend/models/HealthPackages';
 import HealthPackagesDetails from'./pages/HealthPackageDetails';
 import ViewAppointments from './pages/viewAppointments';
-
+import Notifications from './components/Notifications';
 
 // Import your components
 
@@ -104,7 +104,8 @@ function App() {
           <Route path="/changeAdminPassword/:username" element={<ChangeAdminPass/>}/>
           <Route path="/forgetPassword" element={<ForgetPassword/>}/>
           <Route path="/resetPassword/:username" element={<ResetPassword/>}/>
-  
+          <Route path="/notifications" element={<Notifications/>}/>
+    
 
           {/* Add other routes as needed */}
         </Routes>

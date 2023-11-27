@@ -4,6 +4,7 @@ const Appointment = require('../models/appointments');
 const Doctor = require('../models/DoctorModel');
 const Patient = require('../models/PatientModel');
 const FamilyMember = require ('../models/FamilyMemberModel'); // Import your Patient model
+const Notification = require ('../models/notificationModel');
 
 
 const createAppointment = async (req, res) => {
@@ -108,6 +109,14 @@ const reserveAppointment = async(req,res) => {
         await patient.save();
       }
     }
+
+    const msgP = `You have successfully reserved an appointment with doctor ${doctor.name} on ${appointment.date} `;
+    const notificationP = new Notification({msgP});
+    patient.notifications.push(notificationP);
+
+    const msgD = `${patient.name} has successfully reserved an appointment with you on ${appointment.date} `;
+    const notificationD = new Notification({msgD});
+    doctor.notifications.push(notificationD);
 
     return res.status(200).json({ message: 'Appointment reserved successfully' });
   } catch (error) {

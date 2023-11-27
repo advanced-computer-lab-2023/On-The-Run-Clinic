@@ -7,8 +7,8 @@ const Patient = require('./models/PatientModel');
 const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
-const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage} = require("./controllers/patientController")
+const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor,getDoctorNotifications} = require("./controllers/doctorController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getPatientNotifications} = require("./controllers/patientController")
 const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest}=require("./controllers/requestsController")
@@ -152,5 +152,7 @@ app.get("/getAvailableDoctorAppointments/:id",getAvailableDoctorAppointments);
 app.post("/reserveAppointment/:appointmentId",reserveAppointment);
 app.post("/reserveFamilyMemberAppointment/:appointmentId",reserveFamilyMemberAppointment);
 app.post("/reserveLinkedPatientAppointment/:appointmentId",reserveLinkedPatientAppointment);
+app.get("/getPatientNotifications/:id",getPatientNotifications);
+app.get("/getDoctorNotifications/:id",getDoctorNotifications);
 
 

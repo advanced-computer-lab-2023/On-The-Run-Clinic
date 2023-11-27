@@ -276,8 +276,24 @@ const updatePasswordDoctor = async (req, res) => {
   }
 };
  
+const getDoctorNotifications = async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+    const doctor = await Doctor.findById(doctorId).populate('notifications');
 
+    if (!doctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+
+    const notifications = doctor.notifications;
+
+    return res.status(200).json({ notifications });
+  } catch (error) {
+    console.error('Error fetching doctor notifications:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 // Implement other controllers (e.g., update profile, view profile, list patients, etc.) following a similar structure
 
-module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor,createDoctor1}
+module.exports={createDoctor,getDocPatients,getDoctors,deleteDoctor,updateDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor,createDoctor1,getDoctorNotifications}
