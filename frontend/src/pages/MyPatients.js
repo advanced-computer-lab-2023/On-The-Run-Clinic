@@ -129,7 +129,7 @@ const MyPatients = () => {
                     //onClick={() => handlePatientSelect(patient)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <Link to={`/patient-details/${patient.username}`}>
+                    <Link to={`/patient-details/${patient.username}/${username}`}>
                       Name: {patient.name}
                       <br />
                       Username: {patient.username}

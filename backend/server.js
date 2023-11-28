@@ -13,14 +13,15 @@ const {createMember,getFamilyMembers} = require("./controllers/familymemControll
 const cors = require('cors');
 
 
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount} = require("./controllers/patientController");
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,getMyPrescriptions2,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount} = require("./controllers/patientController");
 const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment}=require("./controllers/appointmentsController")
-const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
+const{createPrescription,getPrescriptionsForPatient,deleteMedicineFromPrescription,addMedicineToPres,incrementDosage,decrementDosage}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 const{createPDoctor,getPDoctors,getPDoctor,deletePDoctor}=require("./controllers/pendingDoctorController") 
 const {requireAuthPatient,requireAuthPending,requireAuthDoctor,requireAuthAdmin,requireAuth}=require("./Middleware/requireAuth")
 const{login,logout,forgetPassword,resetPassword}=require("./controllers/userController")
+const{getMedicine,getMedicines,getMedicines2}=require("./controllers/MedicineController")
 const multer=require("multer");
 
 //express app
@@ -113,9 +114,10 @@ app.patch("/ubdateDoctor",updateDoctor);
 app.get("/getFamilyMem/:username",requireAuth,getFamilyMembers);
 app.get("/searchPatientsByName",requireAuth,searchPatientsByName);
 app.post("/addPatientToDr",requireAuth,addPatientToDr);
-app.post("/addPrescription",requireAuth,createPrescription);
+app.post("/addPrescription/:username/:usernameDoctor",requireAuth,createPrescription);
 app.get("/getPrescriptions/:id",requireAuth,getPrescriptionsForPatient);
 app.get("/getMyPrescriptions/:username",requireAuth,getMyPrescriptions);
+app.get("/getMyPrescriptions2/:username/:usernameDoctor",requireAuth,getMyPrescriptions2);
 app.post("/createRequest",createRequest);
 app.post("/createPackage",requireAuthAdmin,createHealthPackage);
 app.get("/getPackages",requireAuth,getPackages);
@@ -170,5 +172,10 @@ app.post("/createDoctor1/:username/:name/:email/:password/:date_of_birth/:hourly
 app.get("/getPDoctor/:username",requireAuth,getPDoctor);
 app.post("/reserveFamilyMemberAppointment/:appointmentId",requireAuth,reserveFamilyMemberAppointment);
 app.post("/reserveLinkedPatientAppointment/:appointmentId",requireAuth,reserveLinkedPatientAppointment);
-
+app.get("/getMedicines",getMedicines)
+app.get("/getMedicines2",getMedicines2)
+app.delete("/deleteMedicineFromPres/:prescriptionId/:medicineId",deleteMedicineFromPrescription);
+app.post("/addMedicineToPres",addMedicineToPres)
+app.put("/decrementDosage/:prescriptionId/:medicineId",decrementDosage)
+app.put("/incrementDosage/:prescriptionId/:medicineId",incrementDosage)
 

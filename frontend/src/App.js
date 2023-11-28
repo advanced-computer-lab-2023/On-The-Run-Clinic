@@ -41,6 +41,7 @@ import ResetPassword from './pages/ResetPassword';
 import HealthPackagesDetails from './pages/HealthPackageDetails';
 import ViewAppointments from './pages/viewAppointments';
 import PendingDoctorPage from './pages/PendingDocPage';
+import ManagePrescriptions from './pages/managePrescriptions';
 
 // Import your components
 
@@ -159,8 +160,8 @@ function App() {
             element={user && user.role === 'patient' ? <FilterAppointmentsPatient /> : <Navigate to="/login" />}
           />
           <Route
-            path="/patient-details/:doctorUsername/:patientUsername"
-            element={user && (user.role === 'doctor' || user.role === 'patient' || user.role === 'admin') ? <DoctorDetails /> : <Navigate to="/login" />}
+            path="/patient-details/:username/:usernameDoctor"
+            element={user && (user.role === 'doctor' || user.role === 'patient' || user.role === 'admin') ? <PatientDetails /> : <Navigate to="/login" />}
           />
           <Route
             path="/doctor-details/:doctorUsername/:patientUsername"
@@ -180,6 +181,10 @@ function App() {
           />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/resetPassword/:username" element={<ResetPassword />} />
+          <Route
+            path="/managePrescriptions/:username/:usernameDoctor"
+            element={user && user.role === 'doctor' ? <ManagePrescriptions /> : <Navigate to="/login" />}
+          />
 
 
           {/* Add other routes as needed */}
