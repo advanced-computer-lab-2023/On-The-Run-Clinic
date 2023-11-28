@@ -41,6 +41,7 @@ import ResetPassword from './pages/ResetPassword';
 import HealthPackagesDetails from './pages/HealthPackageDetails';
 import ViewAppointments from './pages/viewAppointments';
 import PendingDoctorPage from './pages/PendingDocPage';
+import ViewFollowUpReqs from './pages/ViewFollowUpReqs';
 
 // Import your components
 
@@ -180,7 +181,7 @@ function App() {
           />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/resetPassword/:username" element={<ResetPassword />} />
-
+          <Route path="/viewFollowup/:doctorId" element={<ViewFollowUpReqs />} />
 
           {/* Add other routes as needed */}
         </Routes>

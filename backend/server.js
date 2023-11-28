@@ -12,9 +12,9 @@ const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePassw
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
 
-
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount} = require("./controllers/patientController");
-const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment}=require("./controllers/appointmentsController")
+const { createFollowUpReq, acceptFollowUpReq, rejectFollowUpReq,getFollowUpReqs} = require("./controllers/followUpReqController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,addToWallet,getPatientUsername} = require("./controllers/patientController");
+const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
@@ -172,3 +172,10 @@ app.post("/reserveFamilyMemberAppointment/:appointmentId",requireAuth,reserveFam
 app.post("/reserveLinkedPatientAppointment/:appointmentId",requireAuth,reserveLinkedPatientAppointment);
 
 
+app.put("/cancelAppointment/:appointmentId",cancelAppointment);
+app.put("/addtoWallet/:username/:amount",addToWallet);
+app.get("/getPatientUsername/:_id",getPatientUsername);
+app.post("/createFollowUpReq",createFollowUpReq);
+app.get("/getFollowUpReqs/:doctorId",getFollowUpReqs);
+app.post("/acceptFollowUpReq/:reqid",acceptFollowUpReq);
+app.post("/rejectFollowUpReq/:reqid",rejectFollowUpReq);

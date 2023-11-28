@@ -54,6 +54,12 @@ const DoctorDashboard = () => {
             Change my password
           </Link>
         </li>
+        <li>
+          <Link to={`/viewFollowup/${doctor._id}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            View Follow up requests
+          </Link>
+        </li>
         
       </ul>
     </div>

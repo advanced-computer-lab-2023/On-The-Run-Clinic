@@ -13,6 +13,7 @@ const DoctorAppointments = () => {
   const [newAppointmentDate, setNewAppointmentDate] = useState('');
   const [selectedPast, setSelectedPast] = useState(false);
 
+
 const [newAppointmentHour, setNewAppointmentHour] = useState('');
 
 
@@ -253,6 +254,7 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
       }
       return false;
     });
+
     const appointmentsWithPatients = await Promise.all(
       filtered.map(async (appointment) => {
         try {
@@ -284,6 +286,37 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
     console.log("Appointments with Patients:", appointmentsWithPatients);
   
     setFilteredAppointments(appointmentsWithPatients);
+  };
+
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      const appointmentToCancel = appointments.find(app => app._id === appointmentId);
+      const differenceInHours = Math.abs(new Date() - new Date(appointmentToCancel.date)) / 36e5;
+  
+      
+  
+      const response = await axios.put(`http://localhost:4000/cancelAppointment/${appointmentId}`);
+  
+      if (differenceInHours > 24) {
+        console.error('Cannot cancel appointment less than 24 hours before the appointment date');
+        await axios.put(`http://localhost:4000/addtowallet/${appointmentToCancel.patientInfo.username}/${doctor.hourly_rate}`);
+      }
+      
+      if (response.status === 200) {
+        const updatedAppointments = appointments.map((appointment) => {
+          if (appointment._id === appointmentId) {
+            return { ...appointment, status: 'Cancelled' };
+          }
+  
+          return appointment;
+        });
+  
+        setAppointments(updatedAppointments);
+        setFilteredAppointments(updatedAppointments);
+      }
+    } catch (error) {
+      console.error('Error cancelling appointment:', error);
+    }
   };
   return (
     <div>
@@ -352,7 +385,10 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
           <li key={appointment._id}>
             Date: {appointment.date}, Status: {appointment.status}, Description: {appointment.description} {appointment.patientInfo && (
         <span>, Patient Email: <Link to={`/patient-details/${appointment.patientInfo.username}`}>{appointment.patientInfo.name}</Link></span>
-      )}
+        )}
+        {new Date(appointment.date) > new Date() && appointment.status !== 'Cancelled'&& (
+          <button onClick={() => cancelAppointment(appointment._id)}>Cancel Appointment</button>
+        )}
           </li>
         ))}
       </ul>

@@ -5,7 +5,7 @@ const Doctor = require('../models/DoctorModel');
 const Patient = require('../models/PatientModel');
 const FamilyMember = require ('../models/FamilyMemberModel'); // Import your Patient model
 const HealthPackage = require('../models/HealthPackages');
-
+const mongoose = require('mongoose');
 
 const createAppointment = async (req, res) => {
   try {
@@ -352,6 +352,30 @@ const getPatientAppointments = async (req, res) => {
   }
 };
 
+const cancelAppointment = async (req, res) => {
+  const { appointmentId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(appointmentId)) {
+    return res.status(400).json({ message: 'Invalid appointment ID' });
+  }
+  try {
+    const appointment = await Appointment.findById(appointmentId);
+
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    if (new Date(appointment.date) <= new Date()) {
+      return res.status(400).json({ message: 'Appointment date has passed or is today' });
+    }
+    appointment.status = 'Cancelled';
+    await appointment.save();
+
+    return res.status(200).json({ message: 'Appointment cancelled successfully' });
+  } catch (error) {
+    console.error('Error cancelling appointment:', error);
+    return res.status(500).json({ error: 'An error occurred while cancelling the appointment' });
+  }
+};
 
 
-module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment}
+
+module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment}
