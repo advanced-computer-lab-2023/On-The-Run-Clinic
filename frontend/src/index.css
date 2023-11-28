@@ -75,3 +75,34 @@ form.signup, form.login {
   background: #fff;
   border-radius: 4px;
 }
+
+
+.prescriptions {
+  flex: 2;
+}
+
+.prescriptions ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.prescriptions li {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}

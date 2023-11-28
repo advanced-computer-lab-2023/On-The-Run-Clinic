@@ -2,33 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate  } from 'react-router-dom';
 import axios from 'axios';
 
+import './patientDetails.css';
+
 const PatientDetails = () => {
-  const { username } = useParams();
+  const { username,usernameDoctor } = useParams();
   const navigate = useNavigate();
   const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [familyMembers, setFamilyMembers] = useState([]);
-  const [prescriptions, setPrescriptions] = useState([]);
-
+ 
   useEffect(() => {
+    
     const fetchPatientData = async () => {
       try {
         // Make an API request to get all patient information
-        const response = await axios.get('http://localhost:4000/getPatients',{
+        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`,{
           withCredentials: true
         });
 
         if (response.status === 200) {
-          const allPatients = response.data;
-
-          // Find the patient with the matching username
-          const matchingPatient = allPatients.find((pat) => pat.username === username);
-          if (matchingPatient) {
-            setPatient(matchingPatient);
-          } else {
-            // Handle the case where no patient with the username is found
-            console.error('Patient not found:', username);
-          }
+          setPatient(response.data);
         }
       } catch (error) {
         // Handle API request errors more gracefully
@@ -40,60 +32,9 @@ const PatientDetails = () => {
 
     // Call the fetchPatientData function when the component mounts
     fetchPatientData();
+    
   }, [username]);
   
-
-  // Use another useEffect for fetching prescriptions, but make sure it depends only on username
-  useEffect(() => {
-    if (username) {
-      const fetchPrescriptions = async () => {
-        try {
-          const response = await axios.get(`http://localhost:4000/getMyPrescriptions/${username}`,{
-            withCredentials: true
-          });
-          if (response.status === 200) {
-            setPrescriptions(response.data);
-          }
-        } catch (error) {
-          console.error('Error fetching prescriptions:', error);
-        }
-      };
-
-      // Call the fetchPrescriptions function when the username changes
-      fetchPrescriptions();
-    }
-  }, [username]);
-
-  useEffect(() => {
-    // ...
-
-    const fetchFamilyMembers = async () => {
-      try {
-        const response = await axios.get(`http://localhost:4000/getFamilyMem/${username}`);
-        if (response.status === 200) {
-          setFamilyMembers(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching family members:', error);
-      }
-    };
-
-    // Call the fetchFamilyMembers function when the patient ID changes
-      fetchFamilyMembers();
-  }, [patient]);
-
-
-     /* const fetchFamilyMembers = async () => {
-      try {
-        const response = await axios.get(`http://localhost:4000/getFamilyMem/${patient._id}`);
-        if (response.status === 200) {
-          setFamilyMembers(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching family members:', error);
-      }
-    };*/
-
 
   if (loading) {
     return <div>Loading patient details...</div>;
@@ -104,46 +45,56 @@ const PatientDetails = () => {
   }
 
   return (
-    <div>
-      <h2>Patient Details</h2>
-      <p>Name: {patient.name}</p>
-      <p>Username: {patient.username}</p>
-      <p>Email: {patient.email}</p>
-      <p>Date of Birth: {patient.date_of_birth}</p>
-      <p>Gender: {patient.gender}</p>
-      <p>Mobile Number: {patient.mobileNumber}</p>
-      <p>Emergency Contact Name: {patient.emergencyContact.fullName}</p>
-      <p>Emergency Contact Mobile Number: {patient.emergencyContact.mobileNumber}</p>
-
-      <h3>Family Members</h3>
-      <ul>
-        {familyMembers.map((familyMember) => (
-          <li key={familyMember._id}>
-            Name: {familyMember.name}<br />
-            National ID: {familyMember.national_id}<br />
-            Age: {familyMember.age}<br />
-            Gender: {familyMember.gender}<br />
-            Relation: {familyMember.relation}<br />
-          </li>
-        ))}
-      </ul>
-
-      <h3>Prescriptions</h3>
-      <ul>
-        {prescriptions.map((prescription) => (
-          <li key={prescription._id}>
-            Medication Name: {prescription.medicationName}<br />
-            Dosage: {prescription.dosage}<br />
-            Instructions: {prescription.instructions}<br />
-            Date: {new Date(prescription.date).toLocaleDateString()}<br />
-            Filled: {prescription.filled ? 'Yes' : 'No'}<br />
-          </li>
-        ))}
-      </ul>
-      <button onClick={() => navigate(-1)}>Back</button>
-
-      {/* Display additional patient information and health records here */}
+    <div className="container">
+    <div className="details-container">
+    <h2 className="title">Patient Details</h2>
+  <table style={{ fontSize: '1.5em', padding: '10px' }}>
+    <tbody>
+      <tr>
+        <th>Name:</th>
+        <td>{patient.name}</td>
+      </tr>
+      <tr>
+        <th>Username:</th>
+        <td>{patient.username}</td>
+      </tr>
+      <tr>
+        <th>Email:</th>
+        <td>{patient.email}</td>
+      </tr>
+      <tr>
+        <th>Date of Birth:</th>
+        <td>{patient.date_of_birth}</td>
+      </tr>
+      <tr>
+        <th>Gender:</th>
+        <td>{patient.gender}</td>
+      </tr>
+      <tr>
+        <th>Mobile Number:</th>
+        <td>{patient.mobileNumber}</td>
+      </tr>
+      <tr>
+        <th>Emergency Contact Name:</th>
+        <td>{patient.emergencyContact.fullName}</td>
+      </tr>
+      <tr>
+        <th>Emergency Contact Mobile Number:</th>
+        <td>{patient.emergencyContact.mobileNumber}</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div className="button-container">
+      <Link to={`/managePrescriptions/${username}/${usernameDoctor}`}>
+       <button className="button">Manage Prescriptions</button>
+      </Link>
+      <button className="button" onClick={() => navigate(-1)}>Back</button>
     </div>
+  </div>
+
+
+    
   );
 };
 

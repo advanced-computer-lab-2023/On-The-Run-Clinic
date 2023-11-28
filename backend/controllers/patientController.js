@@ -138,7 +138,7 @@ const getMyPrescriptions = async (req, res) => {
    
 
     // Find the doctor by ID and populate the 'patients' field
-    const patient = await Patient.find({username:username});
+    const patient = await Patient.findOne({username:username});
    
 
     if (!patient) {
@@ -146,9 +146,9 @@ const getMyPrescriptions = async (req, res) => {
     }
     
 
-    const pID = patient[0].prescriptions;
+   
     
-    const prescriptions = await Prescription.find({ _id: { $in: pID } });
+    const prescriptions = await Prescription.find({ patient: { $in: patient._id } });
     
     console.log(prescriptions)
     res.status(200).json(prescriptions);
@@ -532,4 +532,61 @@ const addToWallet = async (req, res) => {
 };
 
 
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,addToWallet,getPatientUsername}
+const getMyPrescriptions2 = async (req, res) => {
+  try {
+    const { username,usernameDoctor} = req.params;
+   
+
+    // Find the doctor by ID and populate the 'patients' field
+    const patient = await Patient.findOne({username:username});
+    const doctor = await Doctor.findOne({username:usernameDoctor});
+    console.log(patient)
+    console.log(doctor)
+   
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+    if (!doctor) {
+      return res.status(404).json({ message: 'doctor not found' });
+    }
+    
+
+    const pID = patient._id;
+    const dID = doctor._id;
+    
+    const prescriptions = await Prescription.find({ patient: pID,doctor:dID });
+    
+    console.log(prescriptions)
+    res.status(200).json(prescriptions);
+  } catch (error) {
+    console.error('Error fetching patients:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+const addPrescription = async (req, res) => {
+  const { medicationId, dosage, instructions } = req.body;
+  const { username, usernameDoctor } = req.params;
+
+  try {
+    const newPrescription = new Prescription({
+      patientUsername: username,
+      doctorUsername: usernameDoctor,
+      medicationId,
+      dosage,
+      instructions,
+      date: new Date(),
+      filled: false
+    });
+
+    const savedPrescription = await newPrescription.save();
+
+    res.status(200).json(savedPrescription);
+  } catch (error) {
+    console.error('Error adding prescription:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getMyPrescriptions2,addToWallet,getPatientUsername}
