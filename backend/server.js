@@ -18,7 +18,7 @@ const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,getMyPr
 
 
 
-const{createPrescription,getPrescriptionsForPatient,deleteMedicineFromPrescription,addMedicineToPres,incrementDosage,decrementDosage}=require("./controllers/perscriptionsController")
+const{createPrescription,getPrescriptionsForPatient,deleteMedicineFromPrescription,addMedicineToPres,incrementDosage,decrementDosage,getPrescriptionById}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 const{createPDoctor,getPDoctors,getPDoctor,deletePDoctor}=require("./controllers/pendingDoctorController") 
@@ -117,7 +117,7 @@ app.patch("/ubdateDoctor",updateDoctor);
 app.get("/getFamilyMem/:username",requireAuth,getFamilyMembers);
 app.get("/searchPatientsByName",requireAuth,searchPatientsByName);
 app.post("/addPatientToDr",requireAuth,addPatientToDr);
-app.post("/addPrescription/:username/:usernameDoctor",requireAuth,createPrescription);
+app.post("/addPrescription",createPrescription);
 app.get("/getPrescriptions/:id",requireAuth,getPrescriptionsForPatient);
 app.get("/getMyPrescriptions/:username",requireAuth,getMyPrescriptions);
 app.get("/getMyPrescriptions2/:username/:usernameDoctor",requireAuth,getMyPrescriptions2);
@@ -177,10 +177,8 @@ app.post("/reserveFamilyMemberAppointment/:appointmentId",requireAuth,reserveFam
 app.post("/reserveLinkedPatientAppointment/:appointmentId",requireAuth,reserveLinkedPatientAppointment);
 app.get("/getMedicines",getMedicines)
 app.get("/getMedicines2",getMedicines2)
-app.delete("/deleteMedicineFromPres/:prescriptionId/:medicineId",deleteMedicineFromPrescription);
-app.post("/addMedicineToPres",addMedicineToPres)
-app.put("/decrementDosage/:prescriptionId/:medicineId",decrementDosage)
-app.put("/incrementDosage/:prescriptionId/:medicineId",incrementDosage)
+
+app.get("getPrescriptionById/:prescriptionId",getPrescriptionById)
 
 app.put("/cancelAppointment/:appointmentId",cancelAppointment);
 app.put("/addtoWallet/:username/:amount",addToWallet);

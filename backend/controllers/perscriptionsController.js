@@ -5,19 +5,23 @@ const { default: mongoose } = require('mongoose');
 const Medicine = require('../models/MedicineModel');
 
 const createPrescription = async (req, res) => {
-  const { medicineId,dosage, instructions} = req.body;
-  const {username,usernameDoctor}=req.params; 
+  const { medicines, instructions, doctor, patient } = req.body;
   try {
-    const m=await Medicine.findById(medicineId)
-    const p=await Patient.findOne({username:username})
-    const d=await Doctor.findOne({username:usernameDoctor})
+    const medicinesData = await Promise.all(medicines.map(async ({ id, dosage }) => {
+      // Fetch the medicine name from your database using the id
+      // Replace the following line with your own logic
+      const medicine = await Medicine.findById(id);
+      return {
+        medicineId: id,
+        medicineName: medicine.name,
+        dosage
+      };
+    }));
+  
+    const p=await Patient.findOne({username:patient})
+    const d=await Doctor.findOne({username:doctor})
     const newPrescription = new Prescription({
-      medicines:[{
-        medicineId:m._id,
-        medicineName:m.name,
-        dosage:dosage,
-      
-      }],
+      medicines:medicinesData,
       instructions:instructions,
       patient:p._id,
       doctor:d._id,
@@ -122,9 +126,22 @@ const createPrescription = async (req, res) => {
       res.status(500).json({ error: 'Error decrementing dosage' });
     }
   }
+  const getPrescriptionById = async (req, res) => {
+    try {
+      const { prescriptionId } = req.params;
+      const prescription = await Prescription.findById(prescriptionId);
+      if (!prescription) {
+        return res.status(404).json({ message: 'Prescription not found' });
+      }
+      res.status(200).json(prescription);
+    } catch (error) {
+      console.error('Error fetching prescription:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }
   
   module.exports = {
     createPrescription,
     getPrescriptionsForPatient,
-    deleteMedicineFromPrescription,addMedicineToPres,incrementDosage,decrementDosage
+    deleteMedicineFromPrescription,addMedicineToPres,incrementDosage,decrementDosage,getPrescriptionById
   };

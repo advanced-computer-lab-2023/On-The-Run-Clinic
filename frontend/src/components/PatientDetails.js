@@ -64,7 +64,7 @@ const PatientDetails = () => {
       </tr>
       <tr>
         <th>Date of Birth:</th>
-        <td>{patient.date_of_birth}</td>
+        <td>{new Date(patient.date_of_birth).toLocaleDateString()}</td>
       </tr>
       <tr>
         <th>Gender:</th>
