@@ -1,148 +1,100 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate  } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
+
 import MedicineSelect from '../components/MedicineList';
 import PrescriptionList from '../components/PrescriptionList';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faPlus } from '@fortawesome/free-solid-svg-icons';
+import PrescriptionDetailsModal from '../components/PrescriptionDetailsModal';
+import PrescriptionForm from '../components/PrescriptionForm';
 
 const ManagePrescriptions = () => {
-  const { username,usernameDoctor } = useParams();
+  const { username, usernameDoctor } = useParams();
+  const [modalOpen, setModalOpen] = useState(false);
+
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [isFormVisible, setIsFormVisible] = useState(false);
   const [prescriptions, setPrescriptions] = useState([]);
-  const [medicines, setMedicines] = useState([]);
-  const [isPrescriptionFormVisible, setIsPrescriptionFormVisible] = useState(false);
-  const [isaddmed, setIsaddmed] = useState(false);
-const [newPrescription, setNewPrescription] = useState({ medicineId: '', dosage: '', instructions: '' });
-const [newMed, setNewMed] = useState({ medicineId: '', prescriptionId: '', dosage: 0});
-const [activePrescriptionId, setActivePrescriptionId] = useState(null);
-const [prescription, setPrescription] = useState("");
+
+  const [prescription, setPrescription] = useState("");
+  const [activePrescriptionId, setActivePrescriptionId] = useState(null);
+
+
 
   useEffect(() => {
-    const fetchMedicines = async () => {
+    const fetchPrescriptions = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/getMedicines', {
+        const response = await axios.get(`http://localhost:4000/getMyPrescriptions/${username}`, {
           withCredentials: true
         });
         if (response.status === 200) {
-          setMedicines(response.data);
-          console.log(response.data)
+          console.log("P", response.data)
+          setPrescriptions(response.data);
         }
       } catch (error) {
-        console.error('Error fetching medicines:', error);
+        console.error('Error fetching prescriptions:', error);
       }
     };
-    
-    fetchMedicines();
+    fetchPrescriptions();
   }, [username]);
-  const fetchPrescriptions = async () => {
-    try {
-      const response = await axios.get(`http://localhost:4000/getMyPrescriptions2/${username}/${usernameDoctor}`,{
-        withCredentials: true
-      });
-      if (response.status === 200) {
-        console.log("P",response.data)
-        setPrescriptions(response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching prescriptions:', error);
-    }
-  };
-  
-  useEffect(() => {
-    
-      fetchPrescriptions();
-  }, [username]);
-  // ManagePrescriptions.js
-// ... rest of your code ...
-
-const handleIncrementDosage = async (prescriptionId, medicineId) => {
-  try {
-    const response = await axios.put(`http://localhost:4000/incrementDosage/${prescriptionId}/${medicineId}`, {}, {
-      withCredentials: true
-    });
-    if(response.status === 200){
-      fetchPrescriptions();
-    }
-  } catch(error){
-    console.error('Error incrementing dosage:', error);
-  }
-  fetchPrescriptions();
-};
-
-const handleDecrementDosage = async (prescriptionId, medicineId) => {
-  try {
-    const response = await axios.put(`http://localhost:4000/decrementDosage/${prescriptionId}/${medicineId}`, {}, {
-      withCredentials: true
-    });
-    if(response.status === 200){
-      fetchPrescriptions();
-    }
-  } catch(error){
-    console.error('Error decrementing dosage:', error);
-  }
-  fetchPrescriptions();
-};
-
-// ... rest of your code ...
-  const handleAddMedicine = async (prescriptionId) => {
-    try{
-      console.log("newMed:",prescriptionId)
-      const updatedMed = { ...newMed, prescriptionId: prescriptionId };
-      const response = await axios.post(`http://localhost:4000/addMedicineToPres/`,updatedMed, {
-        withCredentials: true
-      });
-      if(response.status === 200){
-        newMed.medicineId='';
-        fetchPrescriptions();
-      }
-    }
-    catch(error){
-      console.error('Error adding medicine:', error);
-    }
-  };
-  const handleDeleteMedicine = async(prescriptionId, medicineId) => {
-    try {
-      console.log("delete",prescriptionId,medicineId)
-      const response = await axios.delete(`http://localhost:4000/deleteMedicineFromPres/${prescriptionId}/${medicineId}`,{}, {
-        withCredentials: true
-      });
-      if (response.status === 200) {
-        // Remove the deleted medicine from the prescriptions state
-        setPrescriptions(prescriptions.map(prescription => 
-          prescription._id === prescriptionId 
-            ? {...prescription, medicines: prescription.medicines.filter(medicine => medicine._id !== medicineId)}
-            : prescription
-        ));
-      }
-    } catch (error) {
-      console.error('Error deleting medicine:', error);
-    }
-  };
 
 
-  return(
+
+
+  return (
     <>
-    <div style={{ width: '50%', float: 'right' }}>
-    <h2>Medicines</h2>
-      <MedicineSelect
-        medicines={medicines}
-        selectedMedicine={newMed.medicineId}
-        onMedicineChange={(medicineId) => {
-          setNewMed({ ...newMed, medicineId: medicineId });
-        }}
-      />
-    </div>
-    <div style={{ width: '50%', float: 'left' }}>
-    <h2>Prescriptions</h2>
-    <PrescriptionList prescriptions={prescriptions} onAddMedicine={handleAddMedicine} onDeleteMedicine={handleDeleteMedicine} onIncrementDosage={handleIncrementDosage} onDecrementDosage={handleDecrementDosage} />
-    </div>
-    </>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ width: '45%', float: 'left' }}>
+          <h2>
+            Prescriptions
+            <FontAwesomeIcon
+              icon={faPlus}
+              style={{ cursor: 'pointer', marginLeft: '10px' }}
+              onClick={() => setIsFormVisible(true)}
+            />
+          </h2>
+          <ul style={{ listStyleType: 'none', padding: 0 }}>
+            {prescriptions.map((prescription) => (
+              <li key={prescription._id} style={{ marginBottom: '20px' }}>
+                <div style={{ fontSize: '1.2rem', display: 'flex', alignItems: 'center' }}>
+                  <span><strong>Date: </strong>  {new Date(prescription.date).toLocaleDateString('en-GB')}</span>
+                  <FontAwesomeIcon
+                    icon={faEye}
+                    style={{ cursor: 'pointer', marginLeft: '10px' }}
+                    onClick={() => {
+                      setModalOpen(true);
+                      setActivePrescriptionId(prescription._id)
+                      setPrescription(prescriptions.find((p) => p._id === activePrescriptionId));
+                    }}
+                  />
+                </div>
+                <div style={{ fontSize: '1.2rem', marginTop: '10px' }}><strong>Id: </strong> {prescription._id}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div style={{ width: '45%', float: 'right' }}>
+          {isFormVisible && <PrescriptionForm />}
+        </div>
+        {modalOpen && prescription &&
+
+
+<PrescriptionDetailsModal
+  setOpenModal={setModalOpen}
+
+
+  prescription={prescription}
+/>}
+      </div>
+      </>
+
+     
   
-  
-  
+
+
+
   )
 }
 export default ManagePrescriptions

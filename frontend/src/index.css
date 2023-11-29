@@ -17,7 +17,7 @@ header {
 header .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 10px 20px;
+  padding: 10px 20px 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -60,7 +60,7 @@ header nav div button {
   cursor: pointer;
 }
 header h1 {
-  margin: 0;
+  margin: 0px;
   color: #343a40;
 }
 
@@ -105,4 +105,187 @@ th {
 td {
   padding: 10px;
   border-bottom: 1px solid #ccc;
+}
+.modalBackground {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(200, 200, 200);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContainer {
+  width: 500px;
+  height: 500px;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  display: block;
+  flex-direction: column;
+  padding: 30px;
+}
+
+.modalContainer .title {
+  margin: bottom 20px;
+}
+
+.modalContainer .title h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom:0;
+}
+
+.modalContainer .metadata {
+  display:block;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 0.7rem;
+  line-height: 0.7;
+}
+
+.titleCloseBtn {
+  display: block;
+  float: right;
+  height: 20px; /* Add this line */
+  position: relative;
+}
+
+.titleCloseBtn button {
+  display: block;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background-color: transparent;
+  color: black;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.titleCloseBtn button:hover {
+  background-color: rgb(41, 86, 247);
+  color:#ffffff;
+}
+
+.modalContainer .body {
+  flex: 70%;
+  flex-direction: column;
+  font-size: 1.0rem;
+  text-align: center;
+  margin-top:10px;
+  Text-align:left;
+  line-height: 0.7;
+ 
+}
+
+.modalContainer .footer {
+  flex: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#cancelBtn {
+  background-color: crimson;
+}
+.medicine-table {
+  width: 100%; /* reduce width to 90% to create margins */
+  margin: auto; /* center the table */
+}
+
+.medicine-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+.medicine-table th, .medicine-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center; /* center align the text */
+
+}
+
+.medicine-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.medicine-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center; 
+  background-color: #4CAF50;
+  color: white;
+}
+.prescription-form {
+  /* Add your styles here */
+}
+
+.dosage-control {
+  display: flex;
+  align-items: center;
+}
+
+.dosage-control button {
+  width: 20px;
+  height: 20px;
+  font-size: 1rem;
+}
+
+.dosage-control span {
+  margin: 0 10px;
+}
+.form-control {
+  box-shadow: none;
+}
+.form-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.dosage-control {
+  display: flex;
+  align-items: center;
+}
+
+.dosage-control button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: #ddd;
+  color: #333;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.dosage-control span {
+  margin: 0 10px;
 }
