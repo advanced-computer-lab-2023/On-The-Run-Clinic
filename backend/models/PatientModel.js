@@ -50,7 +50,10 @@ const PatientSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-   
+    relation_to_patient: {
+      type: String,
+      required: false,
+    } 
 
     
   },
