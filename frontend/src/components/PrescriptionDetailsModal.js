@@ -25,7 +25,7 @@ const PrescriptionDetailsModal = ({ setOpenModal, prescription }) => {
                 </div>
                 <div className="metadata">
                     <p><strong>ID: </strong>{prescription._id}</p>
-                    <p><strong>Date: </strong>{prescription.date}</p>
+                    <p><strong>Date: </strong>{new Date(prescription.date).toLocaleDateString('en-GB')}</p>
                     <p><strong>Doctor ID: </strong>{prescription.doctor}</p>
                     <p><strong>Filled: </strong>{prescription.status === 'filled' ? 'Yes' : 'No'}</p>
                 </div>

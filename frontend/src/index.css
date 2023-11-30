@@ -12,18 +12,52 @@ body {
   font-family: "Poppins";
 }
 header {
-  background: #fff;
-}
-header .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 10px 20px 0 20px;
+  background: #4CAF50;
+  box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.1);
   display: flex;
-  align-items: center;
+  
   justify-content: space-between;
 }
+
+.left-container {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.right-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+header .left-container h1{
+ color: #fff;
+ text-align: left;
+ 
+}
+header .right-container h3{
+  color: #fff;
+  font-size: 15px;
+  margin-bottom: 0px;
+ }
+ .right-container div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+ header .right-container button {
+  background: transparent;
+  font-size: 15px;
+  color: white;
+  border: 1px solid white;
+  margin-left: 10px;
+}
 header a {
-  color: #333;
+  color: #fff;
   text-decoration: none;
 }
 .pages{
@@ -32,33 +66,6 @@ header a {
   margin: 0 auto;
 }
 
-header nav {
-  display: flex;
-  align-items: center;
-}
-
-header nav div {
-  display: flex;
-  align-items: center;
-}
-
-header nav div span {
-  margin-right: 10px;
-}
-
-header nav div a {
-  margin-right: 10px;
-  color: #343a40;
-  text-decoration: none;
-}
-
-header nav div button {
-  padding: 5px 10px;
-  background-color: #343a40;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
 header h1 {
   margin: 0px;
   color: #343a40;
@@ -111,6 +118,10 @@ td {
   height: 100vh;
   background-color: rgba(200, 200, 200);
   position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -208,6 +219,30 @@ td {
   text-align: center; /* center align the text */
 
 }
+.form-container button:hover {
+  background-color: initial;
+  color: initial;
+}
+.medicine-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.add-button {
+  background: none;
+  border: none;
+  color: green;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+}
 
 .medicine-table tr:nth-child(even) {
   background-color: #f2f2f2;
@@ -257,6 +292,9 @@ td {
 .form-group {
   margin-bottom: 20px;
 }
+.form-group button {
+  background-color: #4CAF50;
+}
 
 .form-group label {
   display: block;
@@ -288,4 +326,42 @@ td {
 
 .dosage-control span {
   margin: 0 10px;
+}
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.prescriptions-list, .prescription-form {
+  width: 45%;
+}
+
+.prescriptions-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.prescriptions-list li {
+  margin-bottom: 20px;
+}
+
+.prescription-card {
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.prescription-header {
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.add-icon, .view-icon {
+  cursor: pointer;
+  margin-left: 10px;
 }

@@ -44,56 +44,48 @@ const ManagePrescriptions = () => {
 
 
   return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ width: '45%', float: 'left' }}>
-          <h2>
-            Prescriptions
-            <FontAwesomeIcon
-              icon={faPlus}
-              style={{ cursor: 'pointer', marginLeft: '10px' }}
-              onClick={() => setIsFormVisible(true)}
-            />
-          </h2>
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            {prescriptions.map((prescription) => (
-              <li key={prescription._id} style={{ marginBottom: '20px' }}>
-                <div style={{ fontSize: '1.2rem', display: 'flex', alignItems: 'center' }}>
-                  <span><strong>Date: </strong>  {new Date(prescription.date).toLocaleDateString('en-GB')}</span>
-                  <FontAwesomeIcon
-                    icon={faEye}
-                    style={{ cursor: 'pointer', marginLeft: '10px' }}
-                    onClick={() => {
-                      setModalOpen(true);
-                      setActivePrescriptionId(prescription._id)
-                      setPrescription(prescriptions.find((p) => p._id === activePrescriptionId));
-                    }}
-                  />
-                </div>
-                <div style={{ fontSize: '1.2rem', marginTop: '10px' }}><strong>Id: </strong> {prescription._id}</div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div style={{ width: '45%', float: 'right' }}>
-          {isFormVisible && <PrescriptionForm />}
-        </div>
-        {modalOpen && prescription &&
-
-
-<PrescriptionDetailsModal
-  setOpenModal={setModalOpen}
-
-
-  prescription={prescription}
-/>}
-      </div>
-      </>
-
-     
-  
-
-
+    <div className="container">
+    <div className="prescriptions-list">
+      <h2>
+        Your Prescriptions
+        <FontAwesomeIcon
+          className="add-icon"
+          icon={faPlus}
+          onClick={() => setIsFormVisible(true)}
+        />
+      </h2>
+      <ul>
+        {prescriptions.map((prescription) => (
+          <li key={prescription._id}>
+            <div className="prescription-card">
+              <div className="prescription-header">
+                <span><strong>Date: </strong>  {new Date(prescription.date).toLocaleDateString('en-GB')}</span>
+                <FontAwesomeIcon
+                  className="view-icon"
+                  icon={faEye}
+                  onClick={() => {
+                    setModalOpen(true);
+                    setActivePrescriptionId(prescription._id)
+                    setPrescription(prescriptions.find((p) => p._id === activePrescriptionId));
+                  }}
+                />
+              </div>
+              <div><strong>Prescription ID: </strong> {prescription._id}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div className="prescription-form">
+      {isFormVisible && <PrescriptionForm />}
+    </div>
+    {modalOpen && prescription &&
+      <PrescriptionDetailsModal
+        setOpenModal={setModalOpen}
+        prescription={prescription}
+      />
+    }
+  </div>
 
   )
 }
