@@ -13,6 +13,9 @@ const PatientAppointments = () => {
   const { username } = useParams();
   const [patient, setPatient] = useState(null);
   const [selectedPast, setSelectedPast] = useState(false);
+  const [newAppointmentDate, setNewAppointmentDate] = useState('');
+  const [newAppointmentHour, setNewAppointmentHour] = useState('');
+
 
   useEffect(() => {
     const fetchAppointmentsWithDoctors = async () => {
@@ -172,6 +175,49 @@ const PatientAppointments = () => {
     setFilteredAppointments(filtered);
   };
 
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      const response = await axios.put(`http://localhost:4000/cancelAppointment/${appointmentId}`);
+
+      if (response.status === 200) {
+        const updatedAppointments = appointments.map((appointment) => {
+          if (appointment._id === appointmentId) {
+            return { ...appointment, status: 'Cancelled' };
+          }
+
+          return appointment;
+        });
+
+        setAppointments(updatedAppointments);
+        setFilteredAppointments(updatedAppointments);
+      }
+    } catch (error) {
+      console.error('Error cancelling appointment:', error);
+    }
+  }
+
+  const handleFollowUpRequest = async (event,doctorId1) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(`http://localhost:4000/createFollowUpReq`, {
+        patientId: patient._id,
+        doctorId: doctorId1,
+        date: newAppointmentDate,
+        status: 'Pending',
+        hour: newAppointmentHour,
+        description: "Follow up request"
+      });
+
+      if (response.status === 201) {
+        alert('Follow up request created successfully');
+      }
+    } catch (error) {
+      console.error('Error creating follow up request:', error);
+    }
+
+  }
+
   return (
     <div>
       <h1>Patient Appointments</h1>
@@ -213,14 +259,38 @@ const PatientAppointments = () => {
       </div>
       <button onClick={resetFilters}>Reset Filters</button>
       <ul>
-        {filteredAppointments.map((appointment) => (
-          <li key={appointment._id}>
-            Date: {appointment.date}, Status: {appointment.status}, Description: {appointment.description} {appointment.doctorInfo && (
-              <span>
-                Doctor: <Link to={`/doctor-details/${appointment.doctorInfo.username}`}>{appointment.doctorInfo.name}</Link>
-              </span>
-            )}
-          </li>
+         {filteredAppointments.map((appointment) => (
+        <li key={appointment._id}>
+          Date: {appointment.date}, Status: {appointment.status}, Description: {appointment.description} {appointment.doctorInfo && (
+            <span>
+              Doctor: <Link to={`/doctor-details/${appointment.doctorInfo.username}`}>{appointment.doctorInfo.name}</Link>
+            </span>
+          )}
+          {new Date(appointment.date) < new Date() && (
+            <form onSubmit={(event) => handleFollowUpRequest(event, appointment.doctorInfo._id)}>          <label>
+            Follow Up Date:
+            <input
+              type="datetime-local"
+              value={newAppointmentDate}
+              onChange={(e) => setNewAppointmentDate(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Follow Up Hour:
+            <textarea
+              value={newAppointmentHour}
+              onChange={(e) => setNewAppointmentHour(e.target.value)}
+              required
+            />
+          </label>
+          <button type="submit">Request Follow Up</button>
+        </form>
+        )}
+          {new Date(appointment.date) > new Date()&& appointment.status !== 'Cancelled' && (
+            <button onClick={() => cancelAppointment(appointment._id)}>Cancel Appointment</button>
+          )}
+        </li>
         ))}
       </ul>
       <button onClick={() => navigate(-1)}>Back</button>

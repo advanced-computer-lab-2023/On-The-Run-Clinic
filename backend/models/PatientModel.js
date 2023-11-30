@@ -50,7 +50,10 @@ const PatientSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-   
+    relation_to_patient: {
+      type: String,
+      required: false,
+    } 
 
     
   },
@@ -79,6 +82,8 @@ const PatientSchema = new mongoose.Schema({
   linkedPatients:[{
     linkedPatientId:{
       type: mongoose.Schema.Types.ObjectId, ref: 'Patient'
+    }, linkedPatientUsername:{
+      type: String, ref: 'Patient', required: false
     },
     linkedPatientRelation:{
     
