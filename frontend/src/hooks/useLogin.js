@@ -41,7 +41,7 @@ export const useLogin = () => {
         setError(json.error)
       }
     } catch (error) {
-      setError('Login error')
+      setError('Invalid username or password')
     } finally {
       setIsLoading(false)
     }

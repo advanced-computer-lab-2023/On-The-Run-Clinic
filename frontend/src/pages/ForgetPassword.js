@@ -33,7 +33,7 @@ function ForgetPassword() {
 
 
   return (
-    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh',flexDirection: 'column' }}>
+    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh',flexDirection: 'column' }}>
       <Card style={{ height: '413px', width: '616px', boxShadow: '0 0 10px rgba(0,0,0,0.5)',marginBottom:'10px' }}>
         <Card.Body>
           <div style={{ display: 'flex', alignItems: 'flex-end', marginBottom: '10px' }}>
