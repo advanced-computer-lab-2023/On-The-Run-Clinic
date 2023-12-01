@@ -43,6 +43,7 @@ import ViewAppointments from './pages/viewAppointments';
 import PendingDoctorPage from './pages/PendingDocPage';
 import ViewFollowUpReqs from './pages/ViewFollowUpReqs';
 import ManagePrescriptions from './pages/managePrescriptions';
+import FollowupDoctor from './pages/FollowupDoctor';
 
 // Import your components
 
@@ -186,6 +187,10 @@ function App() {
           <Route
             path="/managePrescriptions/:username/:usernameDoctor"
             element={user && user.role === 'doctor' ? <ManagePrescriptions /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/followUpDoctor/:username/:usernameDoctor"
+            element={user && user.role === 'doctor' ? <FollowupDoctor /> : <Navigate to="/login" />}
           />
 
 
