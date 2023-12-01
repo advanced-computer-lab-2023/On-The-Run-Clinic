@@ -44,6 +44,8 @@ import PendingDoctorPage from './pages/PendingDocPage';
 import ViewFollowUpReqs from './pages/ViewFollowUpReqs';
 import ManagePrescriptions from './pages/managePrescriptions';
 import FollowupDoctor from './pages/FollowupDoctor';
+import DoctorSettings from './pages/DoctorSettings';
+import Videocall from './pages/VideoCall';
 
 // Import your components
 
@@ -192,6 +194,8 @@ function App() {
             path="/followUpDoctor/:username/:usernameDoctor"
             element={user && user.role === 'doctor' ? <FollowupDoctor /> : <Navigate to="/login" />}
           />
+          <Route path="/doctorSettings/:username" element={<DoctorSettings />} />
+          <Route path="/videocall" element={<Videocall />} />
 
 
           {/* Add other routes as needed */}

@@ -18,6 +18,30 @@ header {
   
   justify-content: space-between;
 }
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  .nav {
+    .nav-link {
+      color: #333;
+      &:hover {
+        color: #007bff;
+      }
+      &.active {
+        color: #007bff;
+        background-color: #f5f5f5;
+      }
+    }
+  }
+
+  .tab-content {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+}
 
 .left-container {
   display: flex;
@@ -273,6 +297,7 @@ td {
 }
 .form-control {
   box-shadow: none;
+  margin-bottom: 10px;
 }
 .form-container {
   width: 100%;
@@ -325,11 +350,7 @@ td {
 .dosage-control span {
   margin: 0 10px;
 }
-.container {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-}
+
 .patients-list{
   width :100%;
 }
@@ -433,4 +454,44 @@ td {
 }
 a:hover {
   text-decoration: none;
+}
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+.nav {
+  border-right: 1px solid #ddd;
+  padding-right: 10px;
+}
+h4 {
+  margin-bottom: 20px;
+}
+
+
+.nav-link {
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #14967f!important;
+  color: white!important;
+}
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #14967f;
+}
+
+.mt-3 {
+  margin-top: 20px;
 }

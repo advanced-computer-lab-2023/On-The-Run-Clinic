@@ -4,11 +4,13 @@ import { useAuthContext } from '../hooks/useAuthContext'
 import { FaShoppingCart } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
 import logo from './doctor.png'
 
 const Navbar = () => {
   const { logout } = useLogout()
   const { user } = useAuthContext()
+  console.log("inNavbar:", user.role);
 
 
   const handleClick = () => {
@@ -34,6 +36,11 @@ const Navbar = () => {
           <div>
             <FontAwesomeIcon icon={faUser} style={{ color: 'White', stroke: 'white', strokeWidth: '2' }} />
             <h3> {user.user}</h3>
+            {user.role === 'doctor' && (
+              <Link to={`/doctorSettings/${user.user}`}>
+                <FontAwesomeIcon icon={faCog} style={{ color: 'White', stroke: 'white', strokeWidth: '2', marginLeft: '10px' }} />
+              </Link>
+            )}
             <button onClick={handleClick}>Log out</button>
           </div>
         )}
