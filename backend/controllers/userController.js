@@ -100,8 +100,8 @@ const transporter = nodemailer.createTransport({
   
   // Route to initiate password reset
   const forgetPassword= async (req, res) => {
-    const { username } = req.body;
-    let email=""
+    const { username,email } = req.body;
+ 
     try {
       let user = await Patient.findOne({ username });
       if (!user) {
@@ -113,7 +113,7 @@ const transporter = nodemailer.createTransport({
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-      email=user.email;
+     
   
       // Generate and store OTP
       const otp = generateOTP();

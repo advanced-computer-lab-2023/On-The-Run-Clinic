@@ -102,14 +102,6 @@ function App() {
             element={user && user.role === 'admin' ? <ViewRequests /> : <Navigate to="/login" />}
           />
           <Route
-            path="/changeDoctorPassword/:username"
-            element={user && user.role === 'doctor' ? <ChangeDoctortPass /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/updateDoctor/:username"
-            element={user && user.role === 'doctor' ? <UpdateDoctorInfo /> : <Navigate to="/login" />}
-          />
-          <Route
             path="/viewMyPatients/:username"
             element={user && user.role === 'doctor' ? <MyPatients /> : <Navigate to="/login" />}
           />
@@ -194,7 +186,10 @@ function App() {
             path="/followUpDoctor/:username/:usernameDoctor"
             element={user && user.role === 'doctor' ? <FollowupDoctor /> : <Navigate to="/login" />}
           />
-          <Route path="/doctorSettings/:username" element={<DoctorSettings />} />
+          <Route
+            path="/doctorSettings/:username"
+            element={user && user.role === 'doctor' ? <DoctorSettings /> : <Navigate to="/login" />}
+          />
           <Route path="/videocall" element={<Videocall />} />
 
 
