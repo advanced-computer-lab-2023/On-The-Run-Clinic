@@ -23,23 +23,6 @@ const ViewAppointments = () => {
     username:patientUsername,
   });
 
-  const fetchAppointments = async () => {
-    try {
-      if (doctorId) {
-        const response = await axios.get(`http://localhost:4000/getAvailableDoctorAppointments/${doctorId}`,{
-          withCredentials: true
-        });
-        if (response.status === 200) {
-          setAppointments(response.data);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     const fetchDoctorId = async () => {
       try {

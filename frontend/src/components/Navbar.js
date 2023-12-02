@@ -1,21 +1,18 @@
-// Navbar.js
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useLogout } from '../hooks/useLogout';
-import { useAuthContext } from '../hooks/useAuthContext';
-import Notifications from './Notifications';
+import { Link } from 'react-router-dom'
+import { useLogout } from '../hooks/useLogout'
+import { useAuthContext } from '../hooks/useAuthContext'
+import { FaShoppingCart } from 'react-icons/fa';
+import { FaBell } from 'react-icons/fa';
 
 const Navbar = () => {
-  const { logout } = useLogout();
-  const { user } = useAuthContext();
+  const { logout } = useLogout()
+  const { user } = useAuthContext()
 
-  // State to manage notifications
-  const [notifications, setNotifications] = useState([]);
 
   const handleClick = () => {
-    logout();
-  };
+    console.log("userrrr"+user);
+    logout()
+  }
 
   return (
     <header>
@@ -24,19 +21,20 @@ const Navbar = () => {
           <h1>Clinic</h1>
         </Link>
         <nav>
-          {/* Add the Notifications component and pass the 'notifications' prop */}
-          {user && <Notifications notifications={notifications} currentUser={user} />}
           {user && (
-            <div className="navbar-options">
-              <Link to="/notifications" className="notifications-icon">
-                🔔
-              </Link>
+            <div>
               <span>{user.user}</span>
+
+              {/* Link to Notifications Page */}
+              <Link to={`/notifications/${user.user}`} className="notification-icon">
+                <FaBell />
+              </Link>
+
               <button onClick={handleClick}>Log out</button>
             </div>
           )}
           {!user && (
-            <div className="navbar-options">
+            <div>
               <Link to="/login">Login</Link>
               <Link to="/register/doctor">Signup as Doctor</Link>
               <Link to="/register/patient">Signup as Patient</Link>
@@ -47,5 +45,4 @@ const Navbar = () => {
     </header>
   );
 };
-
-export default Navbar;
+export default Navbar

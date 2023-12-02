@@ -182,6 +182,11 @@ function App() {
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/resetPassword/:username" element={<ResetPassword />} />
 
+          <Route
+            path="/notifications/:username"
+            element={user && (user.role === 'doctor' || user.role === 'patient') ? <Notifications /> : <Navigate to="/login" />}
+          />
+
 
           {/* Add other routes as needed */}
         </Routes>
