@@ -32,38 +32,21 @@ const Navbar = () => {
           </svg>
           <h1 style={{ fontSize: '25px', fontWeight: '600',color:'White',marginBottom:'10px' }}>On-The-Run</h1>
         </Link>
-        <nav>
-          {user && (
-            <div>
-              <span>{user.user}</span>
-
-              {/* Link to Notifications Page */}
-              <Link to={`/notifications/${user.user}`} className="notification-icon">
-                <FaBell />
-              </Link>
-
-              <button onClick={handleClick}>Log out</button>
-            </div>
-          )}
-          {!user && (
-            <div>
-              <Link to="/login">Login</Link>
-              <Link to="/register/doctor">Signup as Doctor</Link>
-              <Link to="/register/patient">Signup as Patient</Link>
-            </div>
-          )}
-        </nav>
+       
       </div>
       <div className="right-container">
         {user && (
           <div>
             <FontAwesomeIcon icon={faUser} style={{ color: 'White', stroke: 'white', strokeWidth: '2' }} />
             <h3> {user.user}</h3>
-            {user &&user.role === 'doctor' && (
+            {user &&(user.role === 'doctor'||user.role==='patient' )&& (
               <Link to={`/doctorSettings/${user.user}`}>
                 <FontAwesomeIcon icon={faCog} style={{ color: 'White', stroke: 'white', strokeWidth: '2', marginLeft: '10px' }} />
               </Link>
-            )}
+              
+            ) &&( <Link to={`/notifications/${user.user}`} className="notification-icon">
+            <FaBell />
+          </Link>)}
             <button onClick={handleClick}>Log out</button>
           </div>
         )}
