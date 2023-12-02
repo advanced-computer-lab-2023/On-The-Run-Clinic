@@ -35,13 +35,6 @@ const DoctorDashboard = () => {
             View my patients
           </Link>
         </li>
-        
-        <li>
-          <Link to={`/updateDoctor/${username}`} className="menu-link">
-            <i className="fas fa-edit"></i>
-            Update Info
-          </Link>
-        </li>
         <li>
           <Link to={`/filterAppointments/${username}`} className="menu-link">
             <i className="fas fa-edit"></i>
@@ -49,9 +42,9 @@ const DoctorDashboard = () => {
           </Link>
         </li>
         <li>
-          <Link to={`/changeDoctorPassword/${username}`} className="menu-link">
+          <Link to={`/viewFollowup/${doctor._id}`} className="menu-link">
             <i className="fas fa-edit"></i>
-            Change my password
+            View Follow up requests
           </Link>
         </li>
         

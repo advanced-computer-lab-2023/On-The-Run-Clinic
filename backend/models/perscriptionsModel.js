@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
 
 const prescriptionSchema = new mongoose.Schema({
-  medicationName: {
-    type: String,
-    required: true,
-  },
-  dosage: {
-    type: String,
-    required: true,
-  },
+ medicines:[{
+  medicineId:{type: mongoose.Schema.Types.ObjectId,
+    ref: 'Medicine',},
+    medicineName:{type:String},
+    dosage:{type:String},
+
+ }],
   instructions: {
     type: String,
     required: true,

@@ -12,15 +12,19 @@ const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePassw
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
 
+const { createFollowUpReq, acceptFollowUpReq, rejectFollowUpReq,getFollowUpReqs} = require("./controllers/followUpReqController")
+const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment}=require("./controllers/appointmentsController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,getMyPrescriptions2,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,addToWallet,getPatientUsername} = require("./controllers/patientController");
 
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getPatientNotifications} = require("./controllers/patientController");
-const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment}=require("./controllers/appointmentsController")
-const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
+
+
+const{createPrescription,getPrescriptionsForPatient,deleteMedicineFromPrescription,addMedicineToPres,incrementDosage,decrementDosage,getPrescriptionById}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 const{createPDoctor,getPDoctors,getPDoctor,deletePDoctor}=require("./controllers/pendingDoctorController") 
 const {requireAuthPatient,requireAuthPending,requireAuthDoctor,requireAuthAdmin,requireAuth}=require("./Middleware/requireAuth")
 const{login,logout,forgetPassword,resetPassword}=require("./controllers/userController")
+const{getMedicine,getMedicines,getMedicines2}=require("./controllers/MedicineController")
 const multer=require("multer");
 
 //express app
@@ -113,9 +117,10 @@ app.patch("/ubdateDoctor",updateDoctor);
 app.get("/getFamilyMem/:username",requireAuth,getFamilyMembers);
 app.get("/searchPatientsByName",requireAuth,searchPatientsByName);
 app.post("/addPatientToDr",requireAuth,addPatientToDr);
-app.post("/addPrescription",requireAuth,createPrescription);
+app.post("/addPrescription",createPrescription);
 app.get("/getPrescriptions/:id",requireAuth,getPrescriptionsForPatient);
 app.get("/getMyPrescriptions/:username",requireAuth,getMyPrescriptions);
+app.get("/getMyPrescriptions2/:username/:usernameDoctor",requireAuth,getMyPrescriptions2);
 app.post("/createRequest",createRequest);
 app.post("/createPackage",requireAuthAdmin,createHealthPackage);
 app.get("/getPackages",requireAuth,getPackages);
@@ -172,4 +177,15 @@ app.post("/reserveFamilyMemberAppointment/:appointmentId",requireAuth,reserveFam
 app.post("/reserveLinkedPatientAppointment/:appointmentId",requireAuth,reserveLinkedPatientAppointment);
 app.get("/getPatientNotifications/:username",getPatientNotifications);
 app.get("/getDoctorNotifications/:username",getDoctorNotifications);
+app.get("/getMedicines",getMedicines)
+app.get("/getMedicines2",getMedicines2)
 
+app.get("getPrescriptionById/:prescriptionId",getPrescriptionById)
+
+app.put("/cancelAppointment/:appointmentId",cancelAppointment);
+app.put("/addtoWallet/:username/:amount",addToWallet);
+app.get("/getPatientUsername/:_id",getPatientUsername);
+app.post("/createFollowUpReq",createFollowUpReq);
+app.get("/getFollowUpReqs/:doctorId",getFollowUpReqs);
+app.post("/acceptFollowUpReq/:reqid",acceptFollowUpReq);
+app.post("/rejectFollowUpReq/:reqid",rejectFollowUpReq);

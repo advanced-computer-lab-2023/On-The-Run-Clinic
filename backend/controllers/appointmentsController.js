@@ -6,8 +6,12 @@ const Patient = require('../models/PatientModel');
 const FamilyMember = require ('../models/FamilyMemberModel'); // Import your Patient model
 const Notification = require ('../models/notificationModel');
 const HealthPackage = require('../models/HealthPackages');
+<<<<<<< HEAD
 const nodemailer = require('nodemailer'); // For sending emails
 
+=======
+const mongoose = require('mongoose');
+>>>>>>> main
 
 
 const transporter = nodemailer.createTransport({
@@ -399,6 +403,30 @@ const getPatientAppointments = async (req, res) => {
   }
 };
 
+const cancelAppointment = async (req, res) => {
+  const { appointmentId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(appointmentId)) {
+    return res.status(400).json({ message: 'Invalid appointment ID' });
+  }
+  try {
+    const appointment = await Appointment.findById(appointmentId);
+
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    if (new Date(appointment.date) <= new Date()) {
+      return res.status(400).json({ message: 'Appointment date has passed or is today' });
+    }
+    appointment.status = 'Cancelled';
+    await appointment.save();
+
+    return res.status(200).json({ message: 'Appointment cancelled successfully' });
+  } catch (error) {
+    console.error('Error cancelling appointment:', error);
+    return res.status(500).json({ error: 'An error occurred while cancelling the appointment' });
+  }
+};
 
 
-module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment}
+
+module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment}

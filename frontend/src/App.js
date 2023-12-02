@@ -42,6 +42,11 @@ import HealthPackagesDetails from './pages/HealthPackageDetails';
 import ViewAppointments from './pages/viewAppointments';
 import Notifications from './components/Notifications';
 import PendingDoctorPage from './pages/PendingDocPage';
+import ViewFollowUpReqs from './pages/ViewFollowUpReqs';
+import ManagePrescriptions from './pages/managePrescriptions';
+import FollowupDoctor from './pages/FollowupDoctor';
+import DoctorSettings from './pages/DoctorSettings';
+import Videocall from './pages/VideoCall';
 
 // Import your components
 
@@ -98,14 +103,6 @@ function App() {
             element={user && user.role === 'admin' ? <ViewRequests /> : <Navigate to="/login" />}
           />
           <Route
-            path="/changeDoctorPassword/:username"
-            element={user && user.role === 'doctor' ? <ChangeDoctortPass /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/updateDoctor/:username"
-            element={user && user.role === 'doctor' ? <UpdateDoctorInfo /> : <Navigate to="/login" />}
-          />
-          <Route
             path="/viewMyPatients/:username"
             element={user && user.role === 'doctor' ? <MyPatients /> : <Navigate to="/login" />}
           />
@@ -160,8 +157,8 @@ function App() {
             element={user && user.role === 'patient' ? <FilterAppointmentsPatient /> : <Navigate to="/login" />}
           />
           <Route
-            path="/patient-details/:doctorUsername/:patientUsername"
-            element={user && (user.role === 'doctor' || user.role === 'patient' || user.role === 'admin') ? <DoctorDetails /> : <Navigate to="/login" />}
+            path="/patient-details/:username/:usernameDoctor"
+            element={user && (user.role === 'doctor' || user.role === 'patient' || user.role === 'admin') ? <PatientDetails /> : <Navigate to="/login" />}
           />
           <Route
             path="/doctor-details/:doctorUsername/:patientUsername"
@@ -181,6 +178,20 @@ function App() {
           />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/resetPassword/:username" element={<ResetPassword />} />
+          <Route path="/viewFollowup/:doctorId" element={<ViewFollowUpReqs />} />
+          <Route
+            path="/managePrescriptions/:username/:usernameDoctor"
+            element={user && user.role === 'doctor' ? <ManagePrescriptions /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/followUpDoctor/:username/:usernameDoctor"
+            element={user && user.role === 'doctor' ? <FollowupDoctor /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/doctorSettings/:username"
+            element={user && user.role === 'doctor' ? <DoctorSettings /> : <Navigate to="/login" />}
+          />
+          <Route path="/videocall" element={<Videocall />} />
 
           <Route
             path="/notifications/:username"
