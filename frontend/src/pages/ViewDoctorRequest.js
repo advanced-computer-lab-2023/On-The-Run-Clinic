@@ -1,23 +1,26 @@
 
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-
-import './List.css'; // Import your CSS file for styling
+import BeatLoader from "react-spinners/BeatLoader";
+import { faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Modal from 'react-modal';
+import RequestModal from '../components/RequestModal';
 
 const ViewRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  
- 
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [request, setRequest] = useState("");
+  const [activeRequestId, setActiveRequestId] = useState(null);
+
+
 
   const fetchRequests = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:4000/getRequests`,{
+      const response = await axios.get(`http://localhost:4000/getRequests`, {
         withCredentials: true
       });
 
@@ -30,12 +33,13 @@ const ViewRequests = () => {
       setLoading(false);
     }
   };
-  const handleAccept = async (username,name,email,password,date_of_birth,hourly_rate,speciality,Affiliation,educational_background,id) => {
+  const handleAccept = async (username, name, email, password, date_of_birth, hourly_rate, speciality, Affiliation, educational_background, id) => {
+    setIsProcessing(true);
     try {
-      const response = await axios.post(`http://localhost:4000/acceptRequest/${username}/${name}/${email}/${password}/${date_of_birth}/${hourly_rate}/${speciality}/${Affiliation}/${educational_background}/${id}`,{},{
+      const response = await axios.post(`http://localhost:4000/acceptRequest/${id}`, {}, {
         withCredentials: true
       });
-     
+
       if (response.status === 200) {
         setRequests(requests.filter((r) => r._id !== id));
         fetchRequests();
@@ -43,12 +47,16 @@ const ViewRequests = () => {
     } catch (error) {
       console.error('Error accepting request:', error);
     }
+    finally {
+      setIsProcessing(false);
+    }
   };
-  
+
   const handleReject = async (reqid) => {
+    setIsProcessing(true);
     try {
       // Make a DELETE request to the backend to delete the patient
-      await axios.put(`http://localhost:4000/rejectRequest/${reqid}`,{},{
+      await axios.put(`http://localhost:4000/rejectRequest/${reqid}`, {}, {
         withCredentials: true
       });
 
@@ -56,48 +64,106 @@ const ViewRequests = () => {
       fetchRequests();
     } catch (error) {
       console.error('Error rejecting doctor request:', error);
+    }finally {
+      setIsProcessing(false);
     }
   };
 
   useEffect(() => {
     fetchRequests();
   }, []);
-  
+
 
   return (
-    <div className="medicine-list-container">
-      <h1>All Requests</h1>
-      
-      {loading ? (
-    <p>Loading...</p>
-  ) : requests.length > 0 ? (
-    <ul className="medicine-list">
-      {requests.map((m) => (
-        <li key={m._id} className="medicine-item">
-          <div className="medicine-details">
-            <strong>Name:</strong> {m.name}<br />
-            <strong>Username:</strong> {m.username}<br />
-            <strong>email:</strong> {m.email}<br />
-            <strong>Date Of Birth:</strong> {m.date_of_birth}<br />
-            <strong>Hourly Rate:</strong> {m.hourly_rate}<br />
-            <strong>speciality:</strong> {m.speciality}<br />
-            <strong>Educational Background:</strong> {m.educational_background}<br />
-            {(m.status1 !== 'rejected' && m.status1 !== 'accepted') && (
-              <>
-                <button onClick={() => handleAccept(m.username,m.name,m.email,m.password,m.date_of_birth,m.hourly_rate,m.speciality,m.Affiliation,m.educational_background,m._id)}>Accept</button>
-                <button onClick={() => handleReject(m._id)}>Reject</button>              
-              
-              </>
-            )}
+    <div className="container">
+      <div className="patients-list">
+        <h2>All Requests</h2>
+
+
+        {loading ? (
+          <div className="spinner-container">
+            <BeatLoader color="#14967f" size={15} />
           </div>
-          
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p>No Requests found.</p>
-  )}
-</div>
+        ) : requests.length === 0 ? (
+          <p>No Requests found</p>
+        ) : (
+          <ul className="patients-list">
+            {requests.map((m) => (
+              <li key={m._id}>
+                <div className="patients-header">
+                  <div style={{ flex: 1, textAlign: 'left' }}>
+                    <strong>Username: </strong>{m.username}
+                  </div>
+                  <div style={{ flex: 1, textAlign: 'left' }}>
+                    <strong>Requesr ID: </strong>{m._id}
+                  </div>
+                  <div style={{ flex: 1, textAlign: 'right', marginRight: '10px' }}>
+                    {m.status1 === 'pending' && (
+                      <>
+                        <button
+                         disabled={isProcessing}
+                          style={{
+                            backgroundColor: '#4CAF50', /* Green */
+                            border: 'none',
+                            color: 'white',
+                            padding: '10px 20px', // Reduced padding
+                            textAlign: 'center',
+                            textDecoration: 'none',
+                            display: 'inline-block',
+                            fontSize: '14px', // Reduced font size
+                            margin: '4px 2px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => handleAccept(m.username, m.name, m.email, m.password, m.date_of_birth, m.hourly_rate, m.speciality, m.Affiliation, m.educational_background, m._id)}
+                        >
+                          Accept
+                        </button>
+                        <button
+                         disabled={isProcessing}
+                          style={{
+                            backgroundColor: '#f44336', /* Red */
+                            border: 'none',
+                            color: 'white',
+                            padding: '10px 20px', // Reduced padding
+                            textAlign: 'center',
+                            textDecoration: 'none',
+                            display: 'inline-block',
+                            fontSize: '14px', // Reduced font size
+                            margin: '4px 2px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => handleReject(m._id)}
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+                    <FontAwesomeIcon
+                      className="view-icon"
+                      icon={faEye}
+                      style={{ marginLeft: '10px' }}
+                      onClick={() => {
+                        setModalOpen(true);
+                        setActiveRequestId(m._id)
+                        setRequest(requests.find((p) => p._id === activeRequestId));
+                      }}
+                    />
+
+                  </div>
+                </div>
+              </li>
+
+            ))}
+          </ul>
+        )}
+      </div>
+      {modalOpen && request &&
+        <RequestModal
+          setOpenModal={setModalOpen}
+          request={request}
+        />
+      }
+    </div >
   );
 };
 

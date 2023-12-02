@@ -152,7 +152,7 @@ app.post("/login",login);
 app.get("/logout",logout);
 
 app.put("/rejectRequest/:id",requireAuthAdmin,rejectrequest);
-app.post("/acceptRequest/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background/:id",requireAuthAdmin,acceptrequest)
+app.post("/acceptRequest/:id",requireAuthAdmin,acceptrequest)
 //app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:description",createAppointment1);
 app.get("/getDoctorByUsername/:username",requireAuth,getDoctorByUsername);
 app.post("/forgetPassword",forgetPassword);
