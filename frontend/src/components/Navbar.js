@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useLogout } from '../hooks/useLogout'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { FaShoppingCart } from 'react-icons/fa';
+import { FaBell } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +15,7 @@ const Navbar = () => {
 
 
   const handleClick = () => {
+    console.log("userrrr"+user);
     logout()
 
   }
@@ -30,6 +32,27 @@ const Navbar = () => {
           </svg>
           <h1 style={{ fontSize: '25px', fontWeight: '600',color:'White',marginBottom:'10px' }}>On-The-Run</h1>
         </Link>
+        <nav>
+          {user && (
+            <div>
+              <span>{user.user}</span>
+
+              {/* Link to Notifications Page */}
+              <Link to={`/notifications/${user.user}`} className="notification-icon">
+                <FaBell />
+              </Link>
+
+              <button onClick={handleClick}>Log out</button>
+            </div>
+          )}
+          {!user && (
+            <div>
+              <Link to="/login">Login</Link>
+              <Link to="/register/doctor">Signup as Doctor</Link>
+              <Link to="/register/patient">Signup as Patient</Link>
+            </div>
+          )}
+        </nav>
       </div>
       <div className="right-container">
         {user && (
@@ -53,7 +76,6 @@ const Navbar = () => {
       </div>
 
     </header>
-  )
-}
-
+  );
+};
 export default Navbar

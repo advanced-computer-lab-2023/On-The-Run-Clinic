@@ -49,6 +49,7 @@ const doctorSchema = new mongoose.Schema({
   },  passwordReset: {
     type: String,
   },
+  notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification' }],
   medicalDegree: {
     data: Buffer,
     contentType: String,

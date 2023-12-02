@@ -358,6 +358,7 @@ const payByPackage = async (req, res) => {
   try {
     const { username, paymentMethod, selectedPackage,discount,LinkedPatientId } = req.body;
     const packagee = await HealthPackage.findById(selectedPackage);
+    console.log("pp" + packagee);
     const patient = await Patient.findOne({ username: username });
     if(LinkedPatientId===null){
       if(paymentMethod==='wallet'&&patient){
@@ -531,6 +532,24 @@ const addToWallet = async (req, res) => {
   }
 };
 
+const getPatientNotifications = async (req, res) => {
+  try {
+    const {username}=req.params;
+    const patient=await Patient.findOne({username:username}).populate('notifications');
+
+    if (!patient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    const notifications = patient.notifications;
+    console.log(patient.username);
+
+    return res.status(200).json({ notifications });
+  } catch (error) {
+    console.error('Error fetching patient notifications:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 const getMyPrescriptions2 = async (req, res) => {
   try {
@@ -589,4 +608,4 @@ const addPrescription = async (req, res) => {
 };
 
 
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getMyPrescriptions2,addToWallet,getPatientUsername}
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getPatientNotifications,getMyPrescriptions2,addToWallet,getPatientUsername}
