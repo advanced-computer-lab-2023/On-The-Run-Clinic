@@ -6,7 +6,6 @@ const mongoose=require('mongoose')
 const Patient = require('./models/PatientModel');
 const cookieParser = require('cookie-parser');
 
-<<<<<<< HEAD
 const {createDoctor,createDoctor1,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor, getDoctorNotifications} = require("./controllers/doctorController")
 
 const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
@@ -15,22 +14,12 @@ const cors = require('cors');
 
 const { createFollowUpReq, acceptFollowUpReq, rejectFollowUpReq,getFollowUpReqs} = require("./controllers/followUpReqController")
 const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment}=require("./controllers/appointmentsController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,getMyPrescriptions2,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,addToWallet,getPatientUsername} = require("./controllers/patientController");
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,getMyPrescriptions2,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getPatientNotifications,addToWallet,getPatientUsername} = require("./controllers/patientController");
 
 
 
 const{createPrescription,getPrescriptionsForPatient,deleteMedicineFromPrescription,addMedicineToPres,incrementDosage,decrementDosage,getPrescriptionById}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
-=======
-const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage} = require("./controllers/patientController")
-const {createAdmin,getAdmin,getAdmins,deleteAdmin} = require("./controllers/adminController")
-const {createMember,getFamilyMembers} = require("./controllers/familymemController")
-const cors = require('cors');
-const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment}=require("./controllers/appointmentsController")
-const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
-const{createRequest, getOneRequest,getRequests}=require("./controllers/requestsController")
->>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
 const{createPDoctor,getPDoctors,getPDoctor,deletePDoctor}=require("./controllers/pendingDoctorController") 
 const {requireAuthPatient,requireAuthPending,requireAuthDoctor,requireAuthAdmin,requireAuth}=require("./Middleware/requireAuth")
@@ -141,7 +130,6 @@ app.delete("/deleteAdmin/:id",requireAuthAdmin,deleteAdmin);
 app.delete("/deletePatient/:id",requireAuthAdmin,deletePatient);
 app.get("/getDoctor/:username",requireAuth,getDoctorByUsername);
 app.get("/getOneRequest",getOneRequest);
-<<<<<<< HEAD
 app.get("/getRequests",requireAuthAdmin,getRequests);
 app.post("/createAppointment",createAppointment);//removed
 app.get("/getAllAppointments",requireAuth,getAllAppointments);
@@ -172,7 +160,6 @@ app.post("/resetPassword/:username",resetPassword);
 
 app.get("/getAdminByUsername/:username",requireAuthAdmin,getAdminByUsername);
 app.put("/updatePassAdmin",requireAuthAdmin,updatePasswordAdmin);
-=======
 app.get("/getRequests",getRequests);
 app.post("/createAppointment",createAppointment);
 app.get("/getAllAppointments",getAllAppointments);
@@ -191,12 +178,10 @@ app.post("/updatePassPatient",updatePasswordPatient);
 app.post("/updatePassDoctor",updatePasswordDoctor);
 app.get("/getMedicalHistory/:username",getMedicalHistory);
 app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
-app.post("/login",loginUser);
 app.get("/mypackage/:username",viewHealthPackages);
 app.post("/CancelPackage/:username",CancelPackage);
 app.get("/getAvailableDoctorAppointments/:id",getAvailableDoctorAppointments);
 app.post("/reserveAppointment/:appointmentId",reserveAppointment);
->>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
 
 
 app.get("/mypackage/:username",requireAuth,viewHealthPackages);

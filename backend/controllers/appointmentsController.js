@@ -6,12 +6,9 @@ const Patient = require('../models/PatientModel');
 const FamilyMember = require ('../models/FamilyMemberModel'); // Import your Patient model
 const Notification = require ('../models/notificationModel');
 const HealthPackage = require('../models/HealthPackages');
-<<<<<<< HEAD
 const nodemailer = require('nodemailer'); // For sending emails
 
-=======
 const mongoose = require('mongoose');
->>>>>>> main
 
 
 const transporter = nodemailer.createTransport({
@@ -24,7 +21,6 @@ const transporter = nodemailer.createTransport({
 
 const createAppointment = async (req, res) => {
   try {
-<<<<<<< HEAD
 
     const { patientId, doctorId, date, status, description , hour } = req.body;
     const doctor = await Doctor.findById(doctorId);
@@ -35,10 +31,6 @@ const createAppointment = async (req, res) => {
 
     }else{
 
-=======
-    const { patientId, doctorId, date, status, description , hour } = req.body;
-
->>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
     const existingAppointment = await Appointment.findOne({ doctorId, date , hour });
 
     if (existingAppointment) {
@@ -90,7 +82,6 @@ const createAppointment = async (req, res) => {
 const reserveAppointment = async(req,res) => {
   try {
     const { appointmentId } = req.params;
-<<<<<<< HEAD
     const { patientId, status, description , paymentMethod} = req.body;
     const appointment = await Appointment.findById(appointmentId);
     console.log(patientId + " pid"+ status) ;
@@ -103,17 +94,11 @@ const reserveAppointment = async(req,res) => {
       const h=await HealthPackage.findById(patient.healthpackage);
       discount =h.discount;
     }
-=======
-    const { patientId, status, description } = req.body;
-    const appointment = await Appointment.findById(appointmentId);
-    console.log(patientId + " pid"+ status) ;
->>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
 
     if (!appointment) {
       console.log(" app not found");
     }
 
-<<<<<<< HEAD
     if(paymentMethod=="wallet") {
       console.log("wallet " + patient.wallet); 
       if(patient.wallet<doctor.hourly_rate-discount) {
@@ -126,20 +111,11 @@ const reserveAppointment = async(req,res) => {
       }
     }
 
-=======
->>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
     appointment.patientId = patientId;
     appointment.status = status;
     appointment.description = description;
     await appointment.save();
 
-<<<<<<< HEAD
-=======
-    const doctor = await Doctor.findById(appointment.doctorId);
-    console.log("d"+doctor);
-    const patient = await Patient.findById(patientId);
-    console.log("P"+patient);
->>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
 
 
     if (!doctor.patients.includes(patientId)) {
@@ -159,7 +135,6 @@ const reserveAppointment = async(req,res) => {
       }
     }
 
-<<<<<<< HEAD
     const msgP = `You have successfully reserved an appointment with doctor ${doctor.name} on ${appointment.date} `;
     const notificationP = new Notification({ message: msgP }); // Corrected
     await notificationP.save();
@@ -196,8 +171,6 @@ const reserveAppointment = async(req,res) => {
       console.error('Error email:', error);
     }
 
-=======
->>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
     return res.status(200).json({ message: 'Appointment reserved successfully' });
   } catch (error) {
     console.error('Error reserving appointment:', error);
@@ -205,7 +178,6 @@ const reserveAppointment = async(req,res) => {
   }
 }
 
-<<<<<<< HEAD
 const reserveFamilyMemberAppointment = async (req, res) => {
   try {
     const { appointmentId } = req.params;
@@ -352,8 +324,6 @@ const reserveLinkedPatientAppointment = async (req, res) => {
 };
 
 
-=======
->>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
 const getAllAppointments = async (req, res) => {
     try {
         const appointments = await Appointment.find();
@@ -455,9 +425,5 @@ const cancelAppointment = async (req, res) => {
 };
 
 
-<<<<<<< HEAD
 
 module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment}
-=======
-module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment}
->>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
