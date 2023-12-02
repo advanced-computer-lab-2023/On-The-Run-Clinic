@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { Container, Row, Col, Spinner, Button, Card } from 'react-bootstrap';
+=======
+>>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
 
 function HealthPackageList() {
   const { username } = useParams();
@@ -9,6 +12,7 @@ function HealthPackageList() {
   const [hPackage, setPackage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [Patient, setPatient] = useState(null);
+<<<<<<< HEAD
   const [linkedPatients, setLinkedPatients] = useState([]);
   const [status, setStatus] = useState('');
   const fetchLinkedPatients = async () => {
@@ -53,6 +57,15 @@ function HealthPackageList() {
         const pat = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`,{
           withCredentials: true
         });
+=======
+  const [status, setStatus] = useState('');
+  
+  useEffect(() => {
+    const fetchPackage = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/mypackage/${username}`);
+        const pat = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+>>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
         if (response.status === 200) {
           setPackage(response.data.healthPackage); // Assuming the response contains the health package or null if not found
           console.log(response.data);
@@ -87,19 +100,28 @@ function HealthPackageList() {
     };
 
     fetchPackage();
+<<<<<<< HEAD
    
     fetchPackage();
 
     fetchLinkedPatients();
+=======
+>>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
   }, [username]);
 
    const handleCancelSubscription = async () => {
     try {
+<<<<<<< HEAD
       const response =await axios.post(`http://localhost:4000/CancelPackage/${username}`,{},{
         withCredentials: true
       });
       // You may want to refresh the status after cancelling
       if(response.status===(400)){
+=======
+      const response =await axios.post(`http://localhost:4000/CancelPackage/${username}`);
+      // You may want to refresh the status after cancelling
+      if(response.status===(4000)){
+>>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
         alert("No Subscription Found");
       }
       else{
@@ -110,6 +132,7 @@ function HealthPackageList() {
       console.error('Error cancelling subscription:', error);
     }
   };
+<<<<<<< HEAD
   const handleCancelSubscription2 = async (id) => {
     try {
       const patientResponse = await axios.get(`http://localhost:4000/getPatient/${id}`,{
@@ -199,6 +222,28 @@ function HealthPackageList() {
         </Col>
       </Row>
     </Container>
+=======
+
+  return (
+    <div>
+      <h1>Health Package Of {username}</h1>
+      {loading ? (
+        <p>Loading...</p>
+      ) : hPackage ? (
+        <div>
+          <p>Name: {hPackage.name}</p>
+          <p>Price: {hPackage.price}</p>
+          <p>Discount: {hPackage.discount}</p>
+          <p>Services: {hPackage.services}</p>
+          <p>Status: {status}</p>
+            <button onClick={handleCancelSubscription}>Cancel Subscription</button>
+        </div>
+      ) : (
+        <p>No Health Packages Found.</p>
+      )}
+      <button onClick={() => navigate(-1)}>Back</button>
+    </div>
+>>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
   );
 }
 

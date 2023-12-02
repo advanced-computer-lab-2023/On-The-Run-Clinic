@@ -358,7 +358,9 @@ const payByPackage = async (req, res) => {
   try {
     const { username, paymentMethod, selectedPackage,discount,LinkedPatientId } = req.body;
     const packagee = await HealthPackage.findById(selectedPackage);
+    console.log("pp" + packagee);
     const patient = await Patient.findOne({ username: username });
+<<<<<<< HEAD
     if(LinkedPatientId===null){
       if(paymentMethod==='wallet'&&patient){
         if (packagee.price-discount > patient.wallet) {
@@ -368,6 +370,17 @@ const payByPackage = async (req, res) => {
   
         }
   
+=======
+    patient.healthpackage=null;
+    patient.packageBoughtDate = null;
+    const myfamily=patient.linkedPatients;
+    if(paymentMethod==='wallet'){
+      if (packagee.price > patient.wallet) {
+        return res.status(400).json({ error: 'Not enough money in wallet' });
+      }else{
+        patient.wallet = patient.wallet - packagee.price;
+
+>>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
       }
       patient.healthpackage = packagee;
       patient.packageCancelledDate = null;
@@ -395,8 +408,26 @@ const payByPackage = async (req, res) => {
         await p.save();
 
     }
+<<<<<<< HEAD
    
   
+=======
+    patient.healthpackage = packagee;
+    patient.packageCancelledDate = null;
+    patient.packageBoughtDate = new Date();
+    console.log("date " + patient.packageBoughtDate);
+      for (let i = 0; i < myfamily.length; i++) {
+        const familyMember = myfamily[i];
+        const familyMemberObject = await Patient.findById(familyMember.linkedPatientId);
+        familyMemberObject.healthpackage = packagee;
+        familyMemberObject.packageCancelledDate = null;
+        familyMemberObject.packageBoughtDate = new Date();
+        await familyMemberObject.save();
+        // Do something with the family member object
+      }
+
+      await patient.save();
+>>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
       res.status(200).json({ message: 'Payment successful' });
   } catch (error) {
     console.error('Error making wallet payment:', error);
@@ -416,7 +447,10 @@ const CancelPackage = async (req,res) => {
   patient.packageCancelledDate = new Date();
   console.log(patient.packageCancelledDate);
   console.log('Cancelled');
+<<<<<<< HEAD
   patient.healthpackage=null;
+=======
+>>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
   await patient.save();
   res.status(201).json({message :"cancelled"});
   }
@@ -482,6 +516,7 @@ const viewHealthPackages = async (req, res) => {
     return res.status(500).json({ error: 'Error fetching health package' });
   }
 };
+<<<<<<< HEAD
 const getHighestDiscount = async(req,res)=>{
   try{
     const {username}=req.params;
@@ -608,3 +643,9 @@ const addPrescription = async (req, res) => {
 
 
 module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getMyPrescriptions2,addToWallet,getPatientUsername}
+=======
+
+
+
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage}
+>>>>>>> de4034acb04e79edec9fc0cd8c06e3d109395e75
