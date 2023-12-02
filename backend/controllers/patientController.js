@@ -11,9 +11,7 @@ const multer = require('multer');
 const path = require('path');
 
 
-const createToken=(_id)=>{
-  jwt.sign({_id:_id},process.env.SECRET,{expiresIn:'3d'})
-}
+
 
 const createPatient = async(req,res) => {
    try{ const {
@@ -49,9 +47,8 @@ const createPatient = async(req,res) => {
 
       });
       await newPatient.save();
-      const token=createToken(newPatient._id)
 
-    res.status(201).json({newPatient,token});
+    res.status(201).json({newPatient});
 
   } catch (error) {
     console.error(error);
@@ -62,6 +59,7 @@ const getPatient=async(req,res)=>{
   try {
     // Get the patient ID from the URL parameters
     const { id } = req.params;
+   
 
     // Fetch the patient from the database using the ID
     const patient = await Patient.findById(id);
@@ -185,25 +183,61 @@ const linkMemberByEmail=async(req,res)=>{
       if (!patientToBeLinked||!patient) {
         return res.status(404).json({ message: 'No patients found with the provided email.' });
       }
-      patient.linkedPatients.push({
-        linkedPatientId: patientToBeLinked._id,
-        linkedPatientRelation: relation,
-        linkedPatientName:patientToBeLinked.name
+      const p = await Patient.findOne({
+        linkedPatients: {
+          $elemMatch: {
+            linkedPatientId: patientToBeLinked._id
+          }
+        }
       });
-      await patient.save();
+
+      if(!p){
+        console.log("hena");
+        patient.linkedPatients.push({
+          linkedPatientId: patientToBeLinked._id,
+          linkedPatientRelation: relation,
+          linkedPatientName:patientToBeLinked.name
+        });
+        await patient.save();
+        patientToBeLinked.linkedPatients.push({
+          linkedPatientId: patient._id,
+          linkedPatientRelation: relation,
+          linkedPatientName: patient.name
+        });
+        await patientToBeLinked.save();
+      }
 
     }
     else if(email&&mobileNumber){
       const patientToBeLinked = await Patient.findOne({ mobileNumber:mobileNumber,email:email });
+     
+
       if (!patientToBeLinked||!patient) {
         return res.status(404).json({ message: 'No patients found with the provided email.' });
       }
-      patient.linkedPatients.push({
-        linkedPatientId: patientToBeLinked._id,
-        linkedPatientRelation: relation,
-        linkedPatientName:patientToBeLinked.name
+      const p = await Patient.findOne({
+        linkedPatients: {
+          $elemMatch: {
+            linkedPatientId: patientToBeLinked._id
+          }
+        }
       });
-      await patient.save();
+
+      if(!p){
+        patient.linkedPatients.push({
+          linkedPatientId: patientToBeLinked._id,
+          linkedPatientRelation: relation,
+          linkedPatientName:patientToBeLinked.name
+        });
+        await patient.save();
+        patientToBeLinked.linkedPatients.push({
+          linkedPatientId: patient._id,
+          linkedPatientRelation: relation,
+          linkedPatientName: patient.name
+        });
+        await patientToBeLinked.save();
+      }
+      
 
     }
     else{
@@ -217,6 +251,12 @@ const linkMemberByEmail=async(req,res)=>{
         linkedPatientName:patientToBeLinked.name
       });
       await patient.save();
+      patientToBeLinked.linkedPatients.push({
+        linkedPatientId: patient._id,
+        linkedPatientRelation: relation,
+        linkedPatientName: patient.name
+      });
+      await patientToBeLinked.save();
     }
     
     res.status(200).json(patient);
@@ -290,37 +330,47 @@ const deleteMedicalHistory= async (req, res) => {
 }
 const payByPackage = async (req, res) => {
   try {
-    const { username, paymentMethod, selectedPackage } = req.body;
+    const { username, paymentMethod, selectedPackage,discount,LinkedPatientId } = req.body;
     const packagee = await HealthPackage.findById(selectedPackage);
-    console.log("pp" + packagee);
     const patient = await Patient.findOne({ username: username });
-    patient.healthpackage=null;
-    patient.packageBoughtDate = null;
-    const myfamily=patient.linkedPatients;
-    if(paymentMethod==='wallet'){
-      if (packagee.price > patient.wallet) {
-        return res.status(400).json({ error: 'Not enough money in wallet' });
-      }else{
-        patient.wallet = patient.wallet - packagee.price;
-
+    if(LinkedPatientId===null){
+      if(paymentMethod==='wallet'&&patient){
+        if (packagee.price-discount > patient.wallet) {
+          return res.status(400).json({ error: 'Not enough money in wallet' });
+        }else{
+          patient.wallet = patient.wallet - (packagee.price-discount);
+  
+        }
+  
       }
+      patient.healthpackage = packagee;
+      patient.packageCancelledDate = null;
+      patient.packageBoughtDate = new Date();
+      console.log("date " + patient.packageBoughtDate);
+  
+        await patient.save();
+    }
+    else{
+      const p = await Patient.findById(LinkedPatientId);
+      if(paymentMethod==='wallet'&&patient&&p){
+        if (packagee.price-discount > patient.wallet) {
+          return res.status(400).json({ error: 'Not enough money in wallet' });
+        }else{
+          patient.wallet = patient.wallet - (packagee.price-discount);
+  
+        }
+  
+      }
+      p.healthpackage = packagee;
+      p.packageCancelledDate = null;
+      p.packageBoughtDate = new Date();
+      console.log("date " + p.packageBoughtDate);
+  
+        await p.save();
 
     }
-    patient.healthpackage = packagee;
-    patient.packageCancelledDate = null;
-    patient.packageBoughtDate = new Date();
-    console.log("date " + patient.packageBoughtDate);
-      for (let i = 0; i < myfamily.length; i++) {
-        const familyMember = myfamily[i];
-        const familyMemberObject = await Patient.findById(familyMember.linkedPatientId);
-        familyMemberObject.healthpackage = packagee;
-        familyMemberObject.packageCancelledDate = null;
-        familyMemberObject.packageBoughtDate = new Date();
-        await familyMemberObject.save();
-        // Do something with the family member object
-      }
-
-      await patient.save();
+   
+  
       res.status(200).json({ message: 'Payment successful' });
   } catch (error) {
     console.error('Error making wallet payment:', error);
@@ -340,6 +390,7 @@ const CancelPackage = async (req,res) => {
   patient.packageCancelledDate = new Date();
   console.log(patient.packageCancelledDate);
   console.log('Cancelled');
+  patient.healthpackage=null;
   await patient.save();
   res.status(201).json({message :"cancelled"});
   }
@@ -405,17 +456,42 @@ const viewHealthPackages = async (req, res) => {
     return res.status(500).json({ error: 'Error fetching health package' });
   }
 };
+const getHighestDiscount = async(req,res)=>{
+  try{
+    const {username}=req.params;
+    const patient=await Patient.findOne({username:username});
+    const linkedPatients=patient.linkedPatients;
+    let discount=0;
+
+    // Loop over the linkedPatients array
+    for (const linkedPatient of linkedPatients) {
+      // Access each linked patient here
+      const p=await Patient.findById(linkedPatient.linkedPatientId);
+      if(p.healthpackage){
+        if(p.healthpackage.discount>discount){
+          discount=p.healthpackage.discount;
+        }
+      }
+    }
+    return res.status(200).json(discount );
+  
+  }
+  catch{
+    return res.status(500).json({ error: 'Error fetching discount' });
+  }
+}
 
 const getPatientNotifications = async (req, res) => {
   try {
-    const { patientId } = req.params;
-    const patient = await Patient.findById(patientId).populate('notifications');
+    const {username}=req.params;
+    const patient=await Patient.findOne({username:username}).populate('notifications');
 
     if (!patient) {
       return res.status(404).json({ error: 'Patient not found' });
     }
 
     const notifications = patient.notifications;
+    console.log(patient.username);
 
     return res.status(200).json({ notifications });
   } catch (error) {
@@ -425,4 +501,4 @@ const getPatientNotifications = async (req, res) => {
 };
 
 
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getPatientNotifications}
+module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getPatientNotifications,getHighestDiscount}

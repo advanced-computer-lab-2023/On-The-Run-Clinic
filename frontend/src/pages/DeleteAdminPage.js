@@ -16,7 +16,9 @@ const DeleteAdmin = () => {
 
   const fetchAdmins = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/getAdmins`);
+      const response = await axios.get(`http://localhost:4000/getAdmins`,{
+        withCredentials: true
+      });
 
       if (response.status === 200) {
         setAdmins(response.data);
@@ -34,7 +36,9 @@ const DeleteAdmin = () => {
   const handleDelete = async (adminId) => {
     try {
       // Make a DELETE request to the backend to delete the patient
-      await axios.delete(`http://localhost:4000/deleteAdmin/${adminId}`);
+      await axios.delete(`http://localhost:4000/deleteAdmin/${adminId}`,{
+        withCredentials: true
+      });
 
       // After successful deletion, refresh the patient list by re-fetching
       fetchAdmins();

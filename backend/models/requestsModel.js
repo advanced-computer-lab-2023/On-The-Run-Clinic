@@ -35,13 +35,25 @@ const requestSchema = new mongoose.Schema({
   },
   status1: {
     type: String,
+    enum: ['pending', 'accepted', 'rejected'],
     required: false,
   },
-  reqDocs: [{
+  medicalLicense: {
     data: Buffer,
-    mimetype: String,
-    name: String,
-  }],
+    contentType: String,
+  },
+  medicalDegree: {
+    data: Buffer,
+    contentType: String,
+  },
+  doctorId: {
+    data: Buffer,
+    contentType: String,
+  },
+  Affiliation:{
+    type:String,
+    required:false
+  }
   
 });
 

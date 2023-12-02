@@ -12,13 +12,16 @@ const MyPatients = () => {
   const [searchName, setSearchName] = useState('');
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [date, setDate] = useState('');
+  const [hour, setHour] = useState('');
   const [description1, setDescription] = useState('');
-
+  const [hours, setHours] = useState({});
   const [dates, setDates] = useState({});
-const [descriptions, setDescriptions] = useState({});
+  const [descriptions, setDescriptions] = useState({});
   const getDoctorByUsername = async (username) => {
     try {
-      const response = await axios.get(`http://localhost:4000/getDoctorByUsername/${username}`);
+      const response = await axios.get(`http://localhost:4000/getDoctorByUsername/${username}`,{
+        withCredentials: true
+      });
       if (response.status === 200) {
         return response.data;
       }
@@ -28,19 +31,21 @@ const [descriptions, setDescriptions] = useState({});
   };
   const [doctor1, setDoctor] = useState(null);
 
-useEffect(() => {
-  const fetchDoctor = async () => {
-    const doctorData = await getDoctorByUsername(username); // replace 'username' with the actual username
-    setDoctor(doctorData);
-  };
+  useEffect(() => {
+    const fetchDoctor = async () => {
+      const doctorData = await getDoctorByUsername(username); // replace 'username' with the actual username
+      setDoctor(doctorData);
+    };
 
-  fetchDoctor();
-}, []);
+    fetchDoctor();
+  }, []);
 
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/getDocpatients/${username}`);
+        const response = await axios.get(`http://localhost:4000/getDocpatients/${username}`,{
+          withCredentials: true
+        });
         //console.log(response.data);
 
         if (response.status === 200) {
@@ -63,7 +68,7 @@ useEffect(() => {
     );
     return filteredPatientsByName;
   };
-  
+
 
   const handleSearchNameButton = () => {
     const filteredPatients = searchName ? handleSearchByName() : originalPatients; // Use original patients for filtering
@@ -75,11 +80,14 @@ useEffect(() => {
 
 
 
-  
+
   const handleScheduleFollowUp = async (patientId, doctorId, date, status, description) => {
     try {
-      const response = await axios.post(`http://localhost:4000/newAppointment/${username}/${patientId}/${doctorId}/${date}/${status}/${description}`);
-  
+
+      const f = { patientId, doctorId, date, status, description, hour }
+      const response = await axios.post(`http://localhost:4000/createAppointment`, f,{
+        withCredentials: true
+      });
       if (response.status === 200) {
         console.log('Appointment created successfully');
       }
@@ -127,18 +135,27 @@ useEffect(() => {
                       Username: {patient.username}
                       <br />
                     </Link>
-                    <input 
-                    type="date" 
-                    value={dates[patient._id] || ''} 
-                    onChange={e => setDates({...dates, [patient._id]: e.target.value})} />
-                    <input 
-                    type="text" 
-                    value={descriptions[patient._id] || ''} 
-                    onChange={e => setDescriptions({...descriptions, [patient._id]: e.target.value})} 
-                    placeholder="Description" />
-                    <button 
-                    onClick={() => handleScheduleFollowUp(patient._id, doctor1._id, dates[patient._id], 'Scheduled', descriptions[patient._id])}>Schedule Follow Up</button>
-                    </li>
+                    <input
+                      type="date"
+                      value={dates[patient._id] || ''}
+                      onChange={e => setDates({ ...dates, [patient._id]: e.target.value })} />
+                    <input
+                      type="text"
+                      value={descriptions[patient._id] || ''}
+                      onChange={e => setDescriptions({ ...descriptions, [patient._id]: e.target.value })}
+                      placeholder="Description" />
+                    <input
+                      type="text"
+                      value={hours[patient._id] || ''}
+                      onChange={e => setHours({ ...hours, [patient._id]: e.target.value })}
+                      placeholder="Hour"
+                    />
+
+
+                    <button
+                      onClick={() => handleScheduleFollowUp(patient._id, doctor1._id, dates[patient._id], 'Scheduled', descriptions[patient._id])}>Schedule Follow Up</button>
+
+                  </li>
                 );
               })}
             </ul>

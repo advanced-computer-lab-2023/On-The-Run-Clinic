@@ -11,7 +11,9 @@ const [isAdminRegistered, setIsAdminRegistered] = useState(false);
 const handleSubmit = async (e) => {
     e.preventDefault();
     const dr={username,password}
-    try{const response = await axios.post('http://localhost:4000/AdminRegistrationForm', ad);
+    try{const response = await axios.post('http://localhost:4000/AdminRegistrationForm', ad,{
+      withCredentials: true
+    });
     
     if (response.status === 201) {
       console.log('Registration successful:', response.data);

@@ -16,7 +16,9 @@ const DeleteDoctor = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/getDoctors`);
+      const response = await axios.get(`http://localhost:4000/getDoctors`,{
+        withCredentials: true
+      });
 
       if (response.status === 200) {
         setDoctors(response.data);
@@ -34,7 +36,9 @@ const DeleteDoctor = () => {
   const handleDelete = async (doctorId) => {
     try {
       // Make a DELETE request to the backend to delete the patient
-      await axios.delete(`http://localhost:4000/deleteDoctor/${doctorId}`);
+      await axios.delete(`http://localhost:4000/deleteDoctor/${doctorId}`,{
+        withCredentials: true
+      });
 
       // After successful deletion, refresh the patient list by re-fetching
       fetchDoctors();

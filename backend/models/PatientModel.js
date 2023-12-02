@@ -1,7 +1,8 @@
-
+ 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const DoctorModel=require('./DoctorModel')
+const Notification =require('./notificationModel')
 const HealthPackageModel = require('./HealthPackages');
 
 const PatientSchema = new mongoose.Schema({

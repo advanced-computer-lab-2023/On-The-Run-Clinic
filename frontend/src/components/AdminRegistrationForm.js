@@ -9,7 +9,9 @@ const AdminRegistrationForm = ({ onRegistrationSuccess }) => {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       // Send a POST request to register the admin
-      const response = await axios.post('http://localhost:4000/createAdmin', values);
+      const response = await axios.post('http://localhost:4000/createAdmin', values,{
+        withCredentials: true
+      });
 
       // Assuming the response contains the admin's username upon successful registration
       const adminusername = response.data.username;

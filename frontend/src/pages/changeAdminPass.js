@@ -14,7 +14,9 @@ const ChangeAdminPass = () => {
 
   useEffect(() => {
     const fetchAdmin = async () => {
-      const response = await axios.get(`http://localhost:4000/getAdminByUsername/${username}`);
+      const response = await axios.get(`http://localhost:4000/getAdminByUsername/${username}`,{
+        withCredentials: true
+      });
       setAdmin(response.data);
     };
 
@@ -56,6 +58,8 @@ const ChangeAdminPass = () => {
       username,  
        currentPassword,
         newPassword,
+      },{
+        withCredentials: true
       });
   
       setSuccess(true);

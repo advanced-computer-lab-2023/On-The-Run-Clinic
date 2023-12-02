@@ -14,7 +14,9 @@ const PatientDetails = () => {
     const fetchPatientData = async () => {
       try {
         // Make an API request to get all patient information
-        const response = await axios.get('http://localhost:4000/getPatients');
+        const response = await axios.get('http://localhost:4000/getPatients',{
+          withCredentials: true
+        });
 
         if (response.status === 200) {
           const allPatients = response.data;
@@ -46,7 +48,9 @@ const PatientDetails = () => {
     if (username) {
       const fetchPrescriptions = async () => {
         try {
-          const response = await axios.get(`http://localhost:4000/getMyPrescriptions/${username}`);
+          const response = await axios.get(`http://localhost:4000/getMyPrescriptions/${username}`,{
+            withCredentials: true
+          });
           if (response.status === 200) {
             setPrescriptions(response.data);
           }

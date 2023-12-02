@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 const ResetPassword = () => {
   const { username } = useParams();
-  const [email, setEmail] = useState('');
+
   const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -14,9 +14,8 @@ const ResetPassword = () => {
 
     try {
       const response = await axios.post(`http://localhost:4000/resetPassword/${username}`, {
-        email,
         otp,
-        password,
+        newPassword:password,
       });
       console.log(response);
       navigate('/login');
@@ -29,12 +28,7 @@ const ResetPassword = () => {
     <form onSubmit={handleSubmit}>
         <h4>Reset Password</h4>
       <br/>
-      <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+      
       <br/>
       <input
         type="number"

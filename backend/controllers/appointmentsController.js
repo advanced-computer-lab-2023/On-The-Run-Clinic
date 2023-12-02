@@ -5,11 +5,30 @@ const Doctor = require('../models/DoctorModel');
 const Patient = require('../models/PatientModel');
 const FamilyMember = require ('../models/FamilyMemberModel'); // Import your Patient model
 const Notification = require ('../models/notificationModel');
+const HealthPackage = require('../models/HealthPackages');
+const nodemailer = require('nodemailer'); // For sending emails
 
+
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Example: 'Gmail'
+  auth: {
+    user: 'ontherunclinic@gmail.com',
+    pass: 'wkdy hbkz loda mebe',
+  },
+});
 
 const createAppointment = async (req, res) => {
   try {
+
     const { patientId, doctorId, date, status, description , hour } = req.body;
+    const doctor = await Doctor.findById(doctorId);
+    if(patientId==null){
+      const appointment = new Appointment({ patientId:null,doctorId, date ,status:"Available",description : "empty", hour });
+      await appointment.save();
+      res.status(201).json({ message: 'Appointment created successfully', appointment });
+
+    }else{
 
     const existingAppointment = await Appointment.findOne({ doctorId, date , hour });
 
@@ -18,7 +37,7 @@ const createAppointment = async (req, res) => {
     }
 
     // Fetch the doctor and patient objects
-    const doctor = await Doctor.findById(doctorId);
+   
     const patient = await Patient.findById(patientId);
 
     if (!doctor) {
@@ -52,7 +71,7 @@ const createAppointment = async (req, res) => {
     }
 
 
-    res.status(201).json({ message: 'Appointment created successfully', appointment });
+    res.status(201).json({ message: 'Appointment created successfully', appointment });}
   } catch (error) {
     console.error('Error creating appointment:', error);
     res.status(500).json({ error: 'An error occurred while creating the appointment' });
@@ -69,6 +88,11 @@ const reserveAppointment = async(req,res) => {
     console.log("d"+doctor);
     const patient = await Patient.findById(patientId);
     console.log("P"+patient);
+    let discount =0
+    if(patient.healthpackage) {
+      const h=await HealthPackage.findById(patient.healthpackage);
+      discount =h.discount;
+    }
 
     if (!appointment) {
       console.log(" app not found");
@@ -76,11 +100,11 @@ const reserveAppointment = async(req,res) => {
 
     if(paymentMethod=="wallet") {
       console.log("wallet " + patient.wallet); 
-      if(patient.wallet<doctor.hourly_rate) {
+      if(patient.wallet<doctor.hourly_rate-discount) {
         return res.status(400).json({ error: 'Not enough money in wallet' });
       }
       else {
-        patient.wallet = patient.wallet - doctor.hourly_rate;
+        patient.wallet = patient.wallet - doctor.hourly_rate+discount;
       console.log("wallet " + patient.wallet); 
 
       }
@@ -111,12 +135,40 @@ const reserveAppointment = async(req,res) => {
     }
 
     const msgP = `You have successfully reserved an appointment with doctor ${doctor.name} on ${appointment.date} `;
-    const notificationP = new Notification({msgP});
+    const notificationP = new Notification({ message: msgP }); // Corrected
+    await notificationP.save();
     patient.notifications.push(notificationP);
+    await patient.save();
 
+    try {
+      const mailOptions = {
+        from: 'ontherunclinic@hotmail.com',
+        to: 'ahmedyasser17x@gmail.com',
+        subject: 'Appointment Reservation Confirmation',
+        text: msgP,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error email:', error);
+    }
+    
     const msgD = `${patient.name} has successfully reserved an appointment with you on ${appointment.date} `;
-    const notificationD = new Notification({msgD});
+    const notificationD = new Notification({ message: msgD }); // Corrected
+    await notificationD.save();
     doctor.notifications.push(notificationD);
+    await doctor.save();
+
+    try {
+      const mailOptions = {
+        from: 'ontherunclinic@hotmail.com',
+        to: 'ahmedyasser17x@gmail.com',
+        subject: 'Appointment Reservation Confirmation',
+        text: msgD,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error email:', error);
+    }
 
     return res.status(200).json({ message: 'Appointment reserved successfully' });
   } catch (error) {

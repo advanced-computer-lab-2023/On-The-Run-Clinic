@@ -13,7 +13,9 @@ const PatientDashboard = () => {
     
     async function fetchWallet() {
       try {
-        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`);
+        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`,{
+          withCredentials: true
+        });
         if (response.status === 200) {
           setDoctor(response.data);
           
@@ -83,6 +85,12 @@ const PatientDashboard = () => {
           <Link to={`/changePatientPassword/${username}`} className="menu-link">
             <i className="fas fa-edit"></i>
             change my password
+          </Link>
+        </li>
+        <li>
+          <Link to={`/filterAppointmentsPatient/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            view my appointments
           </Link>
         </li>
       </ul>

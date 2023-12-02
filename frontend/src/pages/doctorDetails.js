@@ -12,7 +12,9 @@ const DoctorDetails = () => {
     const fetchDoctorData = async () => {
       try {
         // Make an API request to get all doctor information
-        const response = await axios.get('http://localhost:4000/getDoctors');
+        const response = await axios.get('http://localhost:4000/getDoctors',{
+          withCredentials: true
+        });
 
         if (response.status === 200) {
           const allDoctors = response.data;

@@ -12,7 +12,9 @@ const UpdateDoctorInfo = () => {
 
   useEffect(() => {
     // Fetch the doctor's information based on the username from the URL
-    axios.get(`http://localhost:4000/getDoctor/${username}`)
+    axios.get(`http://localhost:4000/getDoctor/${username}`,{
+      withCredentials: true
+    })
       .then((response) => {
         console.log(response);
         setDoctor(response.data);
@@ -25,7 +27,9 @@ const UpdateDoctorInfo = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       // Send a put request to update the doctor with username
-      const response = await axios.put(`http://localhost:4000/updateDoctor?username=${username}`, values);
+      const response = await axios.put(`http://localhost:4000/updateDoctor?username=${username}`, values,{
+        withCredentials: true
+      });
 
       if (response.status === 200) {
         console.log('Doctor information updated successfully:', response.data);

@@ -4,35 +4,40 @@ require('dotenv').config()
 const express= require("express")
 const mongoose=require('mongoose')
 const Patient = require('./models/PatientModel');
+const cookieParser = require('cookie-parser');
+
+const {createDoctor,createDoctor1,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor, getDoctorNotifications} = require("./controllers/doctorController")
+
 const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
-const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor,getDoctorNotifications} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getPatientNotifications} = require("./controllers/patientController")
+
+
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getPatientNotifications} = require("./controllers/patientController");
 const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment}=require("./controllers/appointmentsController")
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
-const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest}=require("./controllers/requestsController")
+const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
-
-
+const{createPDoctor,getPDoctors,getPDoctor,deletePDoctor}=require("./controllers/pendingDoctorController") 
+const {requireAuthPatient,requireAuthPending,requireAuthDoctor,requireAuthAdmin,requireAuth}=require("./Middleware/requireAuth")
 const{login,logout,forgetPassword,resetPassword}=require("./controllers/userController")
 const multer=require("multer");
 
 //express app
 const app = express()
 const corsOptions = {
-    origin: 'http://localhost:3000', // Replace with your frontend's URL
+    origin: 'http://localhost:3000',
+    credentials: true // Replace with your frontend's URL
   };
-  
   app.use(cors(corsOptions));
-
-app.use(express.json())
-
-
-app.use((req,res,next)=>{
+  app.use(express.json());
+  app.use(cookieParser());
+  app.use((req,res,next)=>{
     console.log(req.path,req.method)
     next()
 })
+
+
 const storage=multer.diskStorage({
     destination:function(req,file,cb){
         return cb(null,'./controllers/uploads')
@@ -90,69 +95,81 @@ app.listen(4000,()=>{
 .catch((error)=>{
     console.log(error)
 })
-app.use(express.json())
-app.post("/createAdmin",createAdmin);
-app.post("/register/doctor",createDoctor);
-app.put("/updateDoctor",updateDoctor);
+
+
+
+app.post("/createAdmin",requireAuthAdmin,createAdmin);
+
+app.post("/register/doctor",requireAuthPending,createDoctor);
+app.put("/updateDoctor",requireAuthDoctor,updateDoctor);
 app.post("/register/patient",createPatient);
-app.get("/getDocPatients/:username", getDocPatients);
-app.get("/getDoctors",getDoctors);
-app.get("/getPatients",getPatients);
-app.get("/getAdmins",getAdmins)
-app.post("/addFamilyMember",createMember);
-app.delete("/deleteDoctor/:id",deleteDoctor);
+app.get("/getDocPatients/:username",requireAuth, getDocPatients);
+app.get("/getDoctors",requireAuth,getDoctors);
+app.get("/getPatients",getPatients);//removed
+app.get("/getAdmins",requireAuthAdmin,getAdmins)
+app.post("/addFamilyMember",requireAuthPatient, createMember);
+app.delete("/deleteDoctor/:id",requireAuthAdmin,deleteDoctor);
 app.patch("/ubdateDoctor",updateDoctor);
-app.get("/getFamilyMem/:username",getFamilyMembers);
-app.get("/searchPatientsByName",searchPatientsByName);
-app.post("/addPatientToDr",addPatientToDr);
-app.post("/addPrescription",createPrescription);
-app.get("/getPrescriptions/:id",getPrescriptionsForPatient);
-app.get("/getMyPrescriptions/:username",getMyPrescriptions);
+app.get("/getFamilyMem/:username",requireAuth,getFamilyMembers);
+app.get("/searchPatientsByName",requireAuth,searchPatientsByName);
+app.post("/addPatientToDr",requireAuth,addPatientToDr);
+app.post("/addPrescription",requireAuth,createPrescription);
+app.get("/getPrescriptions/:id",requireAuth,getPrescriptionsForPatient);
+app.get("/getMyPrescriptions/:username",requireAuth,getMyPrescriptions);
 app.post("/createRequest",createRequest);
-app.post("/createPackage",createHealthPackage);
-app.get("/getPackages",getPackages);
-app.put("/updatePackage",updateHealthPackage);
-app.delete("/deletePackage",deleteHealthPackage);
-app.delete("/deleteAdmin/:id",deleteAdmin);
-app.delete("/deletePatient/:id",deletePatient);
-app.get("/getDoctor/:username",getDoctorByUsername);
+app.post("/createPackage",requireAuthAdmin,createHealthPackage);
+app.get("/getPackages",requireAuth,getPackages);
+app.put("/updatePackage",requireAuthAdmin,updateHealthPackage);
+app.delete("/deletePackage",requireAuthAdmin,deleteHealthPackage);
+app.delete("/deleteAdmin/:id",requireAuthAdmin,deleteAdmin);
+app.delete("/deletePatient/:id",requireAuthAdmin,deletePatient);
+app.get("/getDoctor/:username",requireAuth,getDoctorByUsername);
 app.get("/getOneRequest",getOneRequest);
-app.get("/getRequests",getRequests);
-app.post("/createAppointment",createAppointment);
-app.get("/getAllAppointments",getAllAppointments);
-app.get("/filterAppointments",filter);
-app.get("/search/:username",searchPatientsByUserame);
-app.get("/getDoctorAppointments/:id",getDoctorAppointments);
-app.get("/getPatientAppointments/:id",getPatientAppointments);
-app.get("/getPatient/:id",getPatient);
-app.get("/getDoc/:id",getDoctorbyId);
-app.get("/getPatientByUsername/:username",searchPatientsByUserame);
-app.get("/getPackage/:id",getHealthPackage);
-app.get("/getLinkedFamilyMembers/:username",getLinkedFamilyMembers);
-app.post("/linkMember",linkMemberByEmail);
-app.post("/payPackage",payByPackage);
-app.put("/updatePassPatient",updatePasswordPatient);
-//app.post("/updatePassDoctor",updatePasswordDoctor);
-app.get("/getMedicalHistory/:username",getMedicalHistory);
-app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
+app.get("/getRequests",requireAuthAdmin,getRequests);
+app.post("/createAppointment",createAppointment);//removed
+app.get("/getAllAppointments",requireAuth,getAllAppointments);
+app.get("/filterAppointments",requireAuth,filter);
+app.get("/search/:username",requireAuth,searchPatientsByUserame);
+app.get("/getDoctorAppointments/:id",requireAuth,getDoctorAppointments);
+app.get("/getPatientAppointments/:id",requireAuth,getPatientAppointments);
+app.get("/getPatient/:id",requireAuth,getPatient);
+app.get("/getDoc/:id",requireAuth,getDoctorbyId);
+app.get("/getPatientByUsername/:username",requireAuth,searchPatientsByUserame);
+app.get("/getPackage/:id",requireAuth,getHealthPackage);
+app.get("/getLinkedFamilyMembers/:username",requireAuth,getLinkedFamilyMembers);
+app.post("/linkMember",requireAuthPatient,linkMemberByEmail);
+app.post("/payPackage",requireAuthPatient,payByPackage);
+app.put("/updatePassPatient",requireAuthPatient,updatePasswordPatient);
+app.put("/updatePassDoctor",requireAuthDoctor,updatePasswordDoctor);
+app.get("/getMedicalHistory/:username",requireAuth,getMedicalHistory);
+app.delete('/deleteMedicalRecord/:username/:filename',requireAuth, deleteMedicalHistory);
 app.post("/login",login);
 app.get("/logout",logout);
 
-app.put("/rejectRequest/:id",rejectrequest);
-app.get("/getDoctorByUsername/:username",getDoctorByUsername);
+app.put("/rejectRequest/:id",requireAuthAdmin,rejectrequest);
+app.post("/acceptRequest/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background/:id",requireAuthAdmin,acceptrequest)
+//app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:description",createAppointment1);
+app.get("/getDoctorByUsername/:username",requireAuth,getDoctorByUsername);
 app.post("/forgetPassword",forgetPassword);
 app.post("/resetPassword/:username",resetPassword);
 
-app.get("/getAdminByUsername/:username",getAdminByUsername);
-app.put("/updatePassAdmin",updatePasswordAdmin);
+app.get("/getAdminByUsername/:username",requireAuthAdmin,getAdminByUsername);
+app.put("/updatePassAdmin",requireAuthAdmin,updatePasswordAdmin);
 
-app.get("/mypackage/:username",viewHealthPackages);
-app.post("/CancelPackage/:username",CancelPackage);
-app.get("/getAvailableDoctorAppointments/:id",getAvailableDoctorAppointments);
-app.post("/reserveAppointment/:appointmentId",reserveAppointment);
-app.post("/reserveFamilyMemberAppointment/:appointmentId",reserveFamilyMemberAppointment);
-app.post("/reserveLinkedPatientAppointment/:appointmentId",reserveLinkedPatientAppointment);
-app.get("/getPatientNotifications/:id",getPatientNotifications);
-app.get("/getDoctorNotifications/:id",getDoctorNotifications);
 
+app.get("/mypackage/:username",requireAuth,viewHealthPackages);
+app.post("/CancelPackage/:username",requireAuthPatient,CancelPackage);
+app.get("/getAvailableDoctorAppointments/:id",requireAuth,getAvailableDoctorAppointments);
+app.post("/reserveAppointment/:appointmentId",requireAuth,reserveAppointment);
+app.get("/getPackageDiscount/:username",requireAuth,getHighestDiscount);
+
+app.post("/createPDoctor/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",requireAuthAdmin,createPDoctor);
+app.delete("/deletePDoctor/:username",requireAuthPending,deletePDoctor);
+//app.get("/getPDoctors",getPDoctors);
+app.post("/createDoctor1/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createDoctor1);
+app.get("/getPDoctor/:username",requireAuth,getPDoctor);
+app.post("/reserveFamilyMemberAppointment/:appointmentId",requireAuth,reserveFamilyMemberAppointment);
+app.post("/reserveLinkedPatientAppointment/:appointmentId",requireAuth,reserveLinkedPatientAppointment);
+app.get("/getPatientNotifications/:username",getPatientNotifications);
+app.get("/getDoctorNotifications/:username",getDoctorNotifications);
 
