@@ -5,7 +5,7 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import logo from './doctor.png'
+
 
 const Navbar = () => {
   const { logout } = useLogout()
@@ -46,7 +46,6 @@ const Navbar = () => {
         )}
         {!user && (
           <div>
-            <Link to="/login">Login</Link>
             <Link to="/register/doctor">Signup as Doctor</Link>
             <Link to="/register/patient">Signup as Patient</Link>
           </div>

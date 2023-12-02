@@ -14,12 +14,6 @@ const AdminDashboard = () => {
     <h1>Admin Dashboard</h1>
     <ul className="admin-menu">
       <li>
-        <Link to="/addAdmin" className="menu-link">
-          <i className="fas fa-user-plus"></i>
-          Add Another Admin
-        </Link>
-      </li>
-      <li>
         <Link to="/deleteAdmin" className="menu-link">
           <i className="fas fa-users"></i>
           Manage Admins

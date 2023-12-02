@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-
-import MedicineSelect from '../components/MedicineList';
-import PrescriptionList from '../components/PrescriptionList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPlus } from '@fortawesome/free-solid-svg-icons';
 import PrescriptionDetailsModal from '../components/PrescriptionDetailsModal';
