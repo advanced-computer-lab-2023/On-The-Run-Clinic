@@ -48,6 +48,10 @@ const PendingdoctorSchema = new mongoose.Schema({
       data: Buffer,
       contentType: String,
     },
+    medicalLicense: {
+      data: Buffer,
+      contentType: String,
+    },
     Affiliation:{
       type:String,
       required:false

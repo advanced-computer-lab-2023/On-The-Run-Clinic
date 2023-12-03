@@ -1,124 +1,134 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState} from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Formik, Form, Field } from 'formik';
+import { Col, Row } from 'react-bootstrap';
 
 const ChangeDoctortPass = () => {
   const navigate = useNavigate();
   const { username } = useParams();
-  const [doctor, setDoctor] = useState(null);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    const fetchDoctor = async () => {
-      const response = await axios.get(`http://localhost:4000/getDoctor/${username}`,{
-        withCredentials: true
-      });
-      setDoctor(response.data);
-    };
-
-    fetchDoctor();
-  }, [username]);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-  
+  const handleSubmit = async (values, { setSubmitting }) => {
     const errors = {};
-  
-    if (newPassword !== confirmPassword) {
+
+    if (values.newPassword !== values.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match';
     }
-  
-    if (newPassword.length < 8) {
+
+    if (values.newPassword.length < 8) {
       errors.newPassword = 'Password must be at least 8 characters long';
     }
-  
-    if (!/[A-Z]/.test(newPassword)) {
+
+    if (!/[A-Z]/.test(values.newPassword)) {
       errors.newPassword = 'Password must contain at least one uppercase letter';
     }
-  
-    if (!/[a-z]/.test(newPassword)) {
+
+    if (!/[a-z]/.test(values.newPassword)) {
       errors.newPassword = 'Password must contain at least one lowercase letter';
     }
-  
-    if (!/\d/.test(newPassword)) {
+
+    if (!/\d/.test(values.newPassword)) {
       errors.newPassword = 'Password must contain at least one number';
     }
-  
+
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
+      setSubmitting(false);
       return;
     }
-  
+
     try {
       const response = await axios.put(`http://localhost:4000/updatePassDoctor`, {
-      username,  
-       currentPassword,
-        newPassword,
-      },{
+        username,
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+      }, {
         withCredentials: true
       });
-  
+
       setSuccess(true);
       setErrors(null);
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
+      setSubmitting(false);
     } catch (error) {
       setErrors({ server: error.response.data.message });
       setSuccess(false);
+      setSubmitting(false);
     }
   };
   return (
-    <div>
-      <h1>Welcome!</h1>
-      <h2>Change Password</h2>
+    <>
       {errors && errors.server && (
-        <p style={{ color: 'red' }}>{errors.server}</p>
-      )}
-      {success && (
-        <p style={{ color: 'green' }}>Password updated successfully</p>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="currentPassword">Current Password:</label>
-          <input
-            type="password"
-            id="currentPassword"
-            value={currentPassword}
-            onChange={(event) => setCurrentPassword(event.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="newPassword">New Password:</label>
-          <input
-            type="password"
-            id="newPassword"
-            value={newPassword}
-            onChange={(event) => setNewPassword(event.target.value)}
-          />
-          {errors && errors.newPassword && (
-            <p style={{ color: 'red' }}>{errors.newPassword}</p>
-          )}
-        </div>
-        <div>
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-          />
-          {errors && errors.confirmPassword && (
-            <p style={{ color: 'red' }}>{errors.confirmPassword}</p>
-          )}
-        </div>
-        <button type="submit">Update Password</button>
-      </form>
-    </div>
+      <div className="alert alert-danger" role="alert" style={{ fontSize: '15px' }}>
+        {errors.server}
+      </div>
+    )}
+      <h4 style={{fontSize: '17px',fontWeight: '600',marginTop: '0px'  }}>Password</h4>
+      <Formik
+        initialValues={{
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+        }}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <Row className="mb-3">
+            <Col lg={6}style={{ marginRight: '24px' }}>
+              <label htmlFor="currentPassword" style={{fontSize: '13px', fontWeight: '600',color:'#495057'}}  >Current Password</label>
+                <Field
+                  type="password"
+                  id="currentPassword"
+                  name="currentPassword"
+                  className="form-control"
+                  style={{fontSize: '15px', fontWeight: '400',color:'#495057',width: '300px', height: '40px'}}
+                />
+              </Col>
+            </Row>
+            <Row className="mb-3">
+            <Col lg={6}style={{ marginRight: '24px' }}>
+                <label htmlFor="newPassword" style={{fontSize: '13px', fontWeight: '600',color:'#495057'}}>New Password:</label>
+                <Field
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  className="form-control"
+                  style={{fontSize: '15px', fontWeight: '400',color:'#495057',width: '300px', height: '40px'}}
+                />
+                {errors && errors.newPassword && (
+                <div className="alert alert-danger mt-2" role="alert" style={{ fontSize: '10px' }}>
+                  {errors.newPassword}
+                </div>
+              )}
+              </Col>
+            </Row>
+            <Row className="mb-3">
+            <Col lg={6}style={{ marginRight: '24px' }}>
+                <label htmlFor="confirmPassword" style={{fontSize: '13px', fontWeight: '600',color:'#495057'}}>Confirm New Password:</label>
+                <Field
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  className="form-control"
+                  style={{fontSize: '15px', fontWeight: '400',color:'#495057',width: '300px', height: '40px'}}
+                />
+                {errors && errors.confirmPassword && (
+                  <div className="alert alert-danger mt-2" role="alert" style={{ fontSize: '10px' }}>
+                  {errors.confirmPassword}
+                </div>
+                )}
+              </Col>
+            </Row>
+            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+             Change Password
+           </button>
+           {success && <p className="mt-3">Password Updated Successfully</p>}
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 };
 

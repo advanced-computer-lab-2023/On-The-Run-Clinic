@@ -166,7 +166,21 @@ const rejectrequest = async (req, res) => {
 };
 const acceptrequest = async (req, res) => {
   try {
-    const { username,name,email,password,date_of_birth,hourly_rate,Affiliation,speciality,educational_background,id } = req.params;
+    console.log("hello");
+    const { id } = req.params;
+    const request= await Request.findById(id);
+    const username=request.username;
+    const name=request.name;
+    const email=request.email;
+    const password=request.password;
+    const date_of_birth=request.date_of_birth;
+    const hourly_rate=request.hourly_rate;
+    const speciality=request.speciality;
+    const Affiliation=request.Affiliation;
+    const educational_background=request.educational_background;
+    const medicalLicense=request.medicalLicense;
+    const medicalDegree=request.medicalDegree;
+    const doctorId=request.doctorId;
     const newPendingDoctor = new PendingDoctor({
       username,
       name,
@@ -176,7 +190,10 @@ const acceptrequest = async (req, res) => {
       hourly_rate,
       speciality,
       Affiliation,
-      educational_background
+      educational_background,
+      medicalLicense,
+      medicalDegree,
+      doctorId,
     });
 
     // Save the new doctor to the database
@@ -188,6 +205,7 @@ const acceptrequest = async (req, res) => {
       { status1: 'accepted' },
       { new: true }
     );
+    await updatedRequest.save();
 
     if (!updatedRequest) {
       return res.status(404).json({ message: 'Request not found' });
@@ -204,7 +222,6 @@ const acceptrequest = async (req, res) => {
 
 
 module.exports = { createRequest,getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest };
-
 
 
 

@@ -6,7 +6,7 @@ const mongoose=require('mongoose')
 const Patient = require('./models/PatientModel');
 const cookieParser = require('cookie-parser');
 
-const {createDoctor,createDoctor1,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor} = require("./controllers/doctorController")
+const {createDoctor,createDoctor1,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,updatePasswordDoctor, getDoctorNotifications} = require("./controllers/doctorController")
 
 const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
@@ -14,7 +14,7 @@ const cors = require('cors');
 
 const { createFollowUpReq, acceptFollowUpReq, rejectFollowUpReq,getFollowUpReqs} = require("./controllers/followUpReqController")
 const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment}=require("./controllers/appointmentsController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,getMyPrescriptions2,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,addToWallet,getPatientUsername} = require("./controllers/patientController");
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,getMyPrescriptions2,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getPatientNotifications,addToWallet,getPatientUsername} = require("./controllers/patientController");
 
 
 
@@ -109,7 +109,7 @@ app.put("/updateDoctor",requireAuthDoctor,updateDoctor);
 app.post("/register/patient",createPatient);
 app.get("/getDocPatients/:username",requireAuth, getDocPatients);
 app.get("/getDoctors",requireAuth,getDoctors);
-app.get("/getPatients",requireAuth,getPatients);
+app.get("/getPatients",getPatients);//removed
 app.get("/getAdmins",requireAuthAdmin,getAdmins)
 app.post("/addFamilyMember",requireAuthPatient, createMember);
 app.delete("/deleteDoctor/:id",requireAuthAdmin,deleteDoctor);
@@ -131,7 +131,7 @@ app.delete("/deletePatient/:id",requireAuthAdmin,deletePatient);
 app.get("/getDoctor/:username",requireAuth,getDoctorByUsername);
 app.get("/getOneRequest",getOneRequest);
 app.get("/getRequests",requireAuthAdmin,getRequests);
-app.post("/createAppointment",requireAuth,createAppointment);
+app.post("/createAppointment",createAppointment);//removed
 app.get("/getAllAppointments",requireAuth,getAllAppointments);
 app.get("/filterAppointments",requireAuth,filter);
 app.get("/search/:username",requireAuth,searchPatientsByUserame);
@@ -152,7 +152,7 @@ app.post("/login",login);
 app.get("/logout",logout);
 
 app.put("/rejectRequest/:id",requireAuthAdmin,rejectrequest);
-app.post("/acceptRequest/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background/:id",requireAuthAdmin,acceptrequest)
+app.post("/acceptRequest/:id",requireAuthAdmin,acceptrequest)
 //app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:description",createAppointment1);
 app.get("/getDoctorByUsername/:username",requireAuth,getDoctorByUsername);
 app.post("/forgetPassword",forgetPassword);
@@ -160,6 +160,28 @@ app.post("/resetPassword/:username",resetPassword);
 
 app.get("/getAdminByUsername/:username",requireAuthAdmin,getAdminByUsername);
 app.put("/updatePassAdmin",requireAuthAdmin,updatePasswordAdmin);
+app.get("/getRequests",getRequests);
+app.post("/createAppointment",createAppointment);
+app.get("/getAllAppointments",getAllAppointments);
+app.get("/filterAppointments",filter);
+app.get("/search/:username",searchPatientsByUserame);
+app.get("/getDoctorAppointments/:id",getDoctorAppointments);
+app.get("/getPatientAppointments/:id",getPatientAppointments);
+app.get("/getPatient/:id",getPatient);
+app.get("/getDoc/:id",getDoctorbyId);
+app.get("/getPatientByUsername/:username",searchPatientsByUserame);
+app.get("/getPackage/:id",getHealthPackage);
+app.get("/getLinkedFamilyMembers/:username",getLinkedFamilyMembers);
+app.post("/linkMember",linkMemberByEmail);
+app.post("/payPackage",payByPackage);
+app.post("/updatePassPatient",updatePasswordPatient);
+app.post("/updatePassDoctor",updatePasswordDoctor);
+app.get("/getMedicalHistory/:username",getMedicalHistory);
+app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
+app.get("/mypackage/:username",viewHealthPackages);
+app.post("/CancelPackage/:username",CancelPackage);
+app.get("/getAvailableDoctorAppointments/:id",getAvailableDoctorAppointments);
+app.post("/reserveAppointment/:appointmentId",reserveAppointment);
 
 
 app.get("/mypackage/:username",requireAuth,viewHealthPackages);
@@ -175,6 +197,8 @@ app.post("/createDoctor1/:username/:name/:email/:password/:date_of_birth/:hourly
 app.get("/getPDoctor/:username",requireAuth,getPDoctor);
 app.post("/reserveFamilyMemberAppointment/:appointmentId",requireAuth,reserveFamilyMemberAppointment);
 app.post("/reserveLinkedPatientAppointment/:appointmentId",requireAuth,reserveLinkedPatientAppointment);
+app.get("/getPatientNotifications/:username",getPatientNotifications);
+app.get("/getDoctorNotifications/:username",getDoctorNotifications);
 app.get("/getMedicines",getMedicines)
 app.get("/getMedicines2",getMedicines2)
 

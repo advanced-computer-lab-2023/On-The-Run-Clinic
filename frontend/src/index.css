@@ -3,8 +3,8 @@
 
 /* layout */
 :root {
-  --primary: #1aac83;
-  --error: #e7195a;
+  --primary: #14967f;
+  --error: #095d7e;
 }
 body {
   background: #f1f1f1;
@@ -12,18 +12,76 @@ body {
   font-family: "Poppins";
 }
 header {
-  background: #fff;
-}
-header .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 10px 20px 0 20px;
+  background: #095d7e;
+  box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.1);
   display: flex;
-  align-items: center;
+  
   justify-content: space-between;
 }
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  .nav {
+    .nav-link {
+      color: #333;
+      &:hover {
+        color: #007bff;
+      }
+      &.active {
+        color: #007bff;
+        background-color: #f5f5f5;
+      }
+    }
+  }
+
+  .tab-content {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+}
+
+.left-container {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.right-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+header .left-container h1{
+ color: #fff;
+ text-align: left;
+ 
+}
+header .right-container h3{
+  color: #fff;
+  font-size: 15px;
+  margin-bottom: 0px;
+ }
+ .right-container div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+ header .right-container button {
+  background: transparent;
+  font-size: 15px;
+  color: white;
+  border: 1px solid white;
+  margin-left: 10px;
+}
 header a {
-  color: #333;
+  color: #fff;
   text-decoration: none;
 }
 .pages{
@@ -32,33 +90,6 @@ header a {
   margin: 0 auto;
 }
 
-header nav {
-  display: flex;
-  align-items: center;
-}
-
-header nav div {
-  display: flex;
-  align-items: center;
-}
-
-header nav div span {
-  margin-right: 10px;
-}
-
-header nav div a {
-  margin-right: 10px;
-  color: #343a40;
-  text-decoration: none;
-}
-
-header nav div button {
-  padding: 5px 10px;
-  background-color: #343a40;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
 header h1 {
   margin: 0px;
   color: #343a40;
@@ -111,6 +142,10 @@ td {
   height: 100vh;
   background-color: rgba(200, 200, 200);
   position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,14 +182,16 @@ td {
 }
 
 .titleCloseBtn {
-  display: block;
-  float: right;
-  height: 20px; /* Add this line */
-  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
 }
 
 .titleCloseBtn button {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 40px;
   height: 40px;
   padding: 0;
@@ -166,8 +203,8 @@ td {
 }
 
 .titleCloseBtn button:hover {
-  background-color: rgb(41, 86, 247);
-  color:#ffffff;
+  background-color: transparent;
+
 }
 
 .modalContainer .body {
@@ -208,6 +245,30 @@ td {
   text-align: center; /* center align the text */
 
 }
+.form-container button:hover {
+  background-color: initial;
+  color: initial;
+}
+.medicine-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.add-button {
+  background: none;
+  border: none;
+  color:#14967f;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+}
 
 .medicine-table tr:nth-child(even) {
   background-color: #f2f2f2;
@@ -217,13 +278,9 @@ td {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center; 
-  background-color: #4CAF50;
+  background-color: #14967f;
   color: white;
 }
-.prescription-form {
-  /* Add your styles here */
-}
-
 .dosage-control {
   display: flex;
   align-items: center;
@@ -240,6 +297,7 @@ td {
 }
 .form-control {
   box-shadow: none;
+  margin-bottom: 10px;
 }
 .form-container {
   width: 100%;
@@ -256,6 +314,9 @@ td {
 
 .form-group {
   margin-bottom: 20px;
+}
+.form-group button {
+  background-color: #14967f;
 }
 
 .form-group label {
@@ -288,4 +349,154 @@ td {
 
 .dosage-control span {
   margin: 0 10px;
+}
+
+.patients-list{
+  width :100%;
+}
+.patients-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+.patients-list li {
+  border-bottom: 1px solid #cccccc;
+  padding: 10px 0;
+}
+.patients-header{
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.patients-header div {
+  flex: 1;
+  text-align: center;
+}
+.patients-header span {
+  margin-right: 10px;
+}
+
+.prescriptions-list, .prescription-form {
+  width: 45%;
+}
+
+.prescriptions-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.prescriptions-list li {
+  margin-bottom: 20px;
+}
+
+.prescription-card {
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.prescription-header {
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.add-icon, .view-icon {
+  cursor: pointer;
+  margin-left: 10px;
+}
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  inset: 0;
+}
+.search-bar {
+  position: relative;
+  margin-bottom: 20px;
+}
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+.search-bar::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+}
+.button {
+  background-color: #14967f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #e2fcd6; 
+  color:#095d7e/* Change to the color you want on hover */
+}
+a:hover {
+  text-decoration: none;
+}
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+.nav {
+  border-right: 1px solid #ddd;
+  padding-right: 10px;
+}
+h4 {
+  margin-bottom: 20px;
+}
+
+
+.nav-link {
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #14967f!important;
+  color: white!important;
+}
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #14967f;
+}
+
+.mt-3 {
+  margin-top: 20px;
+}
+.placeholderStyle::placeholder {
+  color: #495057;
+  font-weight: 400;
+  font-size: 15px;
 }

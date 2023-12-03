@@ -39,7 +39,7 @@ const login = async (req, res) => {
     }
 
       if(!user){
-          return res.status(404).json({ error: 'User not found' });
+          return res.status(404).json({ error: "Username doesn't exist" });
       }
       let auth=false;
       if(role==="pending"){
@@ -100,8 +100,8 @@ const transporter = nodemailer.createTransport({
   
   // Route to initiate password reset
   const forgetPassword= async (req, res) => {
-    const { username } = req.body;
-    let email=""
+    const { username,email } = req.body;
+ 
     try {
       let user = await Patient.findOne({ username });
       if (!user) {
@@ -111,9 +111,9 @@ const transporter = nodemailer.createTransport({
          user = await Admin.findOne({ username });
       }
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "Username doesn't exist" });
       }
-      email=user.email;
+     
   
       // Generate and store OTP
       const otp = generateOTP();

@@ -49,6 +49,7 @@ const doctorSchema = new mongoose.Schema({
   },  passwordReset: {
     type: String,
   },
+  notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification' }],
   medicalDegree: {
     data: Buffer,
     contentType: String,
@@ -60,7 +61,10 @@ const doctorSchema = new mongoose.Schema({
   Affiliation:{
     type:String,
     required:false
-  }
+  },medicalLicense: {
+    data: Buffer,
+    contentType: String,
+  },
 });
 
 // Hash the password before saving to the database

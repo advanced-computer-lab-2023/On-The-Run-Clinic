@@ -30,7 +30,7 @@ const createAdmin = async(req,res) => {
     // Save the new doctor to the database
     await newAdmin.save();
 
-    res.status(201).json({ message: 'Admin registered successfully' });
+    res.status(201).json(newAdmin);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while registering the Admin' });

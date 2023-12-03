@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const DoctorModel=require('./DoctorModel')
+const Notification =require('./notificationModel')
 const HealthPackageModel = require('./HealthPackages');
 
 const PatientSchema = new mongoose.Schema({
@@ -104,7 +105,9 @@ const PatientSchema = new mongoose.Schema({
   }],
   passwordReset: {
     type: String,
-  }
+  },
+
+  notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification' }]
  
 });
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
@@ -39,32 +39,34 @@ function PrescriptionForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
         axios.post('http://localhost:4000/addPrescription', {
-          medicines,
-          instructions,
-          doctor: usernameDoctor,
-          patient: username
+            medicines,
+            instructions,
+            doctor: usernameDoctor,
+            patient: username
         })
-        .then(response => {
-            setMedicines([{ id: '', dosage: 1 }]);
-            setInstructions('');
-        })
-        .catch(error => {
-          console.error('Error adding prescription', error);
-        });
-      };
+            .then(response => {
+                setMedicines([{ id: '', dosage: 1 }]);
+                setInstructions('');
+            })
+            .catch(error => {
+                console.error('Error adding prescription', error);
+            });
+    };
+    const removeMedicine = (index) => {
+        const newMedicines = [...medicines];
+        newMedicines.splice(index, 1);
+        setMedicines(newMedicines);
+    };
 
 
     return (
         <form onSubmit={handleSubmit}>
-
-
             <div className="form-container">
-                <h2>New Prescription</h2>
-                <p>Choose Medicine Name From our collections of medicines</p>
+                <h2>Create New Prescription</h2>
                 {medicines.map((medicine, index) => (
-                    <div key={index}>
+                    <div key={index} className="medicine-item">
                         <div className="form-group">
-                            <label htmlFor={`medicine-${index}`}>Medicine:</label>
+                            <label htmlFor={`medicine-${index}`}>Medicine Name:</label>
                             <select
                                 id={`medicine-${index}`}
                                 name={`medicine-${index}`}
@@ -87,13 +89,16 @@ function PrescriptionForm() {
                                 onChange={(e) => updateMedicine(index, 'dosage', e.target.value)}
                             />
                         </div>
+                        <button type="button" className="remove-button" onClick={() => removeMedicine(index)}>
+                            <FontAwesomeIcon icon={faTrash} />
+                        </button>
                     </div>
                 ))}
-                <button type="button" onClick={addMedicine}>
-                    <FontAwesomeIcon icon={faPlus} />
+                <button type="button" className="add-button" onClick={addMedicine}>
+                    <FontAwesomeIcon icon={faPlus} /> Add Another Medicine
                 </button>
                 <div className="form-group">
-                    <label htmlFor="instructions">Instructions:</label>
+                    <label htmlFor="instructions">Additional Instructions:</label>
                     <textarea
                         id="instructions"
                         name="instructions"
@@ -102,7 +107,7 @@ function PrescriptionForm() {
                     />
                 </div>
                 <div className="form-group">
-                    <button type="submit">Submit</button>
+                    <button type="submit">Submit Prescription</button>
                 </div>
             </div>
         </form>
