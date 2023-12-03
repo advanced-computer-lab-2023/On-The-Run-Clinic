@@ -148,25 +148,22 @@ const Doctorz = () => {
 
       <ul>
       {filteredDoctors.map((m) => (
-            
-            <li
-              key={m._id}
-              className="medicine-item"
-              onClick={() => handleDoctorClick(m)} // Add this click handler
-            >
-              <div className="medicine-details">
-                <strong>Name:</strong> <Link to={`/doctor-details/${m.username}/${username}`}> {m.name} </Link><br />
-                <strong>Speciality:</strong> {m.speciality}<br />
-                <strong>Username:</strong> {m.username}<br />
-                <strong>Price:</strong> {m.hourly_rate} - {discount} = {m.hourly_rate - discount}
-               
-              </div>
-              
-            </li>
-          ))}
-      </ul>
-      <button onClick={() => navigate(-1)}>Back</button>
-    </div>
+  <li
+    key={m._id}
+    className="medicine-item"
+    onClick={() => handleDoctorClick(m)} // Add this click handler
+  >
+    <div className="medicine-details">
+  <strong>Name:</strong> <Link to={`/doctor-details/${m.username}/${username}`}> {m.name} </Link><br />
+  <strong>Speciality:</strong> {m.speciality}<br />
+  <strong>Username:</strong> {m.username}<br />
+  <strong>Price:</strong> {m.hourly_rate} - {discount} = {m.hourly_rate - discount}
+</div>
+<button onClick={(e) => {e.stopPropagation(); window.open('https://meet.google.com/', '_blank')}}>Video Call Doctor</button>  </li>
+))}
+</ul>
+<button onClick={() => navigate(-1)}>Back</button>
+</div>
   );
 };
 

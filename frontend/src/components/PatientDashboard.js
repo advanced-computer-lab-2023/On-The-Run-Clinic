@@ -93,6 +93,7 @@ const PatientDashboard = () => {
             view my appointments
           </Link>
         </li>
+        
       </ul>
     </div>
   );

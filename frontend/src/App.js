@@ -13,7 +13,7 @@ import UserSelection from './components/UserSelection';
 import AdminRegistrationForm from "./components/AdminRegistrationForm"
 import FamilyMemberForm from './components/FamilyMemberForm';
 import FamilyMembersList from './pages/viewMyFamilyMem';
-
+import Videocall from './pages/Videocall';
 import MyPatients from './pages/MyPatients';
 import MyPrescription from './pages/viewMyPrescriptions';
 import Doctorz from './pages/ViewDoctorzz';
@@ -43,7 +43,6 @@ import ViewAppointments from './pages/viewAppointments';
 import PendingDoctorPage from './pages/PendingDocPage';
 import ViewFollowUpReqs from './pages/ViewFollowUpReqs';
 import ManagePrescriptions from './pages/managePrescriptions';
-
 // Import your components
 
 
@@ -183,6 +182,8 @@ function App() {
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/resetPassword/:username" element={<ResetPassword />} />
           <Route path="/viewFollowup/:doctorId" element={<ViewFollowUpReqs />} />
+          <Route path="/videocall" element={<Videocall />} />
+
           <Route
             path="/managePrescriptions/:username/:usernameDoctor"
             element={user && user.role === 'doctor' ? <ManagePrescriptions /> : <Navigate to="/login" />}
