@@ -1,6 +1,9 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faPlus } from '@fortawesome/free-solid-svg-icons';
+import LinkForm from '../components/LinkPatientForm';
 
 function LinkPatientPage() {
     const { username } = useParams();
@@ -13,12 +16,14 @@ function LinkPatientPage() {
   });
   const [familyMembers, setFamilyMembers] = useState([]);
   const navigate = useNavigate();
+  const [isFormVisible, setIsFormVisible] = useState(false);
   async function fetchFamilyMembers() {
     try {
       const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`,{
         withCredentials: true
       });
       if (response.status === 200) {
+        console.log("Pp", response.data)
         setFamilyMembers(response.data);
       }
     } catch (error) {
@@ -72,70 +77,45 @@ function LinkPatientPage() {
       alert('An error occurred while linking the patient.');
     }
   };
+  const handleLinkSuccess = (isLinked) => {
+    if (isLinked) {
+     fetchFamilyMembers();
+     setIsFormVisible(false);
+    }
+  };
+
 
   return (
-    <div>
-      <h1>Link Patient Account as Family Member</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="patientId">Enter Patient Mobile Number:</label>
-          <input
-            type="text"
-            id="patientId"
-            name="mobileNumber"
-            value={formData.mobileNumber}
-            onChange={handleChange}
-            required
+    <div className="container">
+    <div className="prescriptions-list">
+      <h2>
+        Your Prescriptions
+        <FontAwesomeIcon
+            className="add-icon"
+            icon={faPlus}
+            onClick={() => setIsFormVisible(true)}
+            style={{ color: '#14967f' }}
           />
-        </div>
-        <div>
-          <label htmlFor="linkedPatientInput">Enter Patient Email:</label>
-          <input
-            type="text"
-            id="linkedPatientInput"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="relation">Relation to the Patient:</label>
-          <select
-            id="relation"
-            name="relation"
-            value={formData.relation}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Relation</option>
-            <option value="Wife">Wife</option>
-            <option value="Husband">Husband</option>
-            <option value="Child">Child</option>
-          </select>
-        </div>
-        <button type="submit">Link Patient</button>
-      </form>
-      <h1>Family Members of {username}</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : familyMembers.length > 0 ? (
-        <ul>
-          {familyMembers.map((familyMember) => (
-            <li key={familyMember._id}>
-              Name: {familyMember.linkedPatientName}<br />
-              
-              Relation: {familyMember.linkedPatientRelation}<br />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No family members found.</p>
-      )}
-      
-
-
+      </h2>
+      <ul>
+        {familyMembers.map((prescription) => (
+          <li key={prescription._id}>
+            <div className="prescription-card">
+              <div className="prescription-header">
+                <span><strong>Name: </strong>  {prescription.linkedPatientName}</span>
+                
+              </div>
+              <div><strong>Relation: </strong> {prescription.linkedPatientRelation}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
+    <div className="prescription-form">
+      {isFormVisible && <LinkForm onLinkSuccess={handleLinkSuccess} />}
+    </div>
+   
+  </div>
   );
 }
 
