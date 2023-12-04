@@ -1,11 +1,10 @@
 import React, { useState} from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import {useParams } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { Col, Row } from 'react-bootstrap';
 
 const ChangeDoctortPass = () => {
-  const navigate = useNavigate();
   const { username } = useParams();
   const [errors, setErrors] = useState(null);
   const [success, setSuccess] = useState(false);

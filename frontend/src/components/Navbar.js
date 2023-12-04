@@ -14,6 +14,7 @@ const Navbar = () => {
 
 
 
+
   const handleClick = () => {
     logout()
 
@@ -38,14 +39,24 @@ const Navbar = () => {
           <div>
             <FontAwesomeIcon icon={faUser} style={{ color: 'White', stroke: 'white', strokeWidth: '2' }} />
             <h3> {user.user}</h3>
-            {user && (user.role === 'doctor' || user.role === 'patient') && (
+            {user.role === 'doctor' && (
               <Link to={`/doctorSettings/${user.user}`}>
                 <FontAwesomeIcon icon={faCog} style={{ color: 'White', stroke: 'white', strokeWidth: '2', marginLeft: '10px' }} />
               </Link>
-
-            ) && (<Link to={`/notifications/${user.user}`} className="notification-icon">
+            )}
+            {user.role === 'patient' && (
+              <Link to={`/patientSettings/${user.user}`}>
+                <FontAwesomeIcon icon={faCog} style={{ color: 'White', stroke: 'white', strokeWidth: '2', marginLeft: '10px' }} />
+              </Link>
+            )}
+             {user.role === 'admin' && (
+              <Link to={`/adminSettings/${user.user}`}>
+                <FontAwesomeIcon icon={faCog} style={{ color: 'White', stroke: 'white', strokeWidth: '2', marginLeft: '10px' }} />
+              </Link>
+            )}
+            <Link to={`/notifications/${user.user}`} className="notification-icon">
               <FaBell />
-            </Link>)}
+            </Link>
             <button onClick={handleClick}>Log out</button>
           </div>
         )}

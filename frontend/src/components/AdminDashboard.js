@@ -43,12 +43,6 @@ const AdminDashboard = () => {
           Manage Health Packages
         </Link>
       </li>
-      <li>
-        <Link to={`/changeAdminPassword/${username}`} className="menu-link">
-          <i className="fas fa-edit"></i>
-          change my password
-        </Link>
-      </li>
     </ul>
   </div>
 );

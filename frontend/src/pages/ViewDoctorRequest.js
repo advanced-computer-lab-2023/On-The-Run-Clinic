@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BeatLoader from "react-spinners/BeatLoader";
-import { faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEye} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Modal from 'react-modal';
 import RequestModal from '../components/RequestModal';
 
 const ViewRequests = () => {
@@ -33,7 +32,7 @@ const ViewRequests = () => {
       setLoading(false);
     }
   };
-  const handleAccept = async (username, name, email, password, date_of_birth, hourly_rate, speciality, Affiliation, educational_background, id) => {
+  const handleAccept = async (id) => {
     setIsProcessing(true);
     try {
       const response = await axios.post(`http://localhost:4000/acceptRequest/${id}`, {}, {
@@ -114,7 +113,7 @@ const ViewRequests = () => {
                             margin: '4px 2px',
                             cursor: 'pointer',
                           }}
-                          onClick={() => handleAccept(m.username, m.name, m.email, m.password, m.date_of_birth, m.hourly_rate, m.speciality, m.Affiliation, m.educational_background, m._id)}
+                          onClick={() => handleAccept( m._id)}
                         >
                           Accept
                         </button>

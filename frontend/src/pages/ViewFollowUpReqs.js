@@ -1,36 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
 import axios from 'axios';
+import BeatLoader from "react-spinners/BeatLoader";
 
 const ViewFollowUpReqs = ({ match }) => {
   const [followUpReqs, setFollowUpReqs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { doctorId } = useParams();
+  const [loadingButtonId, setLoadingButtonId] = useState(null);
 
   const fetchFollowUpReqs = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`http://localhost:4000/getFollowUpReqs/${doctorId}`);
       setFollowUpReqs(response.data);
     } catch (error) {
       console.error('Error getting follow-up requests:', error);
     }
+    setIsLoading(false);
   };
 
 
   useEffect(() => {
-    const fetchFollowUpReqs = async () => {
-      try {
-        const response = await axios.get(`http://localhost:4000/getFollowUpReqs/${doctorId}`);
-        setFollowUpReqs(response.data);
-      } catch (error) {
-        console.error('Error getting follow-up requests:', error);
-      }
-    };
-
     fetchFollowUpReqs();
   }, [doctorId]);
 
   const handleAccept = async (id) => {
+    setLoadingButtonId(id);
     try {
       const response = await axios.post(`http://localhost:4000/acceptFollowUpReq/${id}`);
       console.log(`Accepted request ${id}`);
@@ -40,8 +36,10 @@ const ViewFollowUpReqs = ({ match }) => {
       console.error(`Error accepting request ${id}:`, error);
     }
   };
+  setLoadingButtonId(null);
 
   const handleReject = async (reqid) => {
+    setLoadingButtonId(reqid);
     try {
       const response = await axios.post(`http://localhost:4000/rejectFollowUpReq/${reqid}`);
       console.log(`Rejected request ${reqid}`);
@@ -50,22 +48,86 @@ const ViewFollowUpReqs = ({ match }) => {
     } catch (error) {
       console.error(`Error rejecting request ${reqid}:`, error);
     }
+    setLoadingButtonId(null);
   };
   return (
-    <div>
-      <h1>Follow-Up Requests</h1>
-      {followUpReqs.map((req) => (
-        <div key={req._id}>
-          <p>Patient: {req.patientId}</p>
-          <p>Date: {req.date}</p>
-          <p>Status: {req.status}</p>
-          <button onClick={() => handleAccept(req._id)}>Accept</button>
-          <button onClick={() => handleReject(req._id)}>Reject</button>
-          {/* Add more fields as needed */}
+    <div className="container">
+    <div className="patients-list">
+      <h2>All Requests</h2>
+
+
+      {isLoading ? (
+        <div className="spinner-container">
+          <BeatLoader color="#14967f" size={15} />
         </div>
-      ))}
+      ) : followUpReqs.length === 0 ? (
+        <p>No Requests found</p>
+      ) : (
+        <ul className="patients-list">
+          {followUpReqs.map((m) => (
+            <li key={m._id}>
+              <div className="patients-header">
+                <div style={{ flex: 1, textAlign: 'left' }}>
+                  <strong>Patient ID: </strong>{m.patientId}
+                </div>
+                <div style={{ flex: 1, textAlign: 'left' }}>
+                  <strong>Date: </strong>{m.date}
+                </div>
+                <div style={{ flex: 1, textAlign: 'right', marginRight: '10px' }}>
+                {loadingButtonId === m._id ? (
+                      <BeatLoader color="#14967f" size={15} />
+                    ) : (
+                    <>
+                      <button
+                      
+                        style={{
+                          backgroundColor: '#4CAF50', /* Green */
+                          border: 'none',
+                          color: 'white',
+                          padding: '10px 20px', // Reduced padding
+                          textAlign: 'center',
+                          textDecoration: 'none',
+                          display: 'inline-block',
+                          fontSize: '14px', // Reduced font size
+                          margin: '4px 2px',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => handleAccept(m._id)}
+                      >
+                        Accept
+                      </button>
+                      <button
+                      
+                        style={{
+                          backgroundColor: '#f44336', /* Red */
+                          border: 'none',
+                          color: 'white',
+                          padding: '10px 20px', // Reduced padding
+                          textAlign: 'center',
+                          textDecoration: 'none',
+                          display: 'inline-block',
+                          fontSize: '14px', // Reduced font size
+                          margin: '4px 2px',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => handleReject(m._id)}
+                      >
+                        Reject
+                      </button>
+                    </>
+                  
+                  )}
+                </div>
+              </div>
+            </li>
+
+          ))}
+        </ul>
+      )}
     </div>
-  );
+   
+  </div >
+);
 };
 
-export default ViewFollowUpReqs;
+export default ViewFollowUpReqs; 

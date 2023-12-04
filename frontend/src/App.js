@@ -28,11 +28,9 @@ import FilterAppointmentsPatient from './pages/FilterAppointmentsPatient';
 import DoctorDetails from './pages/doctorDetails';
 import LinkPatientPage from './pages/linkPatient';
 import HealthPackageSubscriptionPage from './pages/SelectHealthPackages';
-import ChangePatientPass from './pages/changePatientPass';
 import MedicalHistoryList from './pages/deleteMedicalHistory';
 
 import Login from './pages/login';
-import ChangeAdminPass from './pages/changeAdminPass';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 //import HealthPackage from '../../backend/models/HealthPackages';
@@ -47,7 +45,8 @@ import DoctorSettings from './pages/DoctorSettings';
 import ManageAdmins from './pages/ManageAdmins';
 import ManageHealthPackages from './pages/HealthPackagesAdmin';
 import MyPres from './pages/MyPrescriptions';
-
+import PatientSettings from './pages/PatientSettings';
+import AdminSettings from './components/AdminSettings';
 // Import your components
 
 
@@ -64,11 +63,21 @@ function App() {
       <div className="App">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              !user ?<Navigate to="/login" /> :
+                user.role === 'patient' ? <Navigate to={`/dashboard/patient/${user.user}`}  /> :
+                  user.role === 'admin' ? <Navigate to={`/dashboard/admin/${user.user}`}  /> :
+                    user.role === 'doctor' ? <Navigate to={`/dashboard/doctor/${user.user}`}  /> :
+                      <Navigate to="/login" />
+            }
+          />
+
           <Route path="/login" element={<Login />} />
           <Route
-            path="/changePatientPassword/:username"
-            element={user && user.role === 'patient' ? <ChangePatientPass /> : <Navigate to="/login" />}
+            path="/patientSettings/:username"
+            element={user && user.role === 'patient' ? <PatientSettings /> : <Navigate to="/login" />}
           />
           <Route
             path="/subHealthPackages/:username"
@@ -94,7 +103,7 @@ function App() {
             path="/healthPackages"
             element={user && user.role === 'admin' ? <AdminHealthPackages /> : <Navigate to="/login" />}
           />
-         
+
           <Route
             path="/viewRequests"
             element={user && user.role === 'admin' ? <ViewRequests /> : <Navigate to="/login" />}
@@ -170,8 +179,8 @@ function App() {
             element={user && (user.role === 'doctor' || user.role === 'patient') ? <ViewAppointments /> : <Navigate to="/login" />}
           />
           <Route
-            path="/changeAdminPassword/:username"
-            element={user && user.role === 'admin' ? <ChangeAdminPass /> : <Navigate to="/login" />}
+            path="/adminSettings/:username"
+            element={user && user.role === 'admin' ? <AdminSettings /> : <Navigate to="/login" />}
           />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/resetPassword/:username" element={<ResetPassword />} />
