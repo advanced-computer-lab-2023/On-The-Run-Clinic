@@ -103,7 +103,6 @@ app.listen(4000,()=>{
 
 
 app.post("/createAdmin",requireAuthAdmin,createAdmin);
-
 app.post("/register/doctor",requireAuthPending,createDoctor);
 app.put("/updateDoctor",requireAuthDoctor,updateDoctor);
 app.post("/register/patient",createPatient);
@@ -122,7 +121,7 @@ app.get("/getPrescriptions/:id",requireAuth,getPrescriptionsForPatient);
 app.get("/getMyPrescriptions/:username",requireAuth,getMyPrescriptions);
 app.get("/getMyPrescriptions2/:username/:usernameDoctor",requireAuth,getMyPrescriptions2);
 app.post("/createRequest",createRequest);
-app.post("/createPackage",requireAuthAdmin,createHealthPackage);
+app.post("/createPackage",createHealthPackage);
 app.get("/getPackages",requireAuth,getPackages);
 app.put("/updatePackage",requireAuthAdmin,updateHealthPackage);
 app.delete("/deletePackage",requireAuthAdmin,deleteHealthPackage);
@@ -160,28 +159,6 @@ app.post("/resetPassword/:username",resetPassword);
 
 app.get("/getAdminByUsername/:username",requireAuthAdmin,getAdminByUsername);
 app.put("/updatePassAdmin",requireAuthAdmin,updatePasswordAdmin);
-app.get("/getRequests",getRequests);
-app.post("/createAppointment",createAppointment);
-app.get("/getAllAppointments",getAllAppointments);
-app.get("/filterAppointments",filter);
-app.get("/search/:username",searchPatientsByUserame);
-app.get("/getDoctorAppointments/:id",getDoctorAppointments);
-app.get("/getPatientAppointments/:id",getPatientAppointments);
-app.get("/getPatient/:id",getPatient);
-app.get("/getDoc/:id",getDoctorbyId);
-app.get("/getPatientByUsername/:username",searchPatientsByUserame);
-app.get("/getPackage/:id",getHealthPackage);
-app.get("/getLinkedFamilyMembers/:username",getLinkedFamilyMembers);
-app.post("/linkMember",linkMemberByEmail);
-app.post("/payPackage",payByPackage);
-app.post("/updatePassPatient",updatePasswordPatient);
-app.post("/updatePassDoctor",updatePasswordDoctor);
-app.get("/getMedicalHistory/:username",getMedicalHistory);
-app.delete('/deleteMedicalRecord/:username/:filename', deleteMedicalHistory);
-app.get("/mypackage/:username",viewHealthPackages);
-app.post("/CancelPackage/:username",CancelPackage);
-app.get("/getAvailableDoctorAppointments/:id",getAvailableDoctorAppointments);
-app.post("/reserveAppointment/:appointmentId",reserveAppointment);
 
 
 app.get("/mypackage/:username",requireAuth,viewHealthPackages);
@@ -192,7 +169,6 @@ app.get("/getPackageDiscount/:username",requireAuth,getHighestDiscount);
 
 app.post("/createPDoctor/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",requireAuthAdmin,createPDoctor);
 app.delete("/deletePDoctor/:username",requireAuthPending,deletePDoctor);
-//app.get("/getPDoctors",getPDoctors);
 app.post("/createDoctor1/:username/:name/:email/:password/:date_of_birth/:hourly_rate/:speciality/:Affiliation/:educational_background",createDoctor1);
 app.get("/getPDoctor/:username",requireAuth,getPDoctor);
 app.post("/reserveFamilyMemberAppointment/:appointmentId",requireAuth,reserveFamilyMemberAppointment);

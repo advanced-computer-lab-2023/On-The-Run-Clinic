@@ -500,3 +500,23 @@ h4 {
   font-weight: 400;
   font-size: 15px;
 }
+.signup-link:hover {
+  color: #14967f;
+}
+.filters-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+}
+
+.filter label {
+  margin-right: 8px;
+}
+.custom-datepicker {
+  width: 150px; /* Adjust the width as needed */
+}

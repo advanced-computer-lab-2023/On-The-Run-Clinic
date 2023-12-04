@@ -6,6 +6,7 @@ const Medicine = require('../models/MedicineModel');
 
 const createPrescription = async (req, res) => {
   const { medicines, instructions, doctor, patient } = req.body;
+  console.log(req.body);
   try {
     const medicinesData = await Promise.all(medicines.map(async ({ id, dosage }) => {
       // Fetch the medicine name from your database using the id
@@ -34,7 +35,7 @@ const createPrescription = async (req, res) => {
     res.status(200).json(savedPrescription);
   } catch (error) {
     console.error('Error creating prescription:', error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error',details:error.message });
   }
 };
   

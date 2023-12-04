@@ -45,10 +45,11 @@ const ManagePrescriptions = () => {
       <h2>
         Your Prescriptions
         <FontAwesomeIcon
-          className="add-icon"
-          icon={faPlus}
-          onClick={() => setIsFormVisible(true)}
-        />
+            className="add-icon"
+            icon={faPlus}
+            onClick={() => setIsFormVisible(true)}
+            style={{ color: '#14967f' }}
+          />
       </h2>
       <ul>
         {prescriptions.map((prescription) => (

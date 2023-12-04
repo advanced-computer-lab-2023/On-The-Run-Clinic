@@ -47,6 +47,8 @@ import FollowupDoctor from './pages/FollowupDoctor';
 import DoctorSettings from './pages/DoctorSettings';
 import Videocall from './pages/VideoCall';
 import ManageAdmins from './pages/ManageAdmins';
+import ManageHealthPackages from './pages/HealthPackagesAdmin';
+import MyPres from './pages/MyPrescriptions';
 
 // Import your components
 
@@ -105,7 +107,7 @@ function App() {
           />
           <Route
             path="/viewMyPrescription/:username"
-            element={user && user.role === 'patient' ? <MyPrescription /> : <Navigate to="/login" />}
+            element={user && user.role === 'patient' ? <MyPres /> : <Navigate to="/login" />}
           />
           <Route
             path="/deleteDoctor"

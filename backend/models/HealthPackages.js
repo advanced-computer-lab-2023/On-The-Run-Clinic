@@ -6,14 +6,13 @@ const healthPackage = new Schema({
     price: {
       type: Number,
       required: true,
-      unique: true // Ensures username uniqueness
    },
-   services: [
+   services: 
     {
        type: String,
        required: true,
     },
- ],
+ 
    name: {
     type: String,
     required: true,
