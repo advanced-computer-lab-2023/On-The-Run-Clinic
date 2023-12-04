@@ -47,6 +47,8 @@ import ManageHealthPackages from './pages/HealthPackagesAdmin';
 import MyPres from './pages/MyPrescriptions';
 import PatientSettings from './pages/PatientSettings';
 import AdminSettings from './components/AdminSettings';
+import AllPackages from './pages/ViewAllPackages';
+import SubPackage from './pages/SubPackage';
 // Import your components
 
 
@@ -81,7 +83,7 @@ function App() {
           />
           <Route
             path="/subHealthPackages/:username"
-            element={user && user.role === 'patient' ? <HealthPackageSubscriptionPage /> : <Navigate to="/login" />}
+            element={user && user.role === 'patient' ? <AllPackages /> : <Navigate to="/login" />}
           />
           <Route
             path="/deleteMedicalHistory/:username"
@@ -202,6 +204,10 @@ function App() {
           <Route
             path="/notifications/:username"
             element={user && (user.role === 'doctor' || user.role === 'patient') ? <Notifications /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/packageDetails/:username/:packageId"
+            element={user && (user.role === 'patient') ? <SubPackage /> : <Navigate to="/login" />}
           />
 
 

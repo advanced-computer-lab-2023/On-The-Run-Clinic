@@ -13,7 +13,7 @@ function HealthPackageList() {
   const [status, setStatus] = useState('');
   const fetchLinkedPatients = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`,{
+      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`, {
         withCredentials: true
       });
       if (response.status === 200) {
@@ -21,15 +21,15 @@ function HealthPackageList() {
         const linkedPatientsWithPackages = [];
 
         for (let patient of linkedPatients) {
-          const patientResponse = await axios.get(`http://localhost:4000/getPatient/${patient.linkedPatientId}`,{
+          const patientResponse = await axios.get(`http://localhost:4000/getPatient/${patient.linkedPatientId}`, {
             withCredentials: true
           });
           const patientUsername = patientResponse.data.username;
-          const packageResponse = await axios.get(`http://localhost:4000/mypackage/${patientUsername}`,{
+          const packageResponse = await axios.get(`http://localhost:4000/mypackage/${patientUsername}`, {
             withCredentials: true
           });
-          console.log("package",packageResponse.data.healthPackage);
-        
+          console.log("package", packageResponse.data.healthPackage);
+
           linkedPatientsWithPackages.push({
             ...patient,
             username: patientUsername,
@@ -47,17 +47,17 @@ function HealthPackageList() {
   useEffect(() => {
     const fetchPackage = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/mypackage/${username}`,{
+        const response = await axios.get(`http://localhost:4000/mypackage/${username}`, {
           withCredentials: true
         });
-        const pat = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`,{
+        const pat = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`, {
           withCredentials: true
         });
         if (response.status === 200) {
           setPackage(response.data.healthPackage); // Assuming the response contains the health package or null if not found
           console.log(response.data);
         }
-        if(pat.status===200) {
+        if (pat.status === 200) {
           setPatient(pat.data);
           calculateStatus(pat.data);
         }
@@ -87,24 +87,24 @@ function HealthPackageList() {
     };
 
     fetchPackage();
-   
+
     fetchPackage();
 
     fetchLinkedPatients();
   }, [username]);
 
-   const handleCancelSubscription = async () => {
+  const handleCancelSubscription = async () => {
     try {
-      const response =await axios.post(`http://localhost:4000/CancelPackage/${username}`,{},{
+      const response = await axios.post(`http://localhost:4000/CancelPackage/${username}`, {}, {
         withCredentials: true
       });
       // You may want to refresh the status after cancelling
-      if(response.status===(400)){
+      if (response.status === (400)) {
         alert("No Subscription Found");
       }
-      else{
-      setStatus(`Cancelled (Package Cancelled Date: `+ new Date()+')');
-      alert('Health Package Subscription Cancelled');
+      else {
+        setStatus(`Cancelled (Package Cancelled Date: ` + new Date() + ')');
+        alert('Health Package Subscription Cancelled');
       }
     } catch (error) {
       console.error('Error cancelling subscription:', error);
@@ -112,40 +112,42 @@ function HealthPackageList() {
   };
   const handleCancelSubscription2 = async (id) => {
     try {
-      const patientResponse = await axios.get(`http://localhost:4000/getPatient/${id}`,{
+      const patientResponse = await axios.get(`http://localhost:4000/getPatient/${id}`, {
         withCredentials: true
       });
       const patientUsername = patientResponse.data.username;
-      const response =await axios.post(`http://localhost:4000/CancelPackage/${patientUsername}`,{},{
+      const response = await axios.post(`http://localhost:4000/CancelPackage/${patientUsername}`, {}, {
         withCredentials: true
       });
       // You may want to refresh the status after cancelling
-      if(response.status===(400)){
+      if (response.status === (400)) {
         alert("No Subscription Found");
         fetchLinkedPatients();
       }
-      else{
+      else {
         fetchLinkedPatients();
-      alert('Health Package Subscription Cancelled');
-      
+        alert('Health Package Subscription Cancelled');
+
       }
     } catch (error) {
       console.error('Error cancelling subscription:', error);
     }
   };
-  
+
 
   return (
     <Container>
-      <Row className="justify-content-md-center">
+      <Row >
         <Col md="auto">
-          <h1 className="my-4 text-center">My health Package</h1>
+        <h2 className="my-4 text-center">My health Package</h2>
+
           {loading ? (
             <Spinner animation="border" role="status">
               <span className="sr-only">Loading...</span>
             </Spinner>
           ) : hPackage ? (
             <>
+              
               <Card style={{ width: '18rem', marginBottom: '1rem' }}>
                 <Card.Header as="h5">{hPackage.name}</Card.Header>
                 <Card.Body>
@@ -158,39 +160,39 @@ function HealthPackageList() {
               </Card>
               <h2 className="my-4 text-center">My Linked Patients Health Packages</h2>
               {linkedPatients.length > 0 ? (
-  linkedPatients.map(patient => (
-    <Row key={patient.id}>
-      <Col md="6">
-        <Card style={{ width: '18rem', marginBottom: '1rem' }}>
-          <Card.Header as="h5">{patient.linkedPatientId}</Card.Header>
-          <Card.Body>
-            <Card.Text>Name: {patient.linkedPatientName}</Card.Text>
-            <Card.Text>Relation: {patient.linkedPatientRelation}</Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md="6">
-        {patient.healthpackage ? (
-          <Card style={{ width: '18rem', marginBottom: '1rem' }}>
-            <Card.Header as="h5">{patient.healthpackage.name}</Card.Header>
-            <Card.Body>
-              <Card.Text>Price: {patient.healthpackage.price}</Card.Text>
-              <Card.Text>Discount: {patient.healthpackage.discount}</Card.Text>
-              <Card.Text>Services: {patient.healthpackage.services}</Card.Text>
-              
-              <Button variant="danger" onClick={() => handleCancelSubscription2(patient.linkedPatientId)}>Cancel Subscription</Button>
-              
-            </Card.Body>
-          </Card>
-        ) : (
-          <p>No Health Package Found for this Patient.</p>
-        )}
-      </Col>
-    </Row>
-  ))
-) : (
-  <p>No Linked Patients Found.</p>
-)}
+                linkedPatients.map(patient => (
+                  <Row key={patient.id}>
+                    <Col md="6">
+                      <Card style={{ width: '18rem', marginBottom: '1rem' }}>
+                        <Card.Header as="h5">{patient.linkedPatientId}</Card.Header>
+                        <Card.Body>
+                          <Card.Text>Name: {patient.linkedPatientName}</Card.Text>
+                          <Card.Text>Relation: {patient.linkedPatientRelation}</Card.Text>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                    <Col md="6">
+                      {patient.healthpackage ? (
+                        <Card style={{ width: '18rem', marginBottom: '1rem' }}>
+                          <Card.Header as="h5">{patient.healthpackage.name}</Card.Header>
+                          <Card.Body>
+                            <Card.Text>Price: {patient.healthpackage.price}</Card.Text>
+                            <Card.Text>Discount: {patient.healthpackage.discount}</Card.Text>
+                            <Card.Text>Services: {patient.healthpackage.services}</Card.Text>
+
+                            <Button variant="danger" onClick={() => handleCancelSubscription2(patient.linkedPatientId)}>Cancel Subscription</Button>
+
+                          </Card.Body>
+                        </Card>
+                      ) : (
+                        <p>No Health Package Found for this Patient.</p>
+                      )}
+                    </Col>
+                  </Row>
+                ))
+              ) : (
+                <p>No Linked Patients Found.</p>
+              )}
             </>
           ) : (
             <p>No Health Packages Found.</p>
