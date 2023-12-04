@@ -12,7 +12,6 @@ import PatientDashboard from './components/PatientDashboard';
 
 import FamilyMemberForm from './components/FamilyMemberForm';
 import FamilyMembersList from './pages/viewMyFamilyMem';
-
 import MyPatients from './pages/MyPatients';
 import MyPrescription from './pages/viewMyPrescriptions';
 import Doctorz from './pages/ViewDoctorzz';
@@ -45,7 +44,6 @@ import ViewFollowUpReqs from './pages/ViewFollowUpReqs';
 import ManagePrescriptions from './pages/managePrescriptions';
 import FollowupDoctor from './pages/FollowupDoctor';
 import DoctorSettings from './pages/DoctorSettings';
-import Videocall from './pages/VideoCall';
 import ManageAdmins from './pages/ManageAdmins';
 import ManageHealthPackages from './pages/HealthPackagesAdmin';
 import MyPres from './pages/MyPrescriptions';
@@ -178,6 +176,7 @@ function App() {
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/resetPassword/:username" element={<ResetPassword />} />
           <Route path="/viewFollowup/:doctorId" element={<ViewFollowUpReqs />} />
+
           <Route
             path="/managePrescriptions/:username/:usernameDoctor"
             element={user && user.role === 'doctor' ? <ManagePrescriptions /> : <Navigate to="/login" />}
@@ -190,7 +189,6 @@ function App() {
             path="/doctorSettings/:username"
             element={user && user.role === 'doctor' ? <DoctorSettings /> : <Navigate to="/login" />}
           />
-          <Route path="/videocall" element={<Videocall />} />
 
           <Route
             path="/notifications/:username"
