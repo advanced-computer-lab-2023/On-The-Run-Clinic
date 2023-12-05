@@ -13,7 +13,7 @@ const {createMember,getFamilyMembers} = require("./controllers/familymemControll
 const cors = require('cors');
 
 const { createFollowUpReq, acceptFollowUpReq, rejectFollowUpReq,getFollowUpReqs} = require("./controllers/followUpReqController")
-const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment}=require("./controllers/appointmentsController")
+const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment,getAppointment, rescheduleAppointment}=require("./controllers/appointmentsController")
 const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,getMyPrescriptions2,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getPatientNotifications,addToWallet,getPatientUsername} = require("./controllers/patientController");
 
 
@@ -107,7 +107,7 @@ app.post("/register/doctor",requireAuthPending,createDoctor);
 app.put("/updateDoctor",requireAuthDoctor,updateDoctor);
 app.post("/register/patient",createPatient);
 app.get("/getDocPatients/:username",requireAuth, getDocPatients);
-app.get("/getDoctors",requireAuth,getDoctors);
+app.get("/getDoctors",getDoctors);//removed
 app.get("/getPatients",getPatients);//removed
 app.get("/getAdmins",requireAuthAdmin,getAdmins)
 app.post("/addFamilyMember",requireAuthPatient, createMember);
@@ -127,7 +127,7 @@ app.put("/updatePackage",requireAuthAdmin,updateHealthPackage);
 app.delete("/deletePackage",requireAuthAdmin,deleteHealthPackage);
 app.delete("/deleteAdmin/:id",requireAuthAdmin,deleteAdmin);
 app.delete("/deletePatient/:id",requireAuthAdmin,deletePatient);
-app.get("/getDoctor/:username",requireAuth,getDoctorByUsername);
+app.get("/getDoctor/:username",getDoctorByUsername);//removed
 app.get("/getOneRequest",getOneRequest);
 app.get("/getRequests",requireAuthAdmin,getRequests);
 app.post("/createAppointment",createAppointment);//removed
@@ -135,12 +135,11 @@ app.get("/getAllAppointments",requireAuth,getAllAppointments);
 app.get("/filterAppointments",requireAuth,filter);
 app.get("/search/:username",requireAuth,searchPatientsByUserame);
 app.get("/getDoctorAppointments/:id",requireAuth,getDoctorAppointments);
-app.get("/getPatientAppointments/:id",requireAuth,getPatientAppointments);
-app.get("/getPatient/:id",requireAuth,getPatient);
-app.get("/getDoc/:id",requireAuth,getDoctorbyId);
+app.get("/getPatient/:id",getPatient);//removed
+app.get("/getDoc/:id",getDoctorbyId);
 app.get("/getPatientByUsername/:username",requireAuth,searchPatientsByUserame);
 app.get("/getPackage/:id",requireAuth,getHealthPackage);
-app.get("/getLinkedFamilyMembers/:username",requireAuth,getLinkedFamilyMembers);
+app.get("/getLinkedFamilyMembers/:username",getLinkedFamilyMembers);//removed
 app.post("/linkMember",requireAuthPatient,linkMemberByEmail);
 app.post("/payPackage",requireAuthPatient,payByPackage);
 app.put("/updatePassPatient",requireAuthPatient,updatePasswordPatient);
@@ -153,12 +152,13 @@ app.get("/logout",logout);
 app.put("/rejectRequest/:id",requireAuthAdmin,rejectrequest);
 app.post("/acceptRequest/:id",requireAuthAdmin,acceptrequest)
 //app.post("/newAppointment/:username/:patientId/:doctorId/:date/:status/:description",createAppointment1);
-app.get("/getDoctorByUsername/:username",requireAuth,getDoctorByUsername);
 app.post("/forgetPassword",forgetPassword);
 app.post("/resetPassword/:username",resetPassword);
 
 app.get("/getAdminByUsername/:username",requireAuthAdmin,getAdminByUsername);
 app.put("/updatePassAdmin",requireAuthAdmin,updatePasswordAdmin);
+app.get("/search/:username",searchPatientsByUserame);
+app.get("/getPatientAppointments/:id",getPatientAppointments);;
 
 
 app.get("/mypackage/:username",requireAuth,viewHealthPackages);
@@ -187,3 +187,5 @@ app.post("/createFollowUpReq",createFollowUpReq);
 app.get("/getFollowUpReqs/:doctorId",getFollowUpReqs);
 app.post("/acceptFollowUpReq/:reqid",acceptFollowUpReq);
 app.post("/rejectFollowUpReq/:reqid",rejectFollowUpReq);
+app.get("/getAppointment/:id",getAppointment);
+app.post("/rescheduleAppointment",rescheduleAppointment);

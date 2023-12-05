@@ -49,6 +49,8 @@ import PatientSettings from './pages/PatientSettings';
 import AdminSettings from './components/AdminSettings';
 import AllPackages from './pages/ViewAllPackages';
 import SubPackage from './pages/SubPackage';
+import Reschedule from './pages/Reschedule';
+
 // Import your components
 
 
@@ -209,6 +211,11 @@ function App() {
             path="/packageDetails/:username/:packageId"
             element={user && (user.role === 'patient') ? <SubPackage /> : <Navigate to="/login" />}
           />
+          <Route
+            path="/reschedule/:id"
+            element={user && (user.role === 'doctor' || user.role === 'patient') ? <Reschedule /> : <Navigate to="/login" />}
+          />
+
 
 
           {/* Add other routes as needed */}
