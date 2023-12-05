@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Route, Routes, Navigate, useParams } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { useAuthContext } from './hooks/useAuthContext';
@@ -9,8 +8,8 @@ import DoctorRegistrationForm from './pages/DoctorRegPage';
 import DoctorDashboard from './components/DoctorDashboard';
 import PatientRegistrationForm from './pages/PatientRegPage';
 import PatientDashboard from './components/PatientDashboard';
-import UserSelection from './components/UserSelection';
-import AdminRegistrationForm from "./components/AdminRegistrationForm"
+
+
 import FamilyMemberForm from './components/FamilyMemberForm';
 import FamilyMembersList from './pages/viewMyFamilyMem';
 
@@ -19,11 +18,11 @@ import MyPrescription from './pages/viewMyPrescriptions';
 import Doctorz from './pages/ViewDoctorzz';
 import DeleteDoctorPage from './pages/DeleteDoctorPage';
 import AdminHealthPackages from './pages/AdminHealthPackages';
-import UpdateDoctorInfo from './pages/updateDoctor';
+
 import ViewRequests from './pages/ViewDoctorRequest';
 import FilterAppointments from './pages/FilterAppointments';
 import AdminDashboard from './components/AdminDashboard';
-import DeleteAdmin from './pages/DeleteAdminPage';
+
 import DeletePatient from './pages/DeletePatientPAge';
 import PatientDetails from './components/PatientDetails';
 import FilterAppointmentsPatient from './pages/FilterAppointmentsPatient';
@@ -32,7 +31,7 @@ import LinkPatientPage from './pages/linkPatient';
 import HealthPackageSubscriptionPage from './pages/SelectHealthPackages';
 import ChangePatientPass from './pages/changePatientPass';
 import MedicalHistoryList from './pages/deleteMedicalHistory';
-import ChangeDoctortPass from './pages/changeDoctorPass';
+
 import Login from './pages/login';
 import ChangeAdminPass from './pages/changeAdminPass';
 import ForgetPassword from './pages/ForgetPassword';
@@ -47,6 +46,8 @@ import ManagePrescriptions from './pages/managePrescriptions';
 import FollowupDoctor from './pages/FollowupDoctor';
 import DoctorSettings from './pages/DoctorSettings';
 import Videocall from './pages/VideoCall';
+import ManageAdmins from './pages/ManageAdmins';
+import Reschedule from './pages/Reschedule';
 
 // Import your components
 
@@ -94,10 +95,7 @@ function App() {
             path="/healthPackages"
             element={user && user.role === 'admin' ? <AdminHealthPackages /> : <Navigate to="/login" />}
           />
-          <Route
-            path="/addAdmin"
-            element={user && user.role === 'admin' ? <AdminRegistrationForm /> : <Navigate to="/login" />}
-          />
+         
           <Route
             path="/viewRequests"
             element={user && user.role === 'admin' ? <ViewRequests /> : <Navigate to="/login" />}
@@ -116,7 +114,7 @@ function App() {
           />
           <Route
             path="/deleteAdmin"
-            element={user && user.role === 'admin' ? <DeleteAdmin /> : <Navigate to="/login" />}
+            element={user && user.role === 'admin' ? <ManageAdmins /> : <Navigate to="/login" />}
           />
           <Route
             path="/deletePatient"
@@ -197,6 +195,11 @@ function App() {
             path="/notifications/:username"
             element={user && (user.role === 'doctor' || user.role === 'patient') ? <Notifications /> : <Navigate to="/login" />}
           />
+          <Route
+            path="/reschedule/:id"
+            element={user && (user.role === 'doctor' || user.role === 'patient') ? <Reschedule /> : <Navigate to="/login" />}
+          />
+
 
 
           {/* Add other routes as needed */}
@@ -208,5 +211,3 @@ function App() {
 
 
 export default App;
-
-// ---- DO NOT MODIFY CODE BELOW THIS LINE ----//

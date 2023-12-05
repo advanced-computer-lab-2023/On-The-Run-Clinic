@@ -30,11 +30,11 @@ const Notifications = () => {
     }
     }
 
-    else  {
+    else if(user.role==='doctor')  {
       try {
         const notifications = await axios.get(`http://localhost:4000/getDoctorNotifications/${username}`);
         if(notifications.status===200) {
-          setNotifications(notifications.data);
+          setNotifications(notifications.data.notifications);
         }
       }catch (error) {
         // Handle API request errors more gracefully
