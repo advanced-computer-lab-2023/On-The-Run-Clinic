@@ -86,7 +86,7 @@ const PatientDetails = () => {
           </tbody>
         </table>
       </div>
-      <div className="button-container">
+      <div className="button-container" style={{ display: 'flex', justifyContent: 'center' }}>
         <Link to={`/managePrescriptions/${username}/${usernameDoctor}`}>
           <button className="button">Manage Prescriptions</button>
         </Link>

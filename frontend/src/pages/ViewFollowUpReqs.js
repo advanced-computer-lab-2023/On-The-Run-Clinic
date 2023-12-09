@@ -35,8 +35,9 @@ const ViewFollowUpReqs = ({ match }) => {
     } catch (error) {
       console.error(`Error accepting request ${id}:`, error);
     }
+    setLoadingButtonId(null);
   };
-  setLoadingButtonId(null);
+ 
 
   const handleReject = async (reqid) => {
     setLoadingButtonId(reqid);
