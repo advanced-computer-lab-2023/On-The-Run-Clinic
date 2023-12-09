@@ -6,7 +6,7 @@ const mongoose=require('mongoose')
 const Patient = require('./models/PatientModel');
 
 const {createDoctor,getDocPatients,getDoctors,updateDoctor,deleteDoctor,addPatientToDr,getDoctorByUsername,getDoctorbyId,createDoctor1} = require("./controllers/doctorController")
-const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient} = require("./controllers/patientController")
+const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient, getPatientDoctors} = require("./controllers/patientController")
 const {createAdmin,getAdmin,getAdmins,deleteAdmin,getAdminByUsername,updatePasswordAdmin} = require("./controllers/adminController")
 const {createMember,getFamilyMembers} = require("./controllers/familymemController")
 const cors = require('cors');
@@ -14,7 +14,7 @@ const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatie
 const{createPrescription,getPrescriptionsForPatient}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
-
+const{createMessage,sendMessageAsPatient,sendMessageAsDoctor,getChatMessages}=require("./controllers/messagesController");
 
 const{login,logout,forgetPassword,resetPassword}=require("./controllers/userController")
 const multer=require("multer");
@@ -23,6 +23,7 @@ const multer=require("multer");
 const app = express()
 const corsOptions = {
     origin: 'http://localhost:3000', // Replace with your frontend's URL
+    credentials: true 
   };
   
   app.use(cors(corsOptions));
@@ -149,6 +150,11 @@ app.post("/resetPassword/:username",resetPassword);
 app.get("/getAdminByUsername/:username",getAdminByUsername);
 app.put("/updatePassAdmin",updatePasswordAdmin);
 
+app.post("/createMessage",createMessage);
+app.get("/getChatMessages/:username/:doctor",getChatMessages);
+app.post("/sendMessageAsDoctor",sendMessageAsDoctor);
+app.post("/sendMessageAsPatient",sendMessageAsPatient);
+app.get("/getPatientDoctors/:username", getPatientDoctors);
 
 
 

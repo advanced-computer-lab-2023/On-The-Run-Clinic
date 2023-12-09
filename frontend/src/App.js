@@ -37,7 +37,10 @@ import Login from './pages/login';
 import ChangeAdminPass from './pages/changeAdminPass';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
-
+import PatientChatPage from './pages/PatientChatPage';
+import DoctorChatPage from './pages/DoctorChatPage';
+import ChatWithMyDoctors from './pages/ChatWithMyDoctors';
+import ChatWithMyPatients from './pages/ChatWithMyPatients';
 // Import your components
 
 
@@ -95,6 +98,11 @@ function App() {
           <Route path="/changeAdminPassword/:username" element={<ChangeAdminPass/>}/>
           <Route path="/forgetPassword" element={<ForgetPassword/>}/>
           <Route path="/resetPassword/:username" element={<ResetPassword/>}/>
+
+          <Route path="/chat/:username/:doctor" element={user && user.role === 'patient' ? <PatientChatPage /> : (user && user.role === 'doctor' ? <DoctorChatPage /> : <Navigate to="/login" />)}/>
+
+          <Route path="/chatWithMyDoctors/:username" element={<ChatWithMyDoctors/>}/>
+          <Route path="/chatWithMyPatients/:username" element={<ChatWithMyPatients/>}/>
   
 
           {/* Add other routes as needed */}

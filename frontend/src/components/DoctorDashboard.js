@@ -7,7 +7,8 @@ import axios from 'axios';
 
 const DoctorDashboard = () => {
   const { username } = useParams();
-  const [doctor,setDoctor]=useState('')
+  const [doctor,setDoctor]=useState('');
+  const [patientUsername, setPatientUsername] = useState('');
   useEffect(() => {
     // Fetch available health packages from the backend when the component mounts
     async function fetchWallet() {
@@ -52,6 +53,13 @@ const DoctorDashboard = () => {
           <Link to={`/changeDoctorPassword/${username}`} className="menu-link">
             <i className="fas fa-edit"></i>
             Change my password
+          </Link>
+        </li>
+
+        <li>
+          <Link to={`/chatWithMyPatients/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            chat with my patients
           </Link>
         </li>
         

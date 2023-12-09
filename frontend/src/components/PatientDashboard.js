@@ -8,6 +8,8 @@ const PatientDashboard = () => {
   const [doctor,setDoctor]=useState('')
   const { user } = useAuthContext()
   const navigate = useNavigate();
+  const [doctorUsername, setDoctorUsername] = useState('');
+  
   useEffect(() => {
     // Fetch available health packages from the backend when the component mounts
     
@@ -79,6 +81,14 @@ const PatientDashboard = () => {
             change my password
           </Link>
         </li>
+        <li>
+          <Link to={`/chatWithMyDoctors/${username}`} className="menu-link">
+            <i className="fas fa-edit"></i>
+            chat with my doctors
+          </Link>
+        </li>
+
+        
       </ul>
     </div>
   );
