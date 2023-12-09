@@ -7,6 +7,7 @@ const FamilyMember = require ('../models/FamilyMemberModel'); // Import your Pat
 const Notification = require ('../models/notificationModel');
 const HealthPackage = require('../models/HealthPackages');
 const nodemailer = require('nodemailer'); // For sending emails
+const { ObjectId } = require('mongodb');
 
 const mongoose = require('mongoose');
 
@@ -417,6 +418,47 @@ const cancelAppointment = async (req, res) => {
     appointment.status = 'Cancelled';
     await appointment.save();
 
+    const doctor = await Doctor.findById(appointment.doctorId);
+    console.log("d"+doctor);
+    const patient = await Patient.findById(appointment.patientId);
+    console.log("P"+patient);
+
+    const msgP = `You have successfully cancelled an appointment with doctor ${doctor.name} on ${appointment.date} `;
+    const notificationP = new Notification({ message: msgP }); // Corrected
+    await notificationP.save();
+    patient.notifications.push(notificationP);
+    await patient.save();
+
+    try {
+      const mailOptions = {
+        from: 'ontherunclinic@hotmail.com',
+        to: 'ahmedyasser17x@gmail.com',
+        subject: 'Appointment Cancellation Confirmation',
+        text: msgP,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error email:', error);
+    }
+    
+    const msgD = `${patient.name} has successfully cancelled an appointment with you on ${appointment.date} `;
+    const notificationD = new Notification({ message: msgD }); // Corrected
+    await notificationD.save();
+    doctor.notifications.push(notificationD);
+    await doctor.save();
+
+    try {
+      const mailOptions = {
+        from: 'ontherunclinic@hotmail.com',
+        to: 'ahmedyasser17x@gmail.com',
+        subject: 'Appointment Cancellation Confirmation',
+        text: msgD,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error email:', error);
+    }
+
     return res.status(200).json({ message: 'Appointment cancelled successfully' });
   } catch (error) {
     console.error('Error cancelling appointment:', error);
@@ -424,6 +466,122 @@ const cancelAppointment = async (req, res) => {
   }
 };
 
+const rescheduleAppointment = async (req, res) => {
+  const { OldappointmentId, NewappointmentId } = req.body;
+  
+  try {
+    console.log("Reschedule appointment endpoint called");
+    console.log("Test Here " + OldappointmentId);
+    console.log("Test Here " + NewappointmentId);
+
+    // Fetch the old appointment from the database
+    const oldAppointment = await Appointment.findById(OldappointmentId);
+    console.log("Test Hereee " +oldAppointment);
+    if(!oldAppointment) {
+      return res.status(400).json({ message: 'Appointment not found' });
+    }
+    console.log("Test There");
+    console.log("o" + oldAppointment);
+    // Fetch the new appointment from the database
+    const newAppointment = await Appointment.findById(NewappointmentId);
+    if(!newAppointment) {
+      return res.status(400).json({ message: 'Appointment not found' });
+    }
+    console.log("n"+newAppointment);
+
+    const doctor = await Doctor.findById(oldAppointment.doctorId);
+    console.log("d"+doctor);
+    const patient = await Patient.findById(oldAppointment.patientId);
+    console.log("P"+patient);
+
+    // Check if both appointments exist
+    if (!oldAppointment || !newAppointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    // Check if the new appointment date is in the future
+    const currentDate = new Date();
+    const newAppointmentDate = new Date(newAppointment.date);
+
+    if (newAppointmentDate <= currentDate) {
+      return res.status(400).json({ message: 'New date must be in the future' });
+    }
+
+    // Update the new appointment details
+    newAppointment.status = 'Scheduled';
+    newAppointment.patientId = oldAppointment.patientId; // Set the patientId of the old appointment to the new one
+
+    // Update the old appointment details
+    oldAppointment.status = 'Available';
+    oldAppointment.patientId = null; // Remove the patientId from the old appointment
+
+    // Save the updated appointments
+    await newAppointment.save();
+    await oldAppointment.save();
+
+    const msgP = `Your appointment with doctor ${doctor.name} has been rescheduled from ${oldAppointment.date} to ${newAppointment.date} `;
+    const notificationP = new Notification({ message: msgP }); // Corrected
+    await notificationP.save();
+    patient.notifications.push(notificationP);
+    await patient.save();
+
+    try {
+      const mailOptions = {
+        from: 'ontherunclinic@hotmail.com',
+        to: 'ahmedyasser17x@gmail.com',
+        subject: 'Appointment Reschedule Confirmation',
+        text: msgP,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error email:', error);
+    }
+    
+    const msgD = `Your appointment with ${patient.name} has been rescheduled from ${oldAppointment.date} to ${newAppointment.date} `;
+    const notificationD = new Notification({ message: msgD }); // Corrected
+    await notificationD.save();
+    doctor.notifications.push(notificationD);
+    await doctor.save();
+
+    try {
+      const mailOptions = {
+        from: 'ontherunclinic@hotmail.com',
+        to: 'ahmedyasser17x@gmail.com',
+        subject: 'Appointment Reschedule Confirmation',
+        text: msgD,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error email:', error);
+    }
 
 
-module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment}
+
+    res.status(200).json({ message: 'Appointment rescheduled successfully' });
+  } catch (error) {
+    console.error('Error rescheduling appointment:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+const getAppointment = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    res.json(appointment); // Send the appointment in the response
+  } catch (error) {
+    console.error('Error fetching appointment:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
+
+module.exports={createAppointment,getAllAppointments,filter,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment,rescheduleAppointment,getAppointment}

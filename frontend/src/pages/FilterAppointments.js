@@ -386,8 +386,13 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
             Date: {appointment.date}, Status: {appointment.status}, Description: {appointment.description} {appointment.patientInfo && (
         <span>, Patient Email: <Link to={`/patient-details/${appointment.patientInfo.username}`}>{appointment.patientInfo.name}</Link></span>
         )}
-        {new Date(appointment.date) > new Date() && appointment.status !== 'Cancelled'&& (
+        {new Date(appointment.date) > new Date() && appointment.status === 'Scheduled'&& (
+          <>
           <button onClick={() => cancelAppointment(appointment._id)}>Cancel Appointment</button>
+          <Link to={`/reschedule/${appointment._id}`}>
+                  <button>Reschedule</button>
+                </Link>
+              </>
         )}
           </li>
         ))}

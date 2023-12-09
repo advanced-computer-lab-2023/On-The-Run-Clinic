@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
-
 const PatientAppointments = () => {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
@@ -16,31 +15,30 @@ const PatientAppointments = () => {
   const [newAppointmentDate, setNewAppointmentDate] = useState('');
   const [newAppointmentHour, setNewAppointmentHour] = useState('');
 
-
   useEffect(() => {
     const fetchAppointmentsWithDoctors = async () => {
       try {
-        const response1 = await axios.get(`http://localhost:4000/search/${username}`,{
-          withCredentials: true
+        const response1 = await axios.get(`http://localhost:4000/search/${username}`, {
+          withCredentials: true,
         });
-        console.log("und"+response1.data._id);
+        console.log('und' + response1.data._id);
         setPatient(response1.data);
 
         if (response1.data) {
-          const response2 = await axios.get(`http://localhost:4000/getPatientAppointments/${response1.data._id}`,{
-            withCredentials: true
+          const response2 = await axios.get(`http://localhost:4000/getPatientAppointments/${response1.data._id}`, {
+            withCredentials: true,
           });
 
           if (response2.status === 200) {
             const patientAppointments = response2.data;
-            console.log("dsa" +patientAppointments );
+            console.log('dsa' + patientAppointments);
 
             const appointmentsWithDoctors = [];
 
             for (const appointment of patientAppointments) {
               try {
-                const response = await axios.get(`http://localhost:4000/getDoc/${appointment.doctorId}`,{
-                  withCredentials: true
+                const response = await axios.get(`http://localhost:4000/getDoc/${appointment.doctorId}`, {
+                  withCredentials: true,
                 });
 
                 if (response.status === 200) {
@@ -83,6 +81,7 @@ const PatientAppointments = () => {
     setSelectedUpcoming(isUpcoming);
     filterAppointments(selectedDate, selectedStatus, isUpcoming);
   };
+
   const handlePastFilterChange = () => {
     const isPast = !selectedPast;
     setSelectedPast(isPast);
@@ -94,15 +93,15 @@ const PatientAppointments = () => {
     setSelectedStatus('');
     setSelectedUpcoming(false);
     setFilteredAppointments(appointments);
-    setSelectedPast(false); 
+    setSelectedPast(false);
   };
 
-  const filterAppointments = (date, status, upcoming,past) => {
+  const filterAppointments = (date, status, upcoming, past) => {
     const filtered = appointments.filter((appointment) => {
       const appointmentDate = new Date(appointment.date);
       const currentDate = new Date();
 
-      if (!date && !status && !upcoming&&!past) {
+      if (!date && !status && !upcoming && !past) {
         return true;
       }
       if (date && status && upcoming) {
@@ -194,9 +193,9 @@ const PatientAppointments = () => {
     } catch (error) {
       console.error('Error cancelling appointment:', error);
     }
-  }
+  };
 
-  const handleFollowUpRequest = async (event,doctorId1) => {
+  const handleFollowUpRequest = async (event, doctorId1) => {
     event.preventDefault();
 
     try {
@@ -206,7 +205,7 @@ const PatientAppointments = () => {
         date: newAppointmentDate,
         status: 'Pending',
         hour: newAppointmentHour,
-        description: "Follow up request"
+        description: 'Follow up request',
       });
 
       if (response.status === 201) {
@@ -215,8 +214,7 @@ const PatientAppointments = () => {
     } catch (error) {
       console.error('Error creating follow up request:', error);
     }
-
-  }
+  };
 
   return (
     <div>
@@ -259,38 +257,44 @@ const PatientAppointments = () => {
       </div>
       <button onClick={resetFilters}>Reset Filters</button>
       <ul>
-         {filteredAppointments.map((appointment) => (
-        <li key={appointment._id}>
-          Date: {appointment.date}, Status: {appointment.status}, Description: {appointment.description} {appointment.doctorInfo && (
-            <span>
-              Doctor: <Link to={`/doctor-details/${appointment.doctorInfo.username}`}>{appointment.doctorInfo.name}</Link>
-            </span>
-          )}
-          {new Date(appointment.date) < new Date() && (
-            <form onSubmit={(event) => handleFollowUpRequest(event, appointment.doctorInfo._id)}>          <label>
-            Follow Up Date:
-            <input
-              type="datetime-local"
-              value={newAppointmentDate}
-              onChange={(e) => setNewAppointmentDate(e.target.value)}
-              required
-            />
-          </label>
-          <label>
-            Follow Up Hour:
-            <textarea
-              value={newAppointmentHour}
-              onChange={(e) => setNewAppointmentHour(e.target.value)}
-              required
-            />
-          </label>
-          <button type="submit">Request Follow Up</button>
-        </form>
-        )}
-          {new Date(appointment.date) > new Date()&& appointment.status !== 'Cancelled' && (
-            <button onClick={() => cancelAppointment(appointment._id)}>Cancel Appointment</button>
-          )}
-        </li>
+        {filteredAppointments.map((appointment) => (
+          <li key={appointment._id}>
+            Date: {appointment.date}, Status: {appointment.status}, Description: {appointment.description} {appointment.doctorInfo && (
+              <span>
+                Doctor: <Link to={`/doctor-details/${appointment.doctorInfo.username}`}>{appointment.doctorInfo.name}</Link>
+              </span>
+            )}
+            {new Date(appointment.date) < new Date() && (
+              <form onSubmit={(event) => handleFollowUpRequest(event, appointment.doctorInfo._id)}>
+                <label>
+                  Follow Up Date:
+                  <input
+                    type="datetime-local"
+                    value={newAppointmentDate}
+                    onChange={(e) => setNewAppointmentDate(e.target.value)}
+                    required
+                  />
+                </label>
+                <label>
+                  Follow Up Hour:
+                  <textarea
+                    value={newAppointmentHour}
+                    onChange={(e) => setNewAppointmentHour(e.target.value)}
+                    required
+                  />
+                </label>
+                <button type="submit">Request Follow Up</button>
+              </form>
+            )}
+            {new Date(appointment.date) > new Date() && appointment.status === 'Scheduled' && (
+              <>
+                <button onClick={() => cancelAppointment(appointment._id)}>Cancel Appointment</button>
+                <Link to={`/reschedule/${appointment._id}`}>
+                  <button>Reschedule</button>
+                </Link>
+              </>
+            )}
+          </li>
         ))}
       </ul>
       <button onClick={() => navigate(-1)}>Back</button>

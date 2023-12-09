@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Card, Spinner, Container, Row, Col } from 'react-bootstrap';
-import Select from 'react-select';
+//import Select from 'react-select';
 const DoctorRegistrationForm = () => {
   const navigate = useNavigate();
 
