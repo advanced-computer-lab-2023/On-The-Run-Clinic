@@ -432,7 +432,7 @@ const cancelAppointment = async (req, res) => {
     try {
       const mailOptions = {
         from: 'ontherunclinic@hotmail.com',
-        to: 'ahmedyasser17x@gmail.com',
+        to: patient.email,
         subject: 'Appointment Cancellation Confirmation',
         text: msgP,
       };
@@ -450,7 +450,7 @@ const cancelAppointment = async (req, res) => {
     try {
       const mailOptions = {
         from: 'ontherunclinic@hotmail.com',
-        to: 'ahmedyasser17x@gmail.com',
+        to: doctor.email,
         subject: 'Appointment Cancellation Confirmation',
         text: msgD,
       };
@@ -528,7 +528,7 @@ const rescheduleAppointment = async (req, res) => {
     try {
       const mailOptions = {
         from: 'ontherunclinic@hotmail.com',
-        to: 'ahmedyasser17x@gmail.com',
+        to: patient.email,
         subject: 'Appointment Reschedule Confirmation',
         text: msgP,
       };
@@ -546,7 +546,7 @@ const rescheduleAppointment = async (req, res) => {
     try {
       const mailOptions = {
         from: 'ontherunclinic@hotmail.com',
-        to: 'ahmedyasser17x@gmail.com',
+        to: doctor.email,
         subject: 'Appointment Reschedule Confirmation',
         text: msgD,
       };

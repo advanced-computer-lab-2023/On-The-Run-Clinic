@@ -3,196 +3,201 @@ import axios from 'axios';
 
 import './MedicineList.css'; // Import your CSS file for styling
 import DoctorDetails from './doctorDetails';
-import { Link } from 'react-router-dom';
-
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { faEye, faVideo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import BeatLoader from "react-spinners/BeatLoader";
 
 const DoctorListPage = () => {
+  const { username } = useParams();
+  const [selectedSpeciality, setSelectedSpeciality] = useState('');
   const [doctors, setDoctors] = useState([]);
+  const [originalDoctors, setOriginalDoctors] = useState([]); // Store original patient data
   const [loading, setLoading] = useState(true);
   const [searchName, setSearchName] = useState('');
-  const [SpecialtyFilter, setSpecialtyFilter] = useState('');
-  const [filterDate, setFilterDate] = useState('');
-  const [filterHour, setFilterHour] = useState('');
-  const [appointments, setAppointments] = useState([]);
   const [patient, setPatient] = useState(null);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const fetchDoctors = async () => {
-    try {
-      const response = await axios.get(`http://localhost:4000/getDoctors`,{
-        withCredentials: true
-      });
+  const [discount, setDiscount] = useState(null);
+  const [appointments, setAppointments] = useState([]);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/getDoctors`, {
+          withCredentials: true
+        });
+        if (response.status === 200) {
 
-      if (response.status === 200) {
-        setDoctors(response.data);
+          setOriginalDoctors(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
       }
-    } catch (error) {
-      console.error('Error fetching medicines:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const fetchAppointments = async () => {
-    try {
-      const response = await axios.get(`http://localhost:4000/getAllAppointments`,{
-        withCredentials: true
-      });
+      try {
+        const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`, {
+          withCredentials: true
+        });
+        if (response.status === 200) {
+          setPatient(response.data);
+          if (response.data.healthpackage) {
+            const healthPackageId = response.data.healthpackage;
+            fetchHealthPackage(healthPackageId);
+          } else {
+            setDiscount(0);
+          }
 
-      if (response.status === 200) {
-        setAppointments(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
       }
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
-    }
-  };
-  const fetchPatient = async (patientId) => { // Add this function
-    try {
-      const response = await axios.get(`http://localhost:4000/getPatient/${patientId}`,{
-        withCredentials: true
-      });
 
-      if (response.status === 200) {
-        setPatient(response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching patient:', error);
-    }
-  };
+    };
+
+    fetchDoctors();
+  }, [username]);
 
   useEffect(() => {
-    fetchDoctors();
-    fetchAppointments();
-    fetchPatient(patient); // Replace 'patient_id_here' with the actual patient ID
-  }, []);
-  const doctorIsAvailable = (doctorId, filterDate, filterHour) => {
-    // Convert filterHour to a number
-    const filterHourNumber = parseInt(filterHour);
-    const filterDateObj = new Date(filterDate);
-  
-    // Check if there are appointments for the specified doctor, date, and hour
-    return !appointments.some((appointment) => {
-      return (
-        appointment.doctorId === doctorId &&
-        appointment.date === filterDateObj &&
-        appointment.hour === filterHourNumber
-      );
-    });
-  };
+    const fetchAppointments = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/getAllAppointments`, {
+          withCredentials: true
+        });
+        if (response.status === 200) {
+          setAppointments(response.data);
 
-  const handleSearch = () => {
-    if (searchName === '' && SpecialtyFilter === ''&& filterDate === '' && filterHour === '') {
-      fetchDoctors();
-      return;
+        }
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+
+
+    fetchAppointments();
+  }, [username]);
+  useEffect(() => {
+    let filteredDoctors = originalDoctors;
+
+    // Filter by speciality
+    if (selectedSpeciality !== '') {
+      filteredDoctors = filteredDoctors.filter(doctor => doctor.speciality === selectedSpeciality);
     }
 
-    const filtered = doctors.filter((doctor) => {
-      const nameMatch = searchName
-        ? doctor.name && doctor.name.toLowerCase().includes(searchName.toLowerCase())
-        : true;
-      const medicalUseMatch = SpecialtyFilter
-        ? doctor.speciality && doctor.speciality.toLowerCase().includes(SpecialtyFilter.toLowerCase())
-        : true;
-      const isDoctorAvailable = doctorIsAvailable(doctor._id, filterDate, filterHour);
-      return nameMatch && medicalUseMatch && isDoctorAvailable;
-    });
+    // Filter by name
+    if (searchName !== '') {
+      filteredDoctors = filteredDoctors.filter(doctor => doctor.name.toLowerCase().includes(searchName.toLowerCase()));
+    }
+    if (selectedDate !== '') {
+      filteredDoctors = filteredDoctors.filter(doctor =>
+        appointments.some(appointment =>
+          appointment.doctorId === doctor._id && appointment.date.split('T')[0] === selectedDate &&
+          (selectedTime === '' || appointment.date.split('T')[1] === selectedTime)
+        )
+      );
+    }
+    setDoctors(filteredDoctors);
 
-    setDoctors(filtered);
-    console.log(filtered);
-  };
-  const handleDoctorClick = (doctor) => {
-    setSelectedDoctor(doctor);
+
+  }, [selectedSpeciality, searchName, selectedDate, selectedTime, originalDoctors, appointments]);
+  const fetchHealthPackage = async (healthPackageId) => {
+    try {
+      if (!healthPackageId) return setDiscount(0);
+      const response = await axios.get(`http://localhost:4000/getPackage/${healthPackageId}`, {
+        withCredentials: true
+      });
+      if (response.status === 200) {
+        setDiscount(response.data.discount);
+      }
+    } catch (error) {
+      console.error('Error fetching health package:', error);
+    }
   };
 
-  const handleCloseDetails = () => {
-    setSelectedDoctor(null);
+  const handleSearchByName = (searchValue) => {
+    const filteredPatientsByName = originalDoctors.filter((patient) =>
+      patient.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setDoctors(filteredPatientsByName);
   };
 
-  const handleSearchNameChange = (e) => {
+  const handleInputChange = (e) => {
     setSearchName(e.target.value);
-    handleSearch();
-  };
 
-  const handleMedicalUseFilterChange = (e) => {
-    setSpecialtyFilter(e.target.value);
-    handleSearch();
-  };
-  const handleFilterDateChange = (e) => {
-    setFilterDate(e.target.value);
-    handleSearch();
-  };
-
-  const handleFilterHourChange = (e) => {
-    setFilterHour(e.target.value);
-    handleSearch();
-  };
-
-  const resetFilters = () => {
-    setSearchName('');
-    setSpecialtyFilter('');
-    setFilterDate('');
-    setFilterHour('');
-    fetchDoctors();
   };
 
   return (
-    <div className="medicine-list-container">
-      <h1>All Doctorssssss</h1>
-      <div className="filter-container">
-        <input
-          type="text"
-          placeholder="Enter doctor's name"
-          value={searchName}
-          onChange={handleSearchNameChange}
-        />
-        <input
-          type="text"
-          placeholder="Filter by Specialty"
-          value={SpecialtyFilter}
-          onChange={handleMedicalUseFilterChange}
-        />
-         <input
-          type="date"
-          placeholder="Select Date of Appointment"
-          value={filterDate}
-          onChange={handleFilterDateChange}
-        />
-        <input
-          type="number"
-          placeholder="Enter Hour of Appointment"
-          value={filterHour}
-          onChange={handleFilterHourChange}
-        />
-        <button onClick={resetFilters}>Reset Filters</button>
-      </div>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : doctors.length > 0 ? (
-        <ul className="medicine-list">
-         
-          {doctors.map((m) => (
-            
-            <li
-              key={m._id}
-              className="medicine-item"
-              onClick={() => handleDoctorClick(m)} // Add this click handler
-            >
-              <div className="medicine-details">
-                <strong>Name:</strong> <Link to={`/doctor-details/${m.username}`}> {m.name} </Link><br />
-                <strong>Speciality:</strong> {m.speciality}<br />
-                <strong>Username:</strong> {m.username}<br />
-                <strong>Session Price:</strong>{m.hourlyRate * (1-patient?.healthPackage?.discount)}<br />
-              </div>
-              
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No Doctors found.</p>
-      )}
-      {selectedDoctor && (
-        <DoctorDetails doctor={selectedDoctor} onClose={handleCloseDetails} />
-      )}
-    </div>
+
+    <div className="container">
+      <div className="patients-list">
+        <h2>All Doctors</h2>
+        <div className="search-bar">
+          <input
+            type="text"
+            value={searchName}
+            onChange={handleInputChange}
+            placeholder="Search by name"
+          />
+        </div>
+        <div className="filter-bar">
+          <select className="speciality-filter" value={selectedSpeciality} onChange={(e) => setSelectedSpeciality(e.target.value)}>
+            <option value="">All Specialities</option>
+            <option value="Allergy and Immunology">Allergy and Immunology</option>
+            <option value="Dermatology">Dermatology</option>
+            <option value="Emergency Medicine">Emergency Medicine</option>
+            <option value="Gynecology">Gynecology</option>
+            <option value="Physical Medicine">Physical Medicine</option>
+            <option value="Psychiatry">Psychiatry</option>
+            <option value="Gastroenterology">Gastroenterology</option>
+            <option value="Orthopedic">Orthopedic</option>
+            <option value="Otolaryngology">Otolaryngology</option>
+            <option value="Pediatrics">Pediatrics</option>
+            <option value="Radiology">Radiology</option>
+            <option value="Surgery">Surgery</option>
+            <option value="Cardiology">Cardiology</option>
+
+          </select>
+          <input className="date-filter" type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
+          <input className="time-filter" type="time" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} />
+        </div>
+        {loading ? (
+          <div className="spinner-container">
+            <BeatLoader color="#14967f" size={15} />
+          </div>
+
+        ) : doctors.length === 0 ? (
+          <p>No doctors found</p>
+        ) : (
+          <ul className="patients-list">
+            {doctors.map((p) => (
+              <li key={p._id}>
+                <div className="patients-header">
+                  <div style={{ flex: 1, textAlign: 'left' }}>
+                    <strong>Name: </strong>{p.name}
+                  </div>
+                  <div style={{ flex: 1, textAlign: 'left' }}>
+                    <strong>Speciality: </strong>{p.speciality}
+                  </div>
+                  <div style={{ flex: 1, textAlign: 'left' }}>
+                    <strong>Appointment Price: </strong>$ {p.hourly_rate - discount}
+                  </div>
+                  <div style={{ flex: 1, textAlign: 'right', marginRight: '15px' }}>
+                    <Link to={`/doctor-details/${p.username}/${username}`}>
+                      <FontAwesomeIcon icon={faEye} color="#14967f" />
+                    </Link>
+                    <button style={{ background: 'transparent', border: 'none' }}  onClick={(e) => { e.stopPropagation(); window.open('https://meet.google.com/', '_blank') }}>
+                      <FontAwesomeIcon icon={faVideo} color="#14967f" style={{ marginLeft: '10px' }} />
+                    </button>
+
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div >
+
   );
 };
 

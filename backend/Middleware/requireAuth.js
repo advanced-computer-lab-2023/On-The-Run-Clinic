@@ -1,10 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 
-
-
-
-
 const requireAuthPending = (req, res, next) => {
   const token = req.cookies.token;
 

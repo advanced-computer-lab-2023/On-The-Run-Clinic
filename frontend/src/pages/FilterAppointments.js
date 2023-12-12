@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams ,Link,useNavigate} from 'react-router-dom';
 
 
+
 const DoctorAppointments = () => {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
@@ -132,32 +133,7 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
     setSelectedDate(selectedDate);
     filterAppointments(selectedDate, selectedStatus, selectedUpcoming);
   };
-  const handleNewAppointmentSubmit = async (e) => {
-    e.preventDefault();
   
-    try {
-      const response = await axios.post('http://localhost:4000/createAppointment', {
-        patientId:null,
-        doctorId: doctor._id,
-        date: newAppointmentDate,
-        description: 'empty',
-        staus:"Available",
-        hour:newAppointmentHour,
-      },{
-        withCredentials: true
-      });
-  
-      if (response.status === 201) {
-        
-        // If the appointment was created successfully, add it to the appointments list
-       fetchAppointmentsWithPatients();
-
-      }
-    } catch (error) {
-      console.error('Error creating new appointment:', error);
-    }
-  };
-
   const handleStatusFilterChange = (event) => {
     const selectedStatus = event.target.value;
     setSelectedStatus(selectedStatus);
@@ -321,27 +297,7 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
   return (
     <div>
       <h1>Doctor Appointments</h1>
-      <form onSubmit={handleNewAppointmentSubmit}>
-      <label>
-        New Appointment Date:
-        <input
-          type="datetime-local"
-          value={newAppointmentDate}
-          onChange={(e) => setNewAppointmentDate(e.target.value)}
-          required
-        />
-      </label>
-      <label>
-        New Appointment Hour:
-        <textarea
-          value={newAppointmentHour}
-          onChange={(e) => setNewAppointmentHour(e.target.value)}
-          required
-        />
-      </label>
-      <button type="submit">Create New Appointment</button>
-    </form>
-
+      
       <div>
         <label>Date Filter:</label>
         <input
@@ -398,6 +354,8 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
         ))}
       </ul>
       <button onClick={() => navigate(-1)}>Back</button>
+
+      
     </div>
   );
 };

@@ -8,8 +8,6 @@ import DoctorRegistrationForm from './pages/DoctorRegPage';
 import DoctorDashboard from './components/DoctorDashboard';
 import PatientRegistrationForm from './pages/PatientRegPage';
 import PatientDashboard from './components/PatientDashboard';
-
-
 import FamilyMemberForm from './components/FamilyMemberForm';
 import FamilyMembersList from './pages/viewMyFamilyMem';
 import MyPatients from './pages/MyPatients';
@@ -17,11 +15,8 @@ import MyPrescription from './pages/viewMyPrescriptions';
 import Doctorz from './pages/ViewDoctorzz';
 import DeleteDoctorPage from './pages/DeleteDoctorPage';
 import AdminHealthPackages from './pages/AdminHealthPackages';
-
 import ViewRequests from './pages/ViewDoctorRequest';
-import FilterAppointments from './pages/FilterAppointments';
 import AdminDashboard from './components/AdminDashboard';
-
 import DeletePatient from './pages/DeletePatientPAge';
 import PatientDetails from './components/PatientDetails';
 import FilterAppointmentsPatient from './pages/FilterAppointmentsPatient';
@@ -29,7 +24,7 @@ import DoctorDetails from './pages/doctorDetails';
 import LinkPatientPage from './pages/linkPatient';
 import HealthPackageSubscriptionPage from './pages/SelectHealthPackages';
 import MedicalHistoryList from './pages/deleteMedicalHistory';
-
+import DoctorListPage from './pages/viewDoctors';
 import Login from './pages/login';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -50,6 +45,7 @@ import AdminSettings from './components/AdminSettings';
 import AllPackages from './pages/ViewAllPackages';
 import SubPackage from './pages/SubPackage';
 import Reschedule from './pages/Reschedule';
+import DoctorAppointment from './pages/DoctorAppointments';
 
 // Import your components
 
@@ -146,7 +142,7 @@ function App() {
           />
           <Route
             path="/viewDoctors/:username"
-            element={user && user.role === 'patient' ? <Doctorz /> : <Navigate to="/login" />}
+            element={user && user.role === 'patient' ? <DoctorListPage /> : <Navigate to="/login" />}
           />
 
           <Route path="/getDoctors" element={<getDoctors />} />
@@ -160,7 +156,7 @@ function App() {
           />
           <Route
             path="/filterAppointments/:username"
-            element={user && user.role === 'doctor' ? <FilterAppointments /> : <Navigate to="/login" />}
+            element={user && user.role === 'doctor' ? <DoctorAppointment /> : <Navigate to="/login" />}
           />
           <Route
             path="/filterAppointmentsPatient/:username"

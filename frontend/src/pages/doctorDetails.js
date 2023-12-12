@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import '../components/patientDetails.css';
 
 const DoctorDetails = () => {
-  const { doctorUsername , patientUsername } = useParams();
+  const { doctorUsername, patientUsername } = useParams();
   const navigate = useNavigate();
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,7 +13,7 @@ const DoctorDetails = () => {
     const fetchDoctorData = async () => {
       try {
         // Make an API request to get all doctor information
-        const response = await axios.get('http://localhost:4000/getDoctors',{
+        const response = await axios.get('http://localhost:4000/getDoctors', {
           withCredentials: true
         });
 
@@ -49,23 +50,54 @@ const DoctorDetails = () => {
   }
 
   return (
-    <div>
-      <h2>Doctor Details</h2>
-      <p>Name: {doctor.name}</p>
-      <p>Username: {doctor.username}</p>
-      <p>Email: {doctor.email}</p>
-      <p>Date of Birth: {doctor.date_of_birth}</p>
-      <p>Hourly Rate: {doctor.hourly_rate}</p>
-      <p>Affiliation: {doctor.Affiliation}</p>
-      <p>Speciality: {doctor.speciality}</p>
-      <p>Educational Background: {doctor.educational_background}</p>
-
-      {/* Display additional doctor information and appointments here */}
-      <button onClick={() => navigate(-1)}>Back</button>
-      <Link to={`/viewAppointments/${doctorUsername}/${patientUsername}`}>
-        <button>View Appointments</button>
-      </Link>
+    <div className="container">
+      <div className="details-container">
+        <h2 className="title">Patient Details</h2>
+        <table style={{ fontSize: '1.5em', padding: '10px' }}>
+          <tbody>
+            <tr>
+              <th>Name:</th>
+              <td>{doctor.name}</td>
+            </tr>
+            <tr>
+              <th>Username:</th>
+              <td>{doctor.username}</td>
+            </tr>
+            <tr>
+              <th>Email:</th>
+              <td>{doctor.email}</td>
+            </tr>
+            <tr>
+              <th>Date of Birth:</th>
+              <td>{new Date(doctor.date_of_birth).toLocaleDateString()}</td>
+            </tr>
+            <tr>
+              <th>Hourly Rate:</th>
+              <td>${doctor.hourly_rate}</td>
+            </tr>
+            <tr>
+              <th>Affiliation</th>
+              <td>{doctor.Affiliation}</td>
+            </tr>
+            <tr>
+              <th>Speciality:</th>
+              <td>{doctor.speciality}</td>
+            </tr>
+            <tr>
+              <th>Educational Background:</th>
+              <td>{doctor.educational_background}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="button-container" style={{ display: 'flex', justifyContent: 'center' }}>
+        <Link to={`/viewAppointments/${doctorUsername}/${patientUsername}`}>
+        <button className="button">View Appointments</button>
+        </Link>
+        <button className="button" onClick={() => navigate(-1)}>Back</button>
+      </div>
     </div>
+
   );
 };
 

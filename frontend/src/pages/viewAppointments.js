@@ -66,6 +66,7 @@ const ViewAppointments = () => {
           });
           if (response.status === 200) {
             setAppointments(response.data);
+            console.log(response.data);
           }
         }
       } catch (error) {
