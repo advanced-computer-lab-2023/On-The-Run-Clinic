@@ -17,12 +17,17 @@ const ViewAppointments = () => {
   const [familyMembers, setFamilyMembers] = useState([]);
   const [selectedFamilyMember , setSelectedFamilyMember] = useState([null]); 
   const [selectedLinkedPatient, setSelectedLinkedPatient] = useState(null);
+  const [step, setStep] = useState(1);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+
  const [formData, setFormData] = useState({
     selectedAppointment: '', // Store the selected package ID
     paymentMethod: 'creditCard',
     username:patientUsername,
   });
-
+  const handleNext = () => {
+    setStep(step + 1);
+  };
   useEffect(() => {
     const fetchDoctorId = async () => {
       try {
@@ -179,7 +184,15 @@ const ViewAppointments = () => {
       console.error('Error reserving appointment:', error);
     }
   };
-  
+  const handleSubmit = () => {
+    if (selectedFamilyMember) {
+      reserveFamilyMemberAppointment(selectedAppointment);
+    } else if (selectedLinkedPatient) {
+      reserveLinkedPatientAppointment(selectedAppointment);
+    } else {
+      reserveAppointment(selectedAppointment);
+    }
+  };
 
   return (
     <div>
@@ -264,7 +277,7 @@ const ViewAppointments = () => {
           {/* Add the Wallet form or content here */}
         </div>
       </div>
-      <button onClick={() => navigate(-1)}>Back</button>
+      <button onClick={() => navigate(-1)}>back</button>
     </div>
   );
   

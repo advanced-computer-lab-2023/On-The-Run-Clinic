@@ -89,7 +89,7 @@ function LinkPatientPage() {
     <div className="container">
     <div className="prescriptions-list">
       <h2>
-        Your Prescriptions
+        Your Family Members
         <FontAwesomeIcon
             className="add-icon"
             icon={faPlus}

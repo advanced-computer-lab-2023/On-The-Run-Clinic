@@ -631,3 +631,30 @@ h4 {
 .filter-bar .time-filter {
   flex: 1;
 }
+.Container {
+  position: relative;
+  /* Other styles */
+}
+
+.next-button {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  background-color: white;
+  color: #14967f;
+}
+.back-button {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  background-color: white;
+  color: blue;
+}
+.back-button:hover {
+  background-color: white;
+  color: blue;
+}
+.next-button:hover{
+  background-color: #14967f;
+  color: white;
+}

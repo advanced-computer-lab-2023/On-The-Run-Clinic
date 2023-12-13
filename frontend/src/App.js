@@ -46,7 +46,7 @@ import AllPackages from './pages/ViewAllPackages';
 import SubPackage from './pages/SubPackage';
 import Reschedule from './pages/Reschedule';
 import DoctorAppointment from './pages/DoctorAppointments';
-
+import ViewDRAppointments from './pages/viewThisDrAppointments';
 // Import your components
 
 
@@ -176,7 +176,7 @@ function App() {
           />
           <Route
             path="/ViewAppointments/:doctorUsername/:patientUsername"
-            element={user && (user.role === 'doctor' || user.role === 'patient') ? <ViewAppointments /> : <Navigate to="/login" />}
+            element={user && (user.role === 'doctor' || user.role === 'patient') ? <ViewDRAppointments /> : <Navigate to="/login" />}
           />
           <Route
             path="/adminSettings/:username"
@@ -212,9 +212,6 @@ function App() {
             element={user && (user.role === 'doctor' || user.role === 'patient') ? <Reschedule /> : <Navigate to="/login" />}
           />
 
-
-
-          {/* Add other routes as needed */}
         </Routes>
       </div>
     </Router>
