@@ -47,6 +47,7 @@ import SubPackage from './pages/SubPackage';
 import Reschedule from './pages/Reschedule';
 import DoctorAppointment from './pages/DoctorAppointments';
 import ViewDRAppointments from './pages/viewThisDrAppointments';
+import PatientAppointment from './pages/PatientAppointments';
 // Import your components
 
 
@@ -160,7 +161,7 @@ function App() {
           />
           <Route
             path="/filterAppointmentsPatient/:username"
-            element={user && user.role === 'patient' ? <FilterAppointmentsPatient /> : <Navigate to="/login" />}
+            element={user && user.role === 'patient' ? <PatientAppointment /> : <Navigate to="/login" />}
           />
           <Route
             path="/patient-details/:username/:usernameDoctor"

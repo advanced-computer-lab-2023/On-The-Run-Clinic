@@ -5,7 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import PaymentForm from '../components/Stripe';
 import { loadStripe } from '@stripe/stripe-js';
 import BeatLoader from "react-spinners/BeatLoader";
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const stripePromise = loadStripe('your-publishable-key');
 

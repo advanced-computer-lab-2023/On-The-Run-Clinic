@@ -39,6 +39,8 @@ const FamilyMembersList = () => {
   }, [username]);
   
   const FamilyMember = ({ member, isLinked }) => (
+
+
     <Card style={{ width: '18rem', marginBottom: '1rem' }}>
       <Card.Header as="h5">{isLinked ? member.linkedPatientName : member.name}</Card.Header>
       <ListGroup variant="flush">
