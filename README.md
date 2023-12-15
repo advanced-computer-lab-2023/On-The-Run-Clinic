@@ -47,5 +47,17 @@ Here are some screenshots that showcase how On-The-Run-Clinic looks and works:
 ![Screenshot 1](screenshots/AdminDashboard.png)
 *Admin Dashboard*
 
-![Screenshot 2](screenshots/Screenshot 2023-12-15 232939.png)
+![Screenshot 2](screenshots/deletePatient.png)
 *Admin viewing and deleting patients page*
+
+![Screenshot 3](screenshots/requests.png)
+*Admin viewing doctor requests*
+
+![Screenshot 4](screenshots/DoctorPatients.png)
+*Doctor viewing his patients and can videoCall them and chat*
+
+![Screenshot 5](screenshots/FamilyMem.png)
+*Patient adding a family member*
+
+![Screenshot 6](screenshots/patientPres.png)
+*Patient viewing his prescription*
