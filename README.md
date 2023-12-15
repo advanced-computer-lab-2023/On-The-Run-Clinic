@@ -47,5 +47,5 @@ Here are some screenshots that showcase how On-The-Run-Clinic looks and works:
 ![Screenshot 1](screenshots/AdminDashboard.png)
 *Admin Dashboard*
 
-![Screenshot 2](screenshots/screenshot2.png)
-*Caption for Screenshot 2*
+![Screenshot 2](screenshots/Screenshot 2023-12-15 232939.png)
+*Admin viewing and deleting patients page*
