@@ -483,3 +483,14 @@ npm run dev
 cd frontend
 npm start
 ```
+## API Reference
+
+### Cross-Chat Messages
+
+- **Create Cross-Chat Message:**
+  ```http
+  POST /createCrossMessage
+- **Get Cross-Chat Message:**
+  ```http
+  GET /getCrossChatMessages/:username/:doctor
+
