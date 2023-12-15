@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { faEye,faVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BeatLoader from "react-spinners/BeatLoader";
-
+import {faEye, faVideo, faComments } from '@fortawesome/free-solid-svg-icons';
 
 const MyPatients = () => {
   const { username } = useParams();
@@ -98,6 +97,11 @@ const MyPatients = () => {
                     <Link to={`/patient-details/${p.username}/${username}`}>
                     <FontAwesomeIcon icon={faEye} color="#14967f" />
                     </Link>
+                    <Link to={`/chat/${p.username}/${username}`}>
+                    <button style={{ background: 'transparent', border: 'none' }}>
+                      <FontAwesomeIcon icon={faComments} color="#14967f" style={{ marginLeft: '10px' }} />
+                      </button>
+                  </Link>
                     <button style={{ background: 'transparent', border: 'none' }}  onClick={(e) => { e.stopPropagation(); window.open('https://meet.google.com/', '_blank') }}>
                       <FontAwesomeIcon icon={faVideo} color="#14967f" style={{ marginLeft: '10px' }} />
                     </button>

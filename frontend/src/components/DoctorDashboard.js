@@ -9,7 +9,7 @@ const DoctorDashboard = () => {
   const { username } = useParams();
   const [doctor, setDoctor] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-
+  const [pharmacistUsername, setPharmacistUsername] = useState('');
   useEffect(() => {
     async function fetchWallet() {
       try {
@@ -51,7 +51,22 @@ const DoctorDashboard = () => {
         <p style={{ color: 'white', fontSize: '35px', marginBottom: '18px' }}>View Followup requests</p>
         </Link>
       </div>
+      <div className="expandable-div" style={{ boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)', padding: '20px', width: '400px', height: '400px', margin: '50px' }}>
+        {/* New textbox for pharmacist's username */}
+        <label>
+          Pharmacist's Username:
+          <input
+            type="text"
+            value={pharmacistUsername}
+            onChange={(e) => setPharmacistUsername(e.target.value)}
+          />
+        </label>
+
+        {/* Update the Link to include both doctor and pharmacist usernames */}
+        <Link to={`/chat/${username}/${pharmacistUsername}`}>Start Chat</Link>
+      </div>
     </div>
+    
   );
 };
 
