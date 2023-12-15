@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-
+import FollowUpModal from './FollowUpModal';  
 import './patientDetails.css';
 
 const PatientDetails = () => {
@@ -10,12 +9,12 @@ const PatientDetails = () => {
   const navigate = useNavigate();
   const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showFollowUpModal, setShowFollowUpModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-
     const fetchPatientData = async () => {
       try {
-        // Make an API request to get all patient information
         const response = await axios.get(`http://localhost:4000/getPatientByUsername/${username}`, {
           withCredentials: true
         });
@@ -24,18 +23,27 @@ const PatientDetails = () => {
           setPatient(response.data);
         }
       } catch (error) {
-        // Handle API request errors more gracefully
         console.error('Error fetching patient data:', error);
       } finally {
-        setLoading(false); // Mark loading as complete, whether successful or not
+        setLoading(false);
       }
     };
 
-    // Call the fetchPatientData function when the component mounts
     fetchPatientData();
-
   }, [username]);
 
+  const handleScheduleFollowUp = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseFollowUpModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleFollowUpSubmit = () => {
+    // You may perform any necessary actions here before closing the modal
+    setIsModalOpen(false);
+  };
 
   if (loading) {
     return <div>Loading patient details...</div>;
@@ -51,7 +59,7 @@ const PatientDetails = () => {
         <h2 className="title">Patient Details</h2>
         <table style={{ fontSize: '1.5em', padding: '10px' }}>
           <tbody>
-            <tr>
+          <tr>
               <th>Name:</th>
               <td>{patient.name}</td>
             </tr>
@@ -90,18 +98,16 @@ const PatientDetails = () => {
         <Link to={`/managePrescriptions/${username}/${usernameDoctor}`}>
           <button className="button">Manage Prescriptions</button>
         </Link>
-        <Link to={{
-          pathname: `/followUpDoctor/${username}/${usernameDoctor}`,
-          state: { patient: patient }
-        }}>
-          <button className="button">Schedule Follow-Up</button>
-        </Link>
+        <button className="button" onClick={handleScheduleFollowUp}>
+          Schedule Follow-Up
+        </button>
+       {/* Render the FollowUpModal component based on the isModalOpen state */}
+       {isModalOpen && (
+           <FollowUpModal onSubmit={handleFollowUpSubmit} onClose={handleCloseFollowUpModal} />
+        )}
         <button className="button" onClick={() => navigate(-1)}>Back</button>
       </div>
     </div>
-
-
-
   );
 };
 
