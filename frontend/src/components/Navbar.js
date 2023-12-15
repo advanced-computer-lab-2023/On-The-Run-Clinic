@@ -34,6 +34,31 @@ const Navbar = () => {
         </Link>
 
       </div>
+      <div style={{display: 'flex', flexDirection: 'row',alignItems:'center'}}>
+      {user &&user.role === 'patient' && (
+        <>
+         
+          <div style={{marginLeft:'30px'}}>
+            <Link to={`/viewFamilyMembers/${user.user}`} style={{ color: 'white' }}>Family Members</Link>
+          </div>
+          <div style={{marginLeft:'30px'}}>
+          <Link to={`/linkFamilyMember/${user.user}`} style={{ color: 'white' }}>Linked Family Members</Link>
+          </div>
+          <div style={{marginLeft:'30px'}}>
+          <Link to={`/filterAppointmentsPatient/${user.user}`} style={{ color: 'white' }}>Appointments</Link>
+          </div>
+          <div style={{marginLeft:'30px'}}>
+          <Link to={`/viewDoctors/${user.user}`} style={{ color: 'white' }}>Doctors</Link>
+          </div>
+          <div style={{marginLeft:'30px'}}>
+          <Link to={`/viewMyPrescription/${user.user}`} style={{ color: 'white' }}>Prescriptions</Link>
+          </div>
+          <div style={{marginLeft:'30px'}}>
+          <Link to={`/subHealthPackages/${user.user}`} style={{ color: 'white' }}>Health Packages</Link>
+          </div>
+        </>
+      )}
+      </div>
       <div className="right-container">
         {user && (
           <div>
