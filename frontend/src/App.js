@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Route, Routes, Navigate, useParams } from 'rea
 import Navbar from './components/Navbar';
 import { useAuthContext } from './hooks/useAuthContext';
 
-
-
+import PatientChatPage from './pages/PatientChatPage';
+import DoctorChatPage from './pages/DoctorChatPage';
 import DoctorRegistrationForm from './pages/DoctorRegPage';
 import DoctorDashboard from './components/DoctorDashboard';
 import PatientRegistrationForm from './pages/PatientRegPage';
@@ -91,6 +91,10 @@ function App() {
           <Route
             path="/viewFamilyMembers/:username"
             element={user && user.role === 'patient' ? <FamilyMembersList /> : <Navigate to="/login" />}
+          />
+          <Route
+            Route path="/chat/:username/:doctor"
+            element={user && user.role === 'patient' ? <PatientChatPage /> : (user && user.role === 'doctor' ? <DoctorChatPage/> : <Navigate to="/login" />)}
           />
           <Route
             path="/linkFamilyMember/:username"

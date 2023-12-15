@@ -15,9 +15,7 @@ const cors = require('cors');
 const { createFollowUpReq, acceptFollowUpReq, rejectFollowUpReq,getFollowUpReqs} = require("./controllers/followUpReqController")
 const{createAppointment,filter,getAllAppointments,getDoctorAppointments,getPatientAppointments,getAvailableDoctorAppointments,reserveAppointment,reserveFamilyMemberAppointment,reserveLinkedPatientAppointment,cancelAppointment,getAppointment, rescheduleAppointment}=require("./controllers/appointmentsController")
 const {createPatient,getPatients,searchPatientsByName,getMyPrescriptions,getMyPrescriptions2,searchPatientsByUserame,deletePatient,getPatient,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getPatientNotifications,addToWallet,getPatientUsername} = require("./controllers/patientController");
-
-
-
+const { createMessage, getChatMessages, sendMessageAsPatient, sendMessageAsDoctor} = require("./controllers/messagesController")
 const{createPrescription,getPrescriptionsForPatient,deleteMedicineFromPrescription,addMedicineToPres,incrementDosage,decrementDosage,getPrescriptionById}=require("./controllers/perscriptionsController")
 const{createRequest, getOneRequest,getRequests,deleteRequest,rejectrequest,acceptrequest}=require("./controllers/requestsController")
 const{createHealthPackage,getPackages,updateHealthPackage,deleteHealthPackage,getHealthPackage}=require("./controllers/HealthPackagesController")
@@ -26,7 +24,7 @@ const {requireAuthPatient,requireAuthPending,requireAuthDoctor,requireAuthAdmin,
 const{login,logout,forgetPassword,resetPassword}=require("./controllers/userController")
 const{getMedicine,getMedicines,getMedicines2}=require("./controllers/MedicineController")
 const multer=require("multer");
-
+const{createCrossMessage,sendCrossMessageAsDoctor,getCrossChatMessages}=require("./controllers/crossOverMessagesController")
 //express app
 const app = express()
 const corsOptions = {
@@ -100,8 +98,13 @@ app.listen(4000,()=>{
     console.log(error)
 })
 
-
-
+app.post("/createCrossMessage",createCrossMessage)
+app.get("/getCrossChatMessages/:username/:doctor",getCrossChatMessages)
+app.post("/sendCrossMessageAsDoctor",sendCrossMessageAsDoctor)
+app.post("/createMessage",createMessage)
+app.get("/getChatMessages/:username/:doctor",getChatMessages)
+app.post("/sendMessageAsDoctor",sendMessageAsDoctor)
+app.post("/sendMessageAsPatient",sendMessageAsPatient)
 app.post("/createAdmin",requireAuthAdmin,createAdmin);
 app.post("/register/doctor",requireAuthPending,createDoctor);
 app.put("/updateDoctor",requireAuthDoctor,updateDoctor);

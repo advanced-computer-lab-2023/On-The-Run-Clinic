@@ -8,6 +8,12 @@ const PatientDashboard = () => {
   const [doctor,setDoctor]=useState('')
   const { user } = useAuthContext()
   const navigate = useNavigate();
+  const [chatDoctorUsername, setChatDoctorUsername] = useState('');
+
+  const handleChatButtonClick = () => {
+    // Redirect to PatientChatPage with the selected doctor's username
+    navigate(`/chat/${username}/${chatDoctorUsername}`);
+  };
   useEffect(() => {
     // Fetch available health packages from the backend when the component mounts
     
@@ -87,9 +93,20 @@ const PatientDashboard = () => {
             view my appointments
           </Link>
         </li>
-        
+        <div>
+        <label htmlFor="chatDoctorUsername">Chat with Doctor:</label>
+        <input
+          type="text"
+          id="chatDoctorUsername"
+          value={chatDoctorUsername}
+          onChange={(e) => setChatDoctorUsername(e.target.value)}
+          placeholder="Enter Doctor's Username"
+        />
+        <button onClick={handleChatButtonClick}>Chat</button>
+      </div>
       </ul>
     </div>
+    
   );
 };
 
