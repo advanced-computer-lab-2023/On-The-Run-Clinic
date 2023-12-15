@@ -484,13 +484,225 @@ cd frontend
 npm start
 ```
 ## API Reference
+```javascript
+app.post("/createCrossMessage",createCrossMessage)
+app.get("/getCrossChatMessages/:username/:doctor",getCrossChatMessages)
+app.post("/sendCrossMessageAsDoctor",sendCrossMessageAsDoctor)
+app.post("/createMessage",createMessage)
+app.get("/getChatMessages/:username/:doctor",getChatMessages)
+app.post("/sendMessageAsDoctor",sendMessageAsDoctor)
+app.post("/sendMessageAsPatient",sendMessageAsPatient)
+app.post("/createAdmin",requireAuthAdmin,createAdmin);
+app.post("/register/doctor",requireAuthPending,createDoctor);
+app.put("/updateDoctor",requireAuthDoctor,updateDoctor);
+app.post("/register/patient",createPatient);
+app.get("/getDocPatients/:username",requireAuth, getDocPatients);
+app.get("/getDoctors",getDoctors);//removed
+app.get("/getPatients",getPatients);//removed
+app.get("/getAdmins",requireAuthAdmin,getAdmins)
+app.post("/addFamilyMember",requireAuthPatient, createMember);
+app.delete("/deleteDoctor/:id",requireAuthAdmin,deleteDoctor);
+app.patch("/ubdateDoctor",updateDoctor);
+app.get("/getFamilyMem/:username",requireAuth,getFamilyMembers);
+app.get("/searchPatientsByName",requireAuth,searchPatientsByName);
+app.post("/addPatientToDr",requireAuth,addPatientToDr);
+app.post("/addPrescription",createPrescription);
+app.get("/getPrescriptions/:id",requireAuth,getPrescriptionsForPatient);
+app.get("/getMyPrescriptions/:username",requireAuth,getMyPrescriptions);
+app.get("/getMyPrescriptions2/:username/:usernameDoctor",requireAuth,getMyPrescriptions2);
+app.post("/createRequest",createRequest);
+app.post("/createPackage",createHealthPackage);
+app.get("/getPackages",requireAuth,getPackages);
+app.put("/updatePackage",requireAuthAdmin,updateHealthPackage);
+app.delete("/deletePackage",requireAuthAdmin,deleteHealthPackage);
+app.delete("/deleteAdmin/:id",requireAuthAdmin,deleteAdmin);
+app.delete("/deletePatient/:id",requireAuthAdmin,deletePatient);
+app.get("/getDoctor/:username",getDoctorByUsername);//removed
+app.get("/getOneRequest",getOneRequest);
+app.get("/getRequests",requireAuthAdmin,getRequests);
+app.post("/createAppointment",createAppointment);//removed
+app.get("/getAllAppointments",requireAuth,getAllAppointments);
+app.get("/filterAppointments",requireAuth,filter);
+app.get("/search/:username",requireAuth,searchPatientsByUserame);
+app.get("/getDoctorAppointments/:id",requireAuth,getDoctorAppointments);
+```
 
-### Cross-Chat Messages
+## Tests
 
-- **Create Cross-Chat Message:**
-  ```http
-  POST /createCrossMessage
-- **Get Cross-Chat Message:**
-  ```http
-  GET /getCrossChatMessages/:username/:doctor
+The On-The-Run-Clinic project includes a set of tests to ensure the reliability and functionality of its features. Postman was used for testing the API endpoints.
+
+### Running Tests
+
+To run the tests, follow these steps:
+
+1. **Install Postman:**
+   - If you don't have Postman installed, download and install it from [Postman's official website](https://www.postman.com/).
+
+2. **Test every endpoint:**
+   - run tests to ensure that the endpoint is working.
+
+
+### Test Scenarios
+
+The tests cover various scenarios, including:
+
+- Authentication and Authorization checks.
+- Endpoint validations for input and output.
+- Handling of edge cases and error responses.
+
+### Important Notes
+
+- Make sure the server is running locally or on a reachable environment before running the tests.
+- Update the environment variables in Postman if necessary, such as the base URL.
+
+## How to Use
+
+On-The-Run-Clinic is designed to be user-friendly, providing an intuitive interface for patients, doctors, and administrators. Follow the steps below to make the most of the application:
+
+### Patient
+
+1. **Registration:**
+   - Start by registering as a patient using the provided registration form.
+   - Fill in your details and submit the form to create an account.
+
+2. **Login:**
+   - Once registered, log in using your credentials.
+
+3. **Dashboard:**
+   - Explore your personalized dashboard where you can manage appointments, prescriptions, and family members.
+
+4. **Appointments:**
+   - Schedule, reschedule, or cancel appointments based on your availability and needs.
+
+5. **Health Packages:**
+   - Browse and subscribe to health packages that offer various benefits and discounts.
+
+6. **Medical History:**
+   - Upload and manage your medical history documents for comprehensive record-keeping.
+
+7. **Wallet:**
+   - Monitor your wallet balance for convenient payments and refunds.
+
+8. **Communication:**
+   - Engage in secure video calls, chats, and follow-up requests with your assigned doctor.
+
+### Doctor
+
+1. **Registration:**
+   - Doctors can register with their details, including speciality.
+
+2. **Login:**
+   - Access the platform using your registered credentials.
+
+3. **Dashboard:**
+   - Navigate the dashboard to manage appointments, prescriptions, and patient interactions.
+
+4. **Appointments:**
+   - View and manage your appointment schedule, accepting or rejecting patient requests.
+
+5. **Prescriptions:**
+   - Add, update, and manage prescriptions for your patients directly from the platform.
+
+6. **Communication:**
+   - Initiate and participate in secure video calls and chats with patients.
+
+### Administrator
+
+
+1. **Login:**
+   - Log in using the administrator account.
+
+2. **Dashboard:**
+   - Access tools for user management, health package configurations, and system settings.
+
+3. **User Management:**
+   - Manage doctors, patients, and other administrators effectively.
+
+4. **Health Packages:**
+   - Add, update, or remove health packages available to patients.
+
+
+### General Tips
+
+- **Authentication:**
+  - Ensure secure and unique passwords for your account.
+  - Use two-factor authentication for an additional layer of security.
+
+
+
+Feel free to explore the features and functionalities of On-The-Run-Clinic to enhance your healthcare experience.
+ ## Contribute
+
+Thank you for considering contributing to On-The-Run-Clinic! We welcome contributions from the community to help improve and enhance the platform. Whether you're a developer, designer, or enthusiast, your input is valuable.
+
+### Development Guidelines
+
+- Follow the established code style and conventions outlined in the [Code Style](#code-style) section.
+
+- Document your code changes thoroughly, especially for new features or significant modifications.
+
+- Write clear and concise commit messages.
+
+### Reporting Issues
+
+If you encounter any bugs, issues, or have suggestions for improvements, please open an issue on the GitHub repository. Provide detailed information to help us understand and address the problem.
+
+### Feature Requests
+
+If you have ideas for new features or improvements, feel free to open an issue to discuss and propose your suggestions.
+
+Thank you for contributing to On-The-Run-Clinic! Your efforts help make healthcare services more accessible and efficient.
+
+## Credits
+
+We would like to express our gratitude to the following individuals and resources that have contributed to the development and learning process of On-The-Run-Clinic:
+
+### YouTube Channels
+
+- [Traversy Media](https://www.youtube.com/channel/UC29ju8bIPH5as8OGnQzwJyA)
+- [Academind](https://www.youtube.com/channel/UCW5YeuERMmlnqo4oq8vwUpg)
+
+### Node.js
+
+- [Node.js Documentation](https://nodejs.org/)
+
+### Tutorials and Playlists
+
+- [Node.js Crash Course](https://www.youtube.com/playlist?list=PLZlA0Gpn_vH_uZs4vJMIhcinABSTUH2bY)
+- [Express.js Crash Course](https://www.youtube.com/watch?v=fgTGADljAeg)
+- [React Introduction](https://www.youtube.com/playlist?list=PLZlA0Gpn_vH_NT5zPVp18nGe_W9LqBDQK)
+- [React Hooks - Functional Components](https://www.youtube.com/playlist?list=PLZlA0Gpn_vH8EtggFGERCwMY5u5hOjf-h)
+- [React Hooks Tutorial](https://youtu.be/hQAHSlTtcmY)
+- [useState vs useEffect](https://codedamn.com/news/reactjs/usestate-and-useeffect-hooks)
+
+### JWT Authentication
+
+- [JWT Authentication Tutorial](https://www.youtube.com/watch?v=mbsmsi7l3r4)
+- [JWT Authentication in Node.js](https://www.youtube.com/watch?v=-RCnNyD0L-s)
+- [MERN Stack Authentication Tutorial](https://dev.to/salarc123/mern-stack-authentication-tutorial-part-1-the-backend-1c57)
+
+### Using Stripe for Payment Process
+
+- [Stripe API Tutorial](https://youtu.be/1r-F3FIONl8)
+
+
+## License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT)
+
+### Third-Party Licenses
+
+Certain components and dependencies used in this project are subject to their own licenses:
+
+- *Stripe:* The use of Stripe is subject to the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). Please review the license terms for more information.
+
+- *MongoDB:* The use of MongoDB is subject to the [Server Side Public License (SSPL)](https://www.mongodb.com/licensing/server-side-public-license). Please review the license terms for more information.
+
+- *nodemon:* The use of nodemon is subject to the [MIT License](https://opensource.org/licenses/MIT). Please review the license terms for more information.
+
+- *Bootstrap:* The use of Bootstrap is subject to the [MIT License](https://opensource.org/licenses/MIT). Please review the license terms for more information.
+
+- *JWT Authentication:* The specific implementation or library used for JWT authentication is subject to its own license. Please review the license terms for more information.
+
+Refer to the respective licenses of these components for details about permissions and restrictions. Ensure compliance with the terms of each license when using or contributing to this project.
 
