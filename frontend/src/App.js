@@ -49,6 +49,7 @@ import ViewDRAppointments from './pages/viewThisDrAppointments';
 import PatientAppointment from './pages/PatientAppointments';
 import ReschedulePatient from './pages/ReschedulePatient';
 import ViewFam from './pages/viewFamilyMem';
+import MyPharma from './pages/viewPharma';
 // Import your components
 
 
@@ -216,6 +217,10 @@ function App() {
           <Route
             path="/reschedule/:id"
             element={user && (user.role === 'doctor' || user.role === 'patient') ? <ReschedulePatient /> : <Navigate to="/login" />}
+          />
+           <Route
+            path="/viewPharma/:username"
+            element={user && (user.role === 'doctor') ? <MyPharma /> : <Navigate to="/login" />}
           />
 
         </Routes>

@@ -23,6 +23,7 @@ const{createPDoctor,getPDoctors,getPDoctor,deletePDoctor}=require("./controllers
 const {requireAuthPatient,requireAuthPending,requireAuthDoctor,requireAuthAdmin,requireAuth}=require("./Middleware/requireAuth")
 const{login,logout,forgetPassword,resetPassword}=require("./controllers/userController")
 const{getMedicine,getMedicines,getMedicines2}=require("./controllers/MedicineController")
+const{getPharmacists}=require("./controllers/pharmacistController");
 const multer=require("multer");
 const{createCrossMessage,sendCrossMessageAsDoctor,getCrossChatMessages}=require("./controllers/crossOverMessagesController")
 //express app
@@ -192,3 +193,4 @@ app.post("/acceptFollowUpReq/:reqid",acceptFollowUpReq);
 app.post("/rejectFollowUpReq/:reqid",rejectFollowUpReq);
 app.get("/getAppointment/:id",getAppointment);
 app.post("/rescheduleAppointment",rescheduleAppointment);
+app.get("/getPharma",getPharmacists);

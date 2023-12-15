@@ -3,6 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import './Dashboard.css'; // Import your CSS file for styling
 import axios from 'axios';
 import BeatLoader from "react-spinners/BeatLoader";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faComments } from '@fortawesome/free-solid-svg-icons';
+
 
 
 const DoctorDashboard = () => {
@@ -52,18 +55,11 @@ const DoctorDashboard = () => {
         </Link>
       </div>
       <div className="expandable-div" style={{ boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)', padding: '20px', width: '400px', height: '400px', margin: '50px' }}>
-        {/* New textbox for pharmacist's username */}
-        <label>
-          Pharmacist's Username:
-          <input
-            type="text"
-            value={pharmacistUsername}
-            onChange={(e) => setPharmacistUsername(e.target.value)}
-          />
-        </label>
+    
 
-        {/* Update the Link to include both doctor and pharmacist usernames */}
-        <Link to={`/chat/${username}/${pharmacistUsername}`}>Start Chat</Link>
+        <Link to={`/viewPharma/${username}`}>
+  <FontAwesomeIcon style={{fontSize:'210px',color:'white',marginTop:'20px',marginBottom:'20px'}} icon={faComments} /><p style={{ color: 'white', fontSize: '35px', marginBottom: '18px' }}>Chat with Pharmacists</p>
+  </Link>
       </div>
     </div>
     
