@@ -39,3 +39,13 @@ The code follows React JavaScript coding conventions with the following notable 
 - **Icons:** FontAwesome icons are used for visual elements.
 
 If you're contributing to the project, please follow these conventions to maintain code consistency.
+
+## Screenshots
+
+Here are some screenshots that showcase how On-The-Run-Clinic looks and works:
+
+![Screenshot 1](screenshots/AdminDashboard.png)
+*Admin Dashboard*
+
+![Screenshot 2](screenshots/screenshot2.png)
+*Caption for Screenshot 2*
