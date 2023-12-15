@@ -4,31 +4,29 @@ import React, { useState, useEffect } from 'react';
 function HealthPackagesForm(
     { onPackagesFetched }
 ) {
-    const [newPackage, setNewPackage] = useState({
-        name: '',
-        price: '',
-        services: '',
-    });
+   const [name, setName] = useState('');
+    const [price, setPrice] = useState('');
+    const [services, setServices] = useState('');
 
-    const handleSubmit = () => {
-       
+    const handleCreatePackage = () => {
         // Send a POST request to create the new health package
-        axios.post('http://localhost:4000/createPackage', newPackage, {
-            withCredentials: true
+        axios.post('http://localhost:4000/createPackage', {name,price,services},{
+          withCredentials: true
         })
-            .then((response) => {
-                console.log('Package created successfully:', response.data, {
-                    withCredentials: true
-                });
-                // Reset the new package form
-                setNewPackage({
-                    name: '',
-                    price: '',
-                    services: '',
-                });
-                // Fetch the updated list of health packages
-            })
-    };
+          .then((response) => {
+            onPackagesFetched(true);
+            console.log('Package created successfully:', response.data,{
+              withCredentials: true
+            });
+           //reset
+           setName('');
+              setPrice('');
+                setServices('');
+            // Fetch the updated list of health packages
+           
+         
+          });
+      };
 
     return (
 
@@ -38,23 +36,23 @@ function HealthPackagesForm(
             <input
                 type="text"
                 placeholder="Name"
-                value={newPackage.name}
-                onChange={(e) => setNewPackage({ ...newPackage, name: e.target.value })}
+                value={name}
+                onChange={(e) => setName(e.target.value )}
             />
             <input
-                type="text"
+                type="Number"
                 placeholder="Price"
-                value={newPackage.price}
-                onChange={(e) => setNewPackage({ ...newPackage, price: e.target.value })}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
             />
             <input
                 type="text"
                 placeholder="Services"
-                value={newPackage.services}
-                onChange={(e) => setNewPackage({ ...newPackage, services: e.target.value })}
+                value={services}
+                onChange={(e) => setServices(e.target.value)}
             />
             <div className="form-group">
-                <button onClick={handleSubmit}>Create</button>
+                <button onClick={handleCreatePackage}>Create</button>
             </div>
         </div>
 

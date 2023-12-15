@@ -103,7 +103,7 @@ function App() {
           />
           <Route
             path="/healthPackages"
-            element={user && user.role === 'admin' ? <AdminHealthPackages /> : <Navigate to="/login" />}
+            element={user && user.role === 'admin' ? <ManageHealthPackages /> : <Navigate to="/login" />}
           />
 
           <Route

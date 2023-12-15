@@ -17,7 +17,7 @@ const PatientDetailsModal = ({ setOpenModal, patient }) => {
                     </button>
                 </div>
                 <div className='title'>
-                    <h1>Patient</h1>
+                    <h1 style={{color:'#14967f'}}>Patient Details</h1>
                 </div>
                 <div className="metadata">
                 <table style={{ fontSize: '16px' }}>

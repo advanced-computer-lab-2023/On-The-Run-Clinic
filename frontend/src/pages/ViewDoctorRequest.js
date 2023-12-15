@@ -142,9 +142,10 @@ const ViewRequests = () => {
                       icon={faEye}
                       style={{ marginLeft: '10px' }}
                       onClick={() => {
-                        setModalOpen(true);
+                        
                         setActiveRequestId(m._id)
-                        setRequest(requests.find((p) => p._id === activeRequestId));
+                        setRequest(m);
+                        setModalOpen(true);
                       }}
                     />
 

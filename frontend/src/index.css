@@ -658,3 +658,7 @@ h4 {
   background-color: #14967f;
   color: white;
 }
+.delete-icon:hover{
+color:crimson;
+cursor: pointer;
+}

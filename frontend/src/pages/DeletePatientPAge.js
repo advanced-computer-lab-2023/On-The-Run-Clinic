@@ -85,9 +85,10 @@ const DeletePatient = () => {
                       icon={faEye}
                       style={{ marginLeft: '10px' }}
                       onClick={() => {
-                        setModalOpen(true);
+                     
                         setActivePatientId(m._id)
-                        setPatient(patients.find((p) => p._id === activePatinetId));
+                        setPatient(m);
+                        setModalOpen(true);
                       }}
                     />
                     <FontAwesomeIcon
@@ -95,9 +96,10 @@ const DeletePatient = () => {
                       icon={faTrash}
                       style={{ marginLeft: '10px' }}
                       onClick={() => {
-                        setIsConfirmModalOpen(true);
+                      
                         setActivePatientId(m._id)
-                        setPatient(patients.find((p) => p._id === activePatinetId));
+                        setPatient(m);
+                        setIsConfirmModalOpen(true);
                       }
                       }
                         

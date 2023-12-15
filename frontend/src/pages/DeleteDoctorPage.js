@@ -81,7 +81,7 @@ const DeleteDoctor = () => {
               <li key={m._id}>
                 <div className="patients-header">
                   <div style={{ flex: 1, textAlign: 'left' }}>
-                    <strong>USername: </strong>{m.username}
+                    <strong>Username: </strong>{m.username}
                   </div>
                   <div style={{ flex: 1, textAlign: 'left' }}>
                     <strong>ID: </strong>{m._id}
@@ -92,9 +92,10 @@ const DeleteDoctor = () => {
                       icon={faEye}
                       style={{ marginLeft: '10px' }}
                       onClick={() => {
-                        setModalOpen(true);
+                        
                         setActiveDoctorId(m._id)
-                        setDoctor(doctors.find((p) => p._id === activeDoctorId));
+                        setDoctor(m);
+                        setModalOpen(true);
                       }}
                     />
                     <FontAwesomeIcon
@@ -102,9 +103,11 @@ const DeleteDoctor = () => {
                       icon={faTrash}
                       style={{ marginLeft: '10px' }}
                       onClick={() => {
-                        setIsConfirmModalOpen(true)
+                       
                         setActiveDoctorId(m._id)
-                        setDoctor(doctors.find((p) => p._id === activeDoctorId));}
+                        setDoctor(m);
+                        setIsConfirmModalOpen(true)
+                      }
 
                       }
                         

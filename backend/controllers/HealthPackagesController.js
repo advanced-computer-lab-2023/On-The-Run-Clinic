@@ -9,7 +9,7 @@ const HealthPackage = require('../models/HealthPackages')
 const createHealthPackage = async(req,res) => {
   //add a new user to the database with 
   //Name,type,password
-  const{price,services,name} = req.body ;
+  const{name,price,services} = req.body ;
   console.log(req.body);
   try {
      const h= new HealthPackage({price,services,name});
@@ -17,6 +17,7 @@ const createHealthPackage = async(req,res) => {
      await h.save();
      res.status(200).json({ message: 'Package added successfully' })
   }catch(error) {
+    console.log(error)
         res.status(400).json({error:error.message})
       }    
   };
@@ -33,6 +34,8 @@ const getPackages = async (req, res) => {
 const updateHealthPackage = async (req, res) => {
   const { id } = req.query;
   const updatedFields = req.body;
+  console.log(updatedFields)
+  console.log(id)
 
   try {
     const existingPackage = await HealthPackage.findById(id);

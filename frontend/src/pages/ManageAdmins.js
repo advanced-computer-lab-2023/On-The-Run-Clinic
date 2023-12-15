@@ -42,10 +42,11 @@ const ManageAdmins = () => {
       console.error('Error deleting doctor:', error);
     }
   };
-  const handleAdminAdded = (admin) => {
-    // Add the new admin to the list of admins
-    setAdmins(prevAdmins => [...prevAdmins, admin]);
-    setIsFormVisible(false);
+  const handleAdminAdded = (isLinked) => {
+    if (isLinked) {
+      fetchAdmins();
+      setIsFormVisible(false);
+     }
   };
 
   return (
@@ -85,7 +86,7 @@ const ManageAdmins = () => {
         </ul>
       </div>
       <div className="prescription-form">
-        {isFormVisible && <AdminForm onAdminAdded={handleAdminAdded} />}
+        {isFormVisible && <AdminForm onLinkSuccess={handleAdminAdded} />}
       </div>
       <Modal
         isOpen={isConfirmModalOpen}
@@ -110,7 +111,7 @@ const ManageAdmins = () => {
         }}
       >
         <h2 style={{ color: '#333', marginBottom: '20px' }}>Confirm Delete</h2>
-        <p style={{ color: '#555', marginBottom: '30px' }}>Are you sure you want to delete this doctor?</p>
+        <p style={{ color: '#555', marginBottom: '30px' }}>Are you sure you want to delete this admin?</p>
        
         <div>
           <button style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: 'crimson', color: '#fff', border: 'none', borderRadius: '5px' }} onClick={() => {

@@ -17,10 +17,10 @@ const DoctorDetailsModal = ({ setOpenModal, doctor }) => {
                     </button>
                 </div>
                 <div className='title'>
-                    <h1>Doctor</h1>
+                    <h1 style={{color:'#14967f'}}>Doctor Details</h1>
                 </div>
                 <div className="metadata">
-                <table style={{ fontSize: '16px' }}>
+                <table style={{ fontSize: '18px' }}>
                         <tbody>
                             <tr><td><strong>ID:</strong></td><td>{doctor._id}</td></tr>
                             <tr><td><strong>Username:</strong></td><td>{doctor.username}</td></tr>

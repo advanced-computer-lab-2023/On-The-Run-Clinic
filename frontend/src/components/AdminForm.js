@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
-function AdminForm(props) {
+function AdminForm({onLinkSuccess}) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState(null);
@@ -24,7 +24,7 @@ function AdminForm(props) {
           setMessage('Admin added successfully');
           setIsError(false);
           console.log("henaaaaaaaa",response.data.username);
-          props.onAdminAdded(response.data);
+          onLinkSuccess(true);
         } catch (error) {
             setMessage('Error adding admin');
             setIsError(true);
