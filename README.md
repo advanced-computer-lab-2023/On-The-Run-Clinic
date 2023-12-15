@@ -122,9 +122,8 @@ These features collectively contribute to a user-centric healthcare platform, pr
 
 ## Code Examples
 
-### User Registration
-
-Registering a patient involves sending a POST request to the server with the necessary user details.
+### Admin adding, deleting, and updating a health package
+Adding a health package involves sending a POST request to the server with necessary package details.
 
 ```javascript
 //admin viewing,deleting and updating the health packages
@@ -245,4 +244,242 @@ const ManageHealthPackages = () => {
   )
 }
 export default ManageHealthPackages
+```
 
+### User Login and Logout
+Logging in and out involves sending a POST request to the server with the necessary user details.
+A token is being created when logging in and it is being deleted when logging out.
+```javascript
+
+// create json web token
+const maxAge = 3 * 24 * 60 * 60;
+const createToken = (username,role) => {
+    return jwt.sign({ user:username,role }, 'supersecret', {
+        expiresIn: maxAge
+    });
+};
+
+
+const login = async (req, res) => {
+  const { username, password } = req.body;
+  try {
+      let user = await Patient.findOne({ username });
+      let role="patient"
+      if(!user){
+          user = await Doctor.findOne({ username });
+          role="doctor"
+      }
+      if(!user){
+          user = await Admin.findOne({ username });
+          role="admin"
+      }
+      if(!user){
+        user = await Pending.findOne({ username });
+        role="pending"
+    }
+
+      if(!user){
+          return res.status(404).json({ error: "Username doesn't exist" });
+      }
+      let auth=false;
+      if(role==="pending"){
+        auth=(password===user.password)
+      }
+      else{
+        auth = await bcrypt.compare(password, user.password);
+      }
+
+    
+
+     
+      if (auth) {
+        const token = createToken(user.username,role);
+        console.log(token);
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: false });
+        res.status(200).json({ user: user.username, role: role, token: token });
+    } else {
+        res.status(401).json({ error: 'Incorrect password' });
+    }
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+}
+
+const logout = async (req, res) => {
+    res.cookie('jwt', '', { maxAge: 1 });
+    res.status(200).json({ message: 'User logged out' });
+}
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // Example: 'Gmail'
+    auth: {
+      user: 'ontherunclinic@gmail.com',
+      pass: 'wkdy hbkz loda mebe',
+    },
+  });
+  
+  // Generate and store OTP
+  const generateOTP = () => {
+    return crypto.randomInt(1000, 9999).toString();
+  };
+  
+  // Send OTP via email
+  const sendOTPByEmail = async (email, otp) => {
+    try {
+      const mailOptions = {
+        from: 'ontherunclinic@hotmail.com',
+        to: email,
+        subject: 'Password Reset OTP',
+        text: `Your OTP for password reset is: ${otp}`,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error sending OTP email:', error);
+    }
+  };
+  
+  // Route to initiate password reset
+  const forgetPassword= async (req, res) => {
+    const { username,email } = req.body;
+ 
+    try {
+      let user = await Patient.findOne({ username });
+      if (!user) {
+         user = await Doctor.findOne({ username });
+      }
+      if (!user) {
+         user = await Admin.findOne({ username });
+      }
+      if (!user) {
+        return res.status(404).json({ message: "Username doesn't exist" });
+      }
+     
+  
+      // Generate and store OTP
+      const otp = generateOTP();
+      
+      user.passwordReset = otp;
+  
+      // Save user with OTP
+      await user.save();
+  
+      // Send OTP via email
+      await sendOTPByEmail(email, otp);
+  
+      return res.status(200).json({ message: 'Check your email for the OTP.' });
+    } catch (error) {
+      console.error('Error initiating password reset:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  
+  // Route to reset the password
+  const resetPassword= async (req, res) => {
+    const { username } = req.params;
+    const {otp, newPassword } = req.body;
+    try {
+      let user = await Patient.findOne({ username });
+      if (!user) {
+         user = await Doctor.findOne({ username });
+      }
+      if (!user) {
+         user = await Admin.findOne({ username });
+      }
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+  
+      
+  
+  
+      if (user.passwordReset!== otp) {
+        return res.status(400).json({ message: 'Invalid OTP' });
+      }
+  
+      // Update password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+  
+      if(user = await Patient.findOne({ username })){
+        await Patient.updateOne(
+          {
+            username: username,
+          },
+          {
+            $set: {
+              password: hashedPassword,
+              passwordReset: undefined,
+            },
+          }
+        );
+        await user.save();
+      }
+      if(user = await Doctor.findOne({ username })){
+        await Doctor.updateOne(
+          {
+            username: username,
+          },
+          {
+            $set: {
+              password: hashedPassword,
+              passwordReset: undefined,   // Clear the password reset data
+            },
+          }
+        );
+        await user.save();
+      }
+      if(user = await Admin.findOne({ username })){
+        await Admin.updateOne(
+          {
+            username: username,
+          },
+          {
+            $set: {
+              password: hashedPassword,
+              passwordReset: undefined,   // Clear the password reset data
+            },
+          }
+        );
+        await user.save();
+      }
+  
+      
+  
+      // Save the updated user
+     
+  
+      return res.status(200).json({ message: 'Password reset successfully.' });
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+
+module.exports = { logout, login, forgetPassword, resetPassword };
+```
+## Installation
+ ### prerequisites
+   1. **Node.js and npm:**
+     - Ensure you have Node.js installed on your machine. You can download it [here](https://nodejs.org/).
+
+   2. **MongoDB:**
+     -[here](https://www.mongodb.com/).
+   3. **Git:**
+     -[here](https://git-scm.com/).
+
+### Clone the Repo
+  ```bash
+ git  https://github.com/advanced-computer-lab-2023/On-The-Run-Clinic.git
+```
+#### To run the backend:
+```bash
+cd backend
+npm run dev
+```
+#### To run the frontend:
+```bash
+cd frontend
+npm start
+```
