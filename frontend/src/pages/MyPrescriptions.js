@@ -127,9 +127,10 @@ const MyPres = () => {
                                             className="view-icon"
                                             icon={faEye}
                                             onClick={() => {
-                                                setModalOpen(true);
                                                 setActivePrescriptionId(prescription._id)
-                                                setPrescription(prescriptions.find((p) => p._id === activePrescriptionId));
+                                                
+                                                setPrescription(prescription);
+                                                setModalOpen(true);
                                             }}
                                         />
                                     </div>

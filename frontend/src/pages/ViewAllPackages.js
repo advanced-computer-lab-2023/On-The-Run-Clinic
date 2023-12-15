@@ -231,7 +231,7 @@ const AllPackages = () => {
         </div>
       </div>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>Subscribe to Package</Modal.Title>
         </Modal.Header>
         <Modal.Body>
