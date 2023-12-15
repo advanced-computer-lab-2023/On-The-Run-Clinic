@@ -28,13 +28,13 @@ const PatientAppointment = () => {
         try {
             const response1 = await axios.get(`http://localhost:4000/search/${username}`, {
                 withCredentials: true,
-              });
+            });
             setPatient(response1.data);
             if (response1.data) {
                 const response2 = await axios.get(`http://localhost:4000/getPatientAppointments/${response1.data._id}`, {
                     withCredentials: true,
-                  });
-                   setAppointments(response2.data);
+                });
+                setAppointments(response2.data);
                 console.log("Appointments:", response2.data);
                 setFilteredAppointments(response2.data);
             }
@@ -85,24 +85,24 @@ const PatientAppointment = () => {
     };
     const cancelAppointment = async (appointmentId) => {
         try {
-          const response = await axios.put(`http://localhost:4000/cancelAppointment/${appointmentId}`);
-    
-          if (response.status === 200) {
-            const updatedAppointments = appointments.map((appointment) => {
-              if (appointment._id === appointmentId) {
-                return { ...appointment, status: 'Cancelled' };
-              }
-    
-              return appointment;
-            });
-    
-            setAppointments(updatedAppointments);
-            setFilteredAppointments(updatedAppointments);
-          }
+            const response = await axios.put(`http://localhost:4000/cancelAppointment/${appointmentId}`);
+
+            if (response.status === 200) {
+                const updatedAppointments = appointments.map((appointment) => {
+                    if (appointment._id === appointmentId) {
+                        return { ...appointment, status: 'Cancelled' };
+                    }
+
+                    return appointment;
+                });
+
+                setAppointments(updatedAppointments);
+                setFilteredAppointments(updatedAppointments);
+            }
         } catch (error) {
-          console.error('Error cancelling appointment:', error);
+            console.error('Error cancelling appointment:', error);
         }
-      };
+    };
 
     const filterAppointments = async (date, status, upcoming, past) => {
         console.log('filterAppointments function called');
@@ -271,13 +271,12 @@ const PatientAppointment = () => {
                     )}
                 </div>
             )}
+
+
             <div className="container">
-
-                <div className="prescriptions-list" >
-
-
-                    <h2>
-                        Your Appointments
+                <div className="patients-list">
+                    <h2 style={{marginBottom:'20px'}}>
+                        {username}'s Appointments
                         <FontAwesomeIcon
                             className="filter-icon"
                             icon={faFilter}
@@ -286,13 +285,30 @@ const PatientAppointment = () => {
                         />
 
                     </h2>
-                    <ul>
+                    <ul className="patients-list">
                         {filteredAppointments.map((a) => (
                             <li key={a._id}>
-                                <div className="prescription-card">
-                                    <div className="prescription-header">
-                                        <span><strong>Date: </strong>  {new Date(a.date).toLocaleDateString('en-GB')}</span>
-                                        <span><strong>Status: </strong> {a.status}</span>
+                                <div className="patients-header">
+                                    <div style={{ flex: 2, textAlign: 'left' }}>
+                                        <strong>Date: </strong>  {new Date(a.date).toLocaleDateString('en-GB')}
+                                    </div>
+                                    <div style={{ flex: 3, textAlign: 'left' }}>
+                                        <strong>ID: </strong>{a._id}
+                                    </div>
+                                    <div style={{ flex: 3, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        {new Date(a.date) > new Date() && a.status === 'Scheduled' && (
+                                            <div style={{ display: 'inline-block' }}>
+                                                <button className="cancel-button" style={{marginRight:'30px'}} onClick={() => {
+                                                    setAppointmentId(a._id);
+                                                    setIsConfirmModalOpen(true)
+                                                }}>Cancel</button>
+                                                <Link to={`/reschedule/${a._id}`}>
+                                                    <button className="reschedule-button">Reschedule</button>
+                                                </Link>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div style={{ flex: 1, textAlign: 'right', marginRight: '10px' }}>
                                         <FontAwesomeIcon
                                             className="view-icon"
                                             icon={faEye}
@@ -304,24 +320,12 @@ const PatientAppointment = () => {
                                         />
 
                                     </div>
-                                    <div><strong>Appointment ID: </strong> {a._id}</div>
-                                    {new Date(a.date) > new Date() && a.status === 'Scheduled' && (
-                                        <>
-                                            <button className="cancel-button" onClick={() => {
-                                                setAppointmentId(a._id);
-                                                setIsConfirmModalOpen(true)
-                                            }}>Cancel</button>
-                                            <Link to={`/reschedule/${a._id}`}>
-                                                <button className="reschedule-button">Reschedule</button>
-                                            </Link>
-                                        </>
-                                    )}
                                 </div>
                             </li>
                         ))}
                     </ul>
-                </div>
 
+                </div>
                 {modalOpen && appointment && patient &&
                     <AppointmentsModalP
                         setOpenModal={setModalOpen}
@@ -330,43 +334,55 @@ const PatientAppointment = () => {
                     />
                 }
             </div>
+
+
+
+
+
+
+
+
+
+
+
+
             <Modal
-        isOpen={isConfirmModalOpen}
-        onRequestClose={() => setIsConfirmModalOpen(false)}
-        contentLabel="Confirm Delete"
-        style={{
-          content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: '#f4f4f4',
-            borderRadius: '10px',
-            padding: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          },
-        }}
-      >
-        <h2 style={{ color: '#333', marginBottom: '20px' }}>Confirm Cancellation</h2>
-        <p style={{ color: '#555', marginBottom: '30px' }}>Are you sure you want to cancel this appointment?</p>
-       
-        <div>
-          <button style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: 'crimson', color: '#fff', border: 'none', borderRadius: '5px' }} onClick={() => {
-            cancelAppointment(activeAppointmentId)
-            setIsConfirmModalOpen(false);
-          }}>
-            Yes
-          </button>
-          <button style={{ padding: '10px 20px', backgroundColor: 'blue', color: '#fff', border: 'none', borderRadius: '5px' }} onClick={() => setIsConfirmModalOpen(false)}>
-            No
-          </button>
-        </div>
-      </Modal>
+                isOpen={isConfirmModalOpen}
+                onRequestClose={() => setIsConfirmModalOpen(false)}
+                contentLabel="Confirm Delete"
+                style={{
+                    content: {
+                        top: '50%',
+                        left: '50%',
+                        right: 'auto',
+                        bottom: 'auto',
+                        marginRight: '-50%',
+                        transform: 'translate(-50%, -50%)',
+                        backgroundColor: '#f4f4f4',
+                        borderRadius: '10px',
+                        padding: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    },
+                }}
+            >
+                <h2 style={{ color: '#333', marginBottom: '20px' }}>Confirm Cancellation</h2>
+                <p style={{ color: '#555', marginBottom: '30px' }}>Are you sure you want to cancel this appointment?</p>
+
+                <div>
+                    <button style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: 'crimson', color: '#fff', border: 'none', borderRadius: '5px' }} onClick={() => {
+                        cancelAppointment(activeAppointmentId)
+                        setIsConfirmModalOpen(false);
+                    }}>
+                        Yes
+                    </button>
+                    <button style={{ padding: '10px 20px', backgroundColor: 'blue', color: '#fff', border: 'none', borderRadius: '5px' }} onClick={() => setIsConfirmModalOpen(false)}>
+                        No
+                    </button>
+                </div>
+            </Modal>
         </div>
 
     )

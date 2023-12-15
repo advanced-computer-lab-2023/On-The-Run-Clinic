@@ -72,14 +72,15 @@ const FamilyMembersList = () => {
     <Container>
       <Row className="justify-content-md-center">
         <Col md="auto">
-          <h1 className="my-4 text-center">Family Members of {username}</h1>
+          <h1 style={{textAlign:'left'}} >Family Members of {username}</h1>
+          <p style={{fontSize:'15px',color:'gray'}}>These are the family members that doesn't have an account and are listed under your name</p>
           {loading ? (
             <Spinner animation="border" role="status">
               <span className="sr-only">Loading...</span>
             </Spinner>
           ) : (
             <>
-              <h2 className="my-3">Normal Family Members</h2>
+            
               <Row>
                 {familyMembers.length > 0 ? (
                   familyMembers.map(member => (
@@ -92,18 +93,7 @@ const FamilyMembersList = () => {
                 )}
               </Row>
 
-              <h2 className="my-3">Linked Family Members</h2>
-              <Row>
-                {linkedFamilyMembers.length > 0 ? (
-                  linkedFamilyMembers.map(member => (
-                    <Col sm={12} md={6} lg={4} xl={3} key={member._id}>
-                      <FamilyMember member={member} isLinked />
-                    </Col>
-                  ))
-                ) : (
-                  <p>No linked family members found.</p>
-                )}
-              </Row>
+              
             </>
           )}
           <Button variant="primary" onClick={() => navigate(-1)}>Back</Button>

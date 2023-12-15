@@ -1,11 +1,12 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import React, { useState,useEffect } from 'react';
+import  {React, useState,useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPlus } from '@fortawesome/free-solid-svg-icons';
-import LinkForm from '../components/LinkPatientForm';
 
-function LinkPatientPage() {
+import FamMemForm from '../components/FamMemForm';
+
+const ViewFam= () => {
     const { username } = useParams();
     const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -17,29 +18,31 @@ function LinkPatientPage() {
   const [familyMembers, setFamilyMembers] = useState([]);
   const navigate = useNavigate();
   const [isFormVisible, setIsFormVisible] = useState(false);
-  async function fetchFamilyMembers() {
+
+  const fetchFamilyMembers = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/getLinkedFamilyMembers/${username}`,{
+     
+      const response = await axios.get(`http://localhost:4000/getFamilyMem/${username}`,{
         withCredentials: true
       });
+      console.log(response.data);
+
       if (response.status === 200) {
-        console.log("Pp", response.data)
         setFamilyMembers(response.data);
       }
+     
+     
     } catch (error) {
       console.error('Error fetching family members:', error);
-      // You can set an error state or display an error message to the user here.
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
-  }
-
+  };
   useEffect(() => {
-    // Fetch family members when the component mounts
    
     fetchFamilyMembers();
   }, [username]);
+
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,7 +92,7 @@ function LinkPatientPage() {
     <div className="container">
     <div className="prescriptions-list">
       <h2>
-         Linked Family Members
+        Family Members
         <FontAwesomeIcon
             className="add-icon"
             icon={faPlus}
@@ -102,29 +105,24 @@ function LinkPatientPage() {
           <li key={prescription._id}>
             <div className="prescription-card">
               <div className="prescription-header">
-                <span><strong>Name: </strong>  {prescription.linkedPatientName}</span>
-                
+                <span><strong>Name: </strong>  {prescription.name}</span>
+              
               </div>
-              <div><strong>Relation: </strong> {prescription.linkedPatientRelation}</div>
-               <div >
-                <Link to={`/filterAppointmentsPatient/${prescription.linkedPatientUsername}`}>
-                    <button className="reschedule-button">View Appointments</button>
-                </Link>
-                <Link to={`/viewHealthPackagesDetails/${prescription.linkedPatientUsername}`}>
-                    <button  className="reschedule-button" style={{ marginLeft: '10px' }}>View Health Package</button>
-                </Link>
-            </div>
+              <div><strong>Relation: </strong> {prescription.relation}</div>
+              <div><strong> National ID:</strong>{prescription.national_id}</div>
+              <div><strong> Age: </strong>{prescription.age}</div>
+
             </div>
           </li>
         ))}
       </ul>
     </div>
     <div className="prescription-form">
-      {isFormVisible && <LinkForm onLinkSuccess={handleLinkSuccess} />}
+      {isFormVisible && <FamMemForm onLinkSuccess={handleLinkSuccess} />}
     </div>
    
   </div>
   );
 }
 
-export default LinkPatientPage;
+export default ViewFam;

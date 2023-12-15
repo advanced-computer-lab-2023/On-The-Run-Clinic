@@ -44,10 +44,11 @@ import PatientSettings from './pages/PatientSettings';
 import AdminSettings from './components/AdminSettings';
 import AllPackages from './pages/ViewAllPackages';
 import SubPackage from './pages/SubPackage';
-import Reschedule from './pages/Reschedule';
 import DoctorAppointment from './pages/DoctorAppointments';
 import ViewDRAppointments from './pages/viewThisDrAppointments';
 import PatientAppointment from './pages/PatientAppointments';
+import ReschedulePatient from './pages/ReschedulePatient';
+import ViewFam from './pages/viewFamilyMem';
 // Import your components
 
 
@@ -90,7 +91,7 @@ function App() {
           />
           <Route
             path="/viewFamilyMembers/:username"
-            element={user && user.role === 'patient' ? <FamilyMembersList /> : <Navigate to="/login" />}
+            element={user && user.role === 'patient' ? <ViewFam /> : <Navigate to="/login" />}
           />
           <Route
             Route path="/chat/:username/:doctor"
@@ -214,7 +215,7 @@ function App() {
           />
           <Route
             path="/reschedule/:id"
-            element={user && (user.role === 'doctor' || user.role === 'patient') ? <Reschedule /> : <Navigate to="/login" />}
+            element={user && (user.role === 'doctor' || user.role === 'patient') ? <ReschedulePatient /> : <Navigate to="/login" />}
           />
 
         </Routes>
