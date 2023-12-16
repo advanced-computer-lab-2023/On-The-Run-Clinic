@@ -14,7 +14,7 @@ const cors = require('cors');
 
 const { createFollowUpReq, acceptFollowUpReq, rejectFollowUpReq, getFollowUpReqs } = require("./controllers/followUpReqController")
 const { createAppointment, filter, getAllAppointments, getDoctorAppointments, getPatientAppointments, getAvailableDoctorAppointments, reserveAppointment, reserveFamilyMemberAppointment, reserveLinkedPatientAppointment, cancelAppointment, getAppointment, rescheduleAppointment } = require("./controllers/appointmentsController")
-const { createPatient, getPatients, searchPatientsByName, getMyPrescriptions, getMyPrescriptions2, searchPatientsByUserame, deletePatient, getPatient, linkMemberByEmail, getLinkedFamilyMembers, getMedicalHistory, deleteMedicalHistory ,payByPackage, updatePasswordPatient, viewHealthPackages, CancelPackage, getHighestDiscount, getPatientNotifications, addToWallet, getPatientUsername } = require("./controllers/patientController");
+const { createPatient, getPatients, checkPatientValidity,searchPatientsByName, getMyPrescriptions, getMyPrescriptions2, searchPatientsByUserame, deletePatient, getPatient, linkMemberByEmail, getLinkedFamilyMembers, getMedicalHistory, deleteMedicalHistory ,payByPackage, updatePasswordPatient, viewHealthPackages, CancelPackage, getHighestDiscount, getPatientNotifications, addToWallet, getPatientUsername } = require("./controllers/patientController");
 const { createMessage, getChatMessages, sendMessageAsPatient, sendMessageAsDoctor} = require("./controllers/messagesController")
 
 
@@ -191,6 +191,7 @@ app.delete("/deleteDoctor/:id", requireAuthAdmin, deleteDoctor);
 app.patch("/ubdateDoctor", updateDoctor);
 app.get("/getFamilyMem/:username", requireAuth, getFamilyMembers);
 app.get("/searchPatientsByName", requireAuth, searchPatientsByName);
+app.get("/checkPatientValidity/:doctorUsername", checkPatientValidity)
 app.post("/addPatientToDr", requireAuth, addPatientToDr);
 app.post("/addPrescription", createPrescription);
 app.get("/getPrescriptions/:id", requireAuth, getPrescriptionsForPatient);

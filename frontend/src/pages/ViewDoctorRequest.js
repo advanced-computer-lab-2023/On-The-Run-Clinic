@@ -94,7 +94,7 @@ const ViewRequests = () => {
                     <strong>Username: </strong>{m.username}
                   </div>
                   <div style={{ flex: 1, textAlign: 'left' }}>
-                    <strong>Requesr ID: </strong>{m._id}
+                    <strong>Request ID: </strong>{m._id}
                   </div>
                   <div style={{ flex: 1, textAlign: 'right', marginRight: '10px' }}>
                     {m.status1 === 'pending' && (
