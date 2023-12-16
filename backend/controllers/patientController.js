@@ -606,6 +606,20 @@ const addPrescription = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+const checkPatientValidity = async (req, res) => {
+  const { doctorUsername } = req.params;
+  try {
+    // Check if the doctorUsername exists in the pharmacist database
+    const doctorExists = await Patient.exists({ username: doctorUsername });
+    if (doctorExists) {
+      return res.status(200).json({ isValid: true });
+    } else {
+      return res.status(200).json({ isValid: false });
+    }
+  } catch (error) {
+    console.error('Error checking doctor validity:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
-
-module.exports={createPatient,getPatients,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getPatientNotifications,getMyPrescriptions2,addToWallet,getPatientUsername}
+module.exports={createPatient,getPatients,checkPatientValidity,deletePatient,searchPatientsByName,getMyPrescriptions,searchPatientsByUserame,getPatient,searchPatientsByUSername,linkMemberByEmail,getLinkedFamilyMembers,getMedicalHistory,deleteMedicalHistory,payByPackage,updatePasswordPatient,viewHealthPackages,CancelPackage,getHighestDiscount,getPatientNotifications,getMyPrescriptions2,addToWallet,getPatientUsername}

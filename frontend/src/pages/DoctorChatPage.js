@@ -8,8 +8,26 @@ const DoctorChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isFetchingCrossMessages, setIsFetchingCrossMessages] = useState(false); // New state variable
-
+  const checkPatientValidity = async (doctorUsername) => {
+    try {
+      const response = await axios.get(`http://localhost:4000/checkPatientValidity/${doctorUsername}`, {
+        withCredentials: true,
+      });
+  
+      return response.status === 200 && response.data.isValid;
+    } catch (error) {
+      console.error('Error checking doctor validity:', error);
+      return false; // Assume invalid in case of an error
+    }
+  };
   const fetchMessages = async () => {
+
+    const isPatient = await checkPatientValidity(doctor);
+
+    if (!isPatient) {
+      setIsFetchingCrossMessages(true);
+    }
+
     try {
       const response = await axios.get(`http://localhost:4000/getChatMessages/${username}/${doctor}`, {
         withCredentials: true,
@@ -21,7 +39,7 @@ const DoctorChatPage = () => {
         if (fetchedMessages.length === 0) {
           // If getChatMessages returns nothing, call getCrossOverChatMessages
           console.log('No messages found. Fetching crossover messages...');
-          setIsFetchingCrossMessages(true); // Set the flag to true
+          
           await getCrossOverChatMessages();
         } else {
           setMessages(fetchedMessages || []);
@@ -42,6 +60,9 @@ const DoctorChatPage = () => {
       if (response.status === 200) {
         const fetchedMessages = response.data;
         setMessages(fetchedMessages || []);
+        if (fetchedMessages.length !== 0) {
+          setIsFetchingCrossMessages(true);
+        }
       }
     } catch (error) {
       console.error('Error fetching crossover chat messages:', error);
@@ -77,6 +98,7 @@ const DoctorChatPage = () => {
 
   const handleSendMessage = async () => {
     let response; // Declare the response variable
+    console.log('isFetchingCrossMessages:', isFetchingCrossMessages);
     try {
       if (isFetchingCrossMessages) {
         // If fetching crossover messages, call sendCrossMessageAsDoctor
