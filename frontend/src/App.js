@@ -28,7 +28,6 @@ import DoctorListPage from './pages/viewDoctors';
 import Login from './pages/login';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
-//import HealthPackage from '../../backend/models/HealthPackages';
 import HealthPackagesDetails from './pages/HealthPackageDetails';
 import ViewAppointments from './pages/viewAppointments';
 import Notifications from './components/Notifications';
@@ -70,7 +69,7 @@ function App() {
             path="/"
             element={
               !user ?<Navigate to="/login" /> :
-                user.role === 'patient' ? <Navigate to={`/dashboard/patient/${user.user}`}  /> :
+                user.role === 'patient' ? <Navigate to={`/filterAppointmentsPatient/${user.user}`}  /> :
                   user.role === 'admin' ? <Navigate to={`/dashboard/admin/${user.user}`}  /> :
                     user.role === 'doctor' ? <Navigate to={`/dashboard/doctor/${user.user}`}  /> :
                       <Navigate to="/login" />

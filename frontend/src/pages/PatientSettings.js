@@ -2,6 +2,7 @@ import { Card, Col, Container, Nav, Row, Tab } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import ChangePatientPass from './changePatientPass';
+import UploadHistory from '../components/uploadMedicalHistory';
 
 
 const PatientSettings = () => {
@@ -12,7 +13,7 @@ const PatientSettings = () => {
         <Row>
           <Col>
             <h1 style={{ marginBottom: '5px',fontSize: '20px',fontWeight: '600' }}>Account Settings</h1>
-            <p style={{ marginBottom: '10px',fontSize: '15px',fontWeight: '500' }}>Change your account settings</p>
+            <p style={{ marginBottom: '10px',fontSize: '15px',fontWeight: '500' ,marginLeft:'55px'}}>Change your account settings</p>
           </Col>
         </Row>
       </Container>
@@ -21,8 +22,12 @@ const PatientSettings = () => {
           <Row>
             <Col sm={3}>
               <Nav variant="pills" className="flex-column">
+                
                 <Nav.Item>
                   <Nav.Link eventKey="password" style={{fontSize: '15px',fontWeight: '500' }}>Password</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="profile" style={{fontSize: '15px',fontWeight: '500' }}>Medical History</Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
@@ -30,6 +35,9 @@ const PatientSettings = () => {
               <Tab.Content style={{ width: '660px',marginTop: '0px' ,height:'470px' }}>
                 <Tab.Pane eventKey="password" style={{ width: '660px',height:'470px' }}>
                 <ChangePatientPass />
+                </Tab.Pane>
+                <Tab.Pane eventKey="profile" style={{ width: '660px',height:'470px' }}>
+                <UploadHistory />
                 </Tab.Pane>
               </Tab.Content>
             </Col>

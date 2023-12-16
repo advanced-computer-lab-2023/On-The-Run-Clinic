@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 
 function MedicalHistoryList() {
   const [medicalHistory, setMedicalHistory] = useState([]);
-  const { username } = useParams();
+  const { username } = useParams(); 
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState('');
   async function fetchMedicalHistory() {

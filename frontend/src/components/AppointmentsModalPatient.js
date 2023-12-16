@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEye,faComments } from '@fortawesome/free-solid-svg-icons';
 
 // Set the root element for accessibility
 
@@ -51,7 +51,10 @@ const AppointmentsModalP = ({ setOpenModal, appointment, patient }) => {
                             <div style={{ display: 'flex', alignItems: 'center', fontSize: '20px' }}>
                                 <strong>Doctor:  </strong>{doctor.name}
                                 <Link to={`/doctor-details/${doctor.username}/${patient.username}`}>
-                                    <FontAwesomeIcon icon={faEye} style={{ marginLeft: '10px' }} />
+                                    <FontAwesomeIcon icon={faEye} style={{ marginLeft: '15px' }} />
+                                </Link>
+                                <Link to={`/chat/${patient.username}/${doctor.username}`}>
+                                    <FontAwesomeIcon icon={faComments} style={{ marginLeft: '15px' }} />
                                 </Link>
                             </div>
                         </>

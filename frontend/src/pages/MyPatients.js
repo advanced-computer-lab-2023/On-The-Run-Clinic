@@ -97,7 +97,7 @@ const MyPatients = () => {
                     <Link to={`/patient-details/${p.username}/${username}`}>
                     <FontAwesomeIcon icon={faEye} color="#14967f" />
                     </Link>
-                    <Link to={`/chat/${p.username}/${username}`}>
+                    <Link to={`/chat/${username}/${p.username}`}>
                     <button style={{ background: 'transparent', border: 'none' }}>
                       <FontAwesomeIcon icon={faComments} color="#14967f" style={{ marginLeft: '10px' }} />
                       </button>
