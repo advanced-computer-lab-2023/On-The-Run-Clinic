@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BeatLoader from "react-spinners/BeatLoader";
 import {faEye, faVideo, faComments } from '@fortawesome/free-solid-svg-icons';
-
 const MyPatients = () => {
   const { username } = useParams();
+  const navigate = useNavigate(); // Add useNavigate hook
   const [patients, setPatients] = useState([]);
   const [originalPatients, setOriginalPatients] = useState([]); // Store original patient data
   const [loading, setLoading] = useState(true);
   const [searchName, setSearchName] = useState('');
- 
   const [doctor1, setDoctor] = useState(null);
 
   useEffect(() => {
@@ -25,15 +25,14 @@ const MyPatients = () => {
         }
       } catch (error) {
         console.error('Error fetching doctor:', error);
-      } // replace 'username' with the actual username
-
+      }
     };
+
     const fetchPatients = async () => {
-      try { 
+      try {
         const response = await axios.get(`http://localhost:4000/getDocpatients/${username}`, {
           withCredentials: true
         });
-        console.log(response.data);
 
         if (response.status === 200) {
           setPatients(response.data);
@@ -45,6 +44,7 @@ const MyPatients = () => {
         setLoading(false);
       }
     };
+
     fetchDoctor();
     fetchPatients();
   }, [username]);
@@ -61,8 +61,9 @@ const MyPatients = () => {
     handleSearchByName(e.target.value);
   };
 
-
-
+  const handleGoBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
 
   return (
     <div className="container">
@@ -87,15 +88,15 @@ const MyPatients = () => {
             {patients.map((p) => (
               <li key={p._id}>
                 <div className="patients-header">
-                <div style={{ flex: 1, textAlign: 'left' }}>
+                  <div style={{ flex: 1, textAlign: 'left' }}>
                     <strong>Name: </strong>{p.name}
                   </div>
                   <div style={{ flex: 1, textAlign: 'left' }}>
                     <strong>ID: </strong>{p._id}
                   </div>
-                  <div style={{ flex: 1, textAlign: 'right' ,marginRight:'10px'}}>
+                  <div style={{ flex: 1, textAlign: 'right', marginRight: '10px' }}>
                     <Link to={`/patient-details/${p.username}/${username}`}>
-                    <FontAwesomeIcon icon={faEye} color="#14967f" />
+                      <FontAwesomeIcon icon={faEye} color="#14967f" />
                     </Link>
                     <Link to={`/chat/${username}/${p.username}`}>
                     <button style={{ background: 'transparent', border: 'none' }}>
@@ -112,6 +113,15 @@ const MyPatients = () => {
           </ul>
         )}
       </div>
+      <div className="back-button-container">
+  <button
+    className="back-button"
+    onClick={handleGoBack}
+    style={{ backgroundColor: '#2060a4', color: '#fff',position: 'absolute'}}
+  >
+    Back
+  </button>
+</div>
     </div>
   );
 };
