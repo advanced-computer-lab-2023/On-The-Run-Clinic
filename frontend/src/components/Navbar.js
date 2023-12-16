@@ -5,14 +5,50 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { FaBell } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { faCog ,faWallet} from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import { useState,useEffect } from 'react';
 
 
 const Navbar = () => {
   const { logout } = useLogout()
   const { user } = useAuthContext()
+const [doctor,setDoctor]=useState(null);
+const [patient,setPatient]=useState(null); 
+  useEffect(() => {
 
 
+
+    const fetchDoctor = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/getDoctor/${user.user}`, {
+          withCredentials: true,
+        });
+        setDoctor(response.data);
+      } catch (error) {
+        console.error('Error fetching wallet:', error);
+      }
+    };
+    const fetchPatient = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/search/${user.user}`, {
+          withCredentials: true,
+        });
+        setPatient(response.data);
+      } catch (error) {
+        console.error('Error fetching wallet:', error);
+      }
+    };
+    if (user && user.role === 'doctor') {
+      fetchDoctor();
+    }
+    if(user && user.role === 'patient'){
+      fetchPatient();
+    }
+    
+
+    
+  }, [user]); 
 
 
   const handleClick = () => {
@@ -64,6 +100,19 @@ const Navbar = () => {
           <div>
             <FontAwesomeIcon icon={faUser} style={{ color: 'White', stroke: 'white', strokeWidth: '2' }} />
             <h3> {user.user}</h3>
+            {user.role === 'doctor' && doctor &&(
+             <div><FontAwesomeIcon icon={faWallet} style={{ color: 'White', stroke: 'white', strokeWidth: '2' }}/>
+             <h3> ${doctor.wallet}</h3>
+             </div>
+
+            )}
+             {user.role === 'patient' && patient &&(
+             <div><FontAwesomeIcon icon={faWallet} style={{ color: 'White', stroke: 'white', strokeWidth: '2' }}/>
+             <h3> ${patient.wallet}</h3>
+             </div>
+
+            )}
+            
             {user.role === 'doctor' && (
               <Link to={`/doctorSettings/${user.user}`}>
                 <FontAwesomeIcon icon={faCog} style={{ color: 'White', stroke: 'white', strokeWidth: '2', marginLeft: '10px' }} />

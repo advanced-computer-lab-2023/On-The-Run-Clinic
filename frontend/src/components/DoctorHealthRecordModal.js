@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const DoctorHealthRecordModal = ({ onSubmit, onClose }) => {
+const DoctorHealthRecordModal = ({ username,onSubmit, onClose }) => {
   const [file, setFile] = useState(null);
-  const [patientUsername, setPatientUsername] = useState('');
   const [message, setMessage] = useState('');
+
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
 
-  const handleUsernameChange = (event) => {
-    setPatientUsername(event.target.value);
-  };
+ 
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -20,7 +18,7 @@ const DoctorHealthRecordModal = ({ onSubmit, onClose }) => {
     const formData = new FormData();
     formData.append('file', file);
 
-    axios.post(`http://localhost:4000/upload2?username=${patientUsername}`, formData, {
+    axios.post(`http://localhost:4000/upload2?username=${username}`, formData, {
       withCredentials: true,
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -52,16 +50,7 @@ const DoctorHealthRecordModal = ({ onSubmit, onClose }) => {
               style={inputStyle}
             />
           </div>
-          <div className="form-group" style={formGroupStyle}>
-            <label style={labelStyle}>Patient Username:</label>
-            <input
-              type="text"
-              value={patientUsername}
-              onChange={handleUsernameChange}
-              required
-              style={inputStyle}
-            />
-          </div>
+          
           <button type="submit" style={submitBtnStyle}>
             Upload
           </button>

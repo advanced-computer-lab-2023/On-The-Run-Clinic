@@ -204,9 +204,6 @@ const transporter = nodemailer.createTransport({
         await user.save();
       }
   
-      
-  
-      // Save the updated user
      
   
       return res.status(200).json({ message: 'Password reset successfully.' });

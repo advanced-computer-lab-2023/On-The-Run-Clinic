@@ -113,15 +113,7 @@ const MyPatients = () => {
           </ul>
         )}
       </div>
-      <div className="back-button-container">
-  <button
-    className="back-button"
-    onClick={handleGoBack}
-    style={{ backgroundColor: '#2060a4', color: '#fff',position: 'absolute'}}
-  >
-    Back
-  </button>
-</div>
+     
     </div>
   );
 };

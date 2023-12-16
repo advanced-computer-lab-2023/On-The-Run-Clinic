@@ -119,20 +119,7 @@ const ViewFollowUpReqs = () => {
           </ul>
         )}
       </div>
-      <button
-        style={{
-          marginTop: '20px',
-          padding: '10px 20px',
-          backgroundColor: '#2060a4',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
-        onClick={handleGoBack}
-      >
-        Back
-      </button>
+     
     </div>
   );
 };

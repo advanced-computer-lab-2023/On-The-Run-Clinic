@@ -129,7 +129,7 @@ const PatientDetails = () => {
         )}
         {/* Render the DoctorHealthRecordModal component based on the isHealthRecordModalOpen state */}
         {isHealthRecordModalOpen && (
-          <DoctorHealthRecordModal onSubmit={handleHealthRecordSubmit} onClose={handleCloseHealthRecordModal} />
+          <DoctorHealthRecordModal onSubmit={handleHealthRecordSubmit}username={username} onClose={handleCloseHealthRecordModal} />
         )}
        {/* Render the PatientHealthRecord component based on the "View Health Record" button click */}
        {viewHealthRecord && <PatientHealthRecord username={username} onClose={handleCloseHealthRecordModal} />}

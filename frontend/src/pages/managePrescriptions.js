@@ -41,9 +41,12 @@ const ManagePrescriptions = () => {
 
   return (
     <div className="container">
+      
     <div className="prescriptions-list">
+
       <h2>
-        Your Prescriptions
+      <button onClick={() => navigate(-1)} style={{ display: 'inline-block', marginBottom: '10px', color: '#14967f', backgroundColor: 'transparent', padding: '10px', borderRadius: '5px', border: 'none' ,fontSize:'30px',fontWeight:'600'}}> &larr;</button>
+        {username}'s Prescriptions
         <FontAwesomeIcon
             className="add-icon"
             icon={faPlus}
@@ -51,6 +54,8 @@ const ManagePrescriptions = () => {
             style={{ color: '#14967f' }}
           />
       </h2>
+      
+      
       <ul>
         {prescriptions.map((prescription) => (
           <li key={prescription._id}>
@@ -61,9 +66,10 @@ const ManagePrescriptions = () => {
                   className="view-icon"
                   icon={faEye}
                   onClick={() => {
-                    setModalOpen(true);
+                   
                     setActivePrescriptionId(prescription._id)
-                    setPrescription(prescriptions.find((p) => p._id === activePrescriptionId));
+                    setPrescription(prescription);
+                    setModalOpen(true);
                   }}
                 />
               </div>

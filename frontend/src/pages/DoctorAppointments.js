@@ -7,49 +7,48 @@ import AppointmentsModal from '../components/AppointmentsModal';
 import AppointmentForm from '../components/AppointmentForm';
 import FilterPanel from '../components/filterPanel';
 import Modal from 'react-modal';
-
 const DoctorAppointment = () => {
-  const { username } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('');
-  const [selectedUpcoming, setSelectedUpcoming] = useState(false);
-  const [filteredAppointments, setFilteredAppointments] = useState([]);
-  const [selectedPast, setSelectedPast] = useState(false);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [isFormVisible, setIsFormVisible] = useState(false);
-  const [appointments, setAppointments] = useState([]);
+    const { username } = useParams();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState('');
+    const [selectedUpcoming, setSelectedUpcoming] = useState(false); // New state for upcoming filter
+    const [filteredAppointments, setFilteredAppointments] = useState([]);
+    const [selectedPast, setSelectedPast] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [isFormVisible, setIsFormVisible] = useState(false);
+    const [appointments, setAppointments] = useState([]);
 
-  const [appointment, setAppointment] = useState("");
-  const [activeAppointmentId, setAppointmentId] = useState(null);
-  const [doctor, setDoctor] = useState(null);
-  const [isFilterVisible, setIsFilterVisible] = useState(false);
-  const navigate = useNavigate(); // React Router's useNavigate hook
+    const [appointment, setAppointment] = useState("");
+    const [activeAppointmentId, setAppointmentId] = useState(null);
+    const [doctor, setDoctor] = useState(null);
+    const [isFilterVisible, setIsFilterVisible] = useState(false);
 
-  const fetchAppointments = async () => {
-    try {
-      const response1 = await axios.get(`http://localhost:4000/getDoctor/${username}`, { withCredentials: true });
+    const fetchAppointments = async () => {
+        try {
+            const response1 = await axios.get(`http://localhost:4000/getDoctor/${username}`, { withCredentials: true });
 
-      setDoctor(response1.data);
-      if (response1.data) {
-        const response2 = await axios.get(`http://localhost:4000/getDoctorAppointments/${response1.data._id}`, { withCredentials: true });
-        setAppointments(response2.data);
-        console.log("Appointments:", response2.data);
-        setFilteredAppointments(response2.data);
-      }
+            setDoctor(response1.data);
+            if (response1.data) {
+                const response2 = await axios.get(`http://localhost:4000/getDoctorAppointments/${response1.data._id}`, { withCredentials: true });
+                setAppointments(response2.data);
+                console.log("Appointments:", response2.data);
+                setFilteredAppointments(response2.data);
+            }
 
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
+        } catch (error) {
+            console.error('Error fetching appointments:', error);
+        }
+
     }
-  }
 
-  useEffect(() => {
-    fetchAppointments();
-  }, [filteredAppointments]);
+    useEffect(() => {
+        fetchAppointments();
+    }, [filteredAppointments]);
 
-  const handleAppointments = (newAppointments) => {
-    setAppointments(newAppointments);
-  };
+    const handleAppointments = (newAppointments) => {
+        setAppointments(newAppointments);
+    };
     const handleDateFilterChange = (event) => {
         const selectedDate = event.target.value;
         setSelectedDate(selectedDate);
@@ -224,10 +223,7 @@ const DoctorAppointment = () => {
         setFilteredAppointments(appointmentsWithPatients);
     };
 
-    const handleGoBack = () => {
-        // Use the navigate function to go back
-        navigate(-1);
-      };
+
 
     return (
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -306,44 +302,38 @@ const DoctorAppointment = () => {
 
                     </h2>
                     <ul>
-                    {filteredAppointments.map((a) => (
-    <li key={a._id}>
-        <div className="prescription-card" style={{ width: '200%' }}>
-            <div className="prescription-header" style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <div style={{ width: '50%' }}> {/* Adjust the width as needed */}
-                    <span><strong>Date: </strong> {new Date(a.date).toLocaleDateString('en-GB')}</span>
-                    <span><strong>Status: </strong> {a.status}</span>
-                </div>
-                <div style={{ width: '50%', textAlign: 'right' }}> {/* Adjust the width as needed */}
-                    <span><strong>Appointment ID: </strong> {a._id}</span> {/* Move Appointment ID here */}
-                    <FontAwesomeIcon
-                        className="view-icon"
-                        icon={faEye}
-                        onClick={() => {
-                            setModalOpen(true);
-                            setAppointmentId(a._id);
-                            setAppointment(appointments.find((l) => l._id === a._id));
-                        }}
-                    />
-                </div>
-            </div>
-            {new Date(a.date) > new Date() && a.status === 'Scheduled' && (
-                <>
-                    <button className="cancel-button" onClick={() => {
-                        setAppointmentId(a._id);
-                        setIsConfirmModalOpen(true)
-                    }}>Cancel</button>
-                    <Link to={`/reschedule/${a._id}`}>
-                        <button className="reschedule-button">Reschedule</button>
-                    </Link>
-                </>
-            )}
-        </div>
-    </li>
-))}
+                        {filteredAppointments.map((a) => (
+                            <li key={a._id}>
+                                <div className="prescription-card">
+                                    <div className="prescription-header">
+                                        <span><strong>Date: </strong>  {new Date(a.date).toLocaleDateString('en-GB')}</span>
+                                        <span><strong>Status: </strong> {a.status}</span>
+                                        <FontAwesomeIcon
+                                            className="view-icon"
+                                            icon={faEye}
+                                            onClick={() => {
+                                                setModalOpen(true);
+                                                setAppointmentId(a._id);
+                                                setAppointment(appointments.find((l) => l._id === a._id));
+                                            }}
+                                        />
 
-
-
+                                    </div>
+                                    <div><strong>Appointment ID: </strong> {a._id}</div>
+                                    {new Date(a.date) > new Date() && a.status === 'Scheduled' && (
+                                        <>
+                                            <button className="cancel-button" onClick={() => {
+                                                setAppointmentId(a._id);
+                                                setIsConfirmModalOpen(true)
+                                            }}>Cancel</button>
+                                            <Link to={`/reschedule/${a._id}`}>
+                                                <button className="reschedule-button">Reschedule</button>
+                                            </Link>
+                                        </>
+                                    )}
+                                </div>
+                            </li>
+                        ))}
                     </ul>
                 </div>
                 <div className="prescription-form" >
@@ -396,12 +386,6 @@ const DoctorAppointment = () => {
           </button>
         </div>
       </Modal>
-      <button
-          style={{ alignSelf: 'flex-end', marginTop: '20px',marginBottom:'10px', width:'500px', marginRight: '600px', padding: '10px 20px', backgroundColor: '#2060a4', color: '#fff', border: 'none', borderRadius: '5px' }}
-          onClick={handleGoBack}
-        >
-          Back
-        </button>
         </div>
 
     )

@@ -67,15 +67,7 @@ const MyPharma = () => {
           </ul>
         )}
       </div>
-      <div className="back-button-container">
-        <button
-          className="back-button"
-          onClick={() => navigate(-1)}
-          style={{ backgroundColor: '#2060a4', color: '#fff', marginTop: '20px' }}
-        >
-          Back
-        </button>
-      </div>
+     
     </div>
   );
 };

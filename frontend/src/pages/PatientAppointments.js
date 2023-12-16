@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faPlus, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import AppointmentsModalP from '../components/AppointmentsModalPatient';
 import AppointmentForm from '../components/AppointmentForm';
 import FilterPanel from '../components/filterPanel';
 import Modal from 'react-modal';
+import BeatLoader from "react-spinners/BeatLoader";
+import FollowUpModal from '../components/FollowUpModalPatient';
 const PatientAppointment = () => {
     const { username } = useParams();
     const [modalOpen, setModalOpen] = useState(false);
@@ -18,13 +20,16 @@ const PatientAppointment = () => {
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [appointments, setAppointments] = useState([]);
-
+    const navigate = useNavigate();
     const [appointment, setAppointment] = useState("");
     const [activeAppointmentId, setAppointmentId] = useState(null);
     const [patient, setPatient] = useState(null);
     const [isFilterVisible, setIsFilterVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const fetchAppointments = async () => {
+        setIsLoading(true);
         try {
             const response1 = await axios.get(`http://localhost:4000/search/${username}`, {
                 withCredentials: true,
@@ -42,38 +47,44 @@ const PatientAppointment = () => {
         } catch (error) {
             console.error('Error fetching appointments:', error);
         }
+        setIsLoading(false);
 
     }
 
     useEffect(() => {
         fetchAppointments();
-    }, [filteredAppointments]);
+    }, [username]);
 
     const handleAppointments = (newAppointments) => {
         setAppointments(newAppointments);
+        fetchAppointments();
     };
     const handleDateFilterChange = (event) => {
         const selectedDate = event.target.value;
         setSelectedDate(selectedDate);
         filterAppointments(selectedDate, selectedStatus, selectedUpcoming);
+        fetchAppointments();
     };
 
     const handleStatusFilterChange = (event) => {
         const selectedStatus = event.target.value;
         setSelectedStatus(selectedStatus);
         filterAppointments(selectedDate, selectedStatus, selectedUpcoming, selectedPast);
+        fetchAppointments();
     };
 
     const handleUpcomingFilterChange = () => {
         const isUpcoming = !selectedUpcoming;
         setSelectedUpcoming(isUpcoming);
         filterAppointments(selectedDate, selectedStatus, isUpcoming, selectedPast);
+        fetchAppointments();
     };
 
     const handlePastFilterChange = () => {
         const isPast = !selectedPast;
         setSelectedPast(isPast);
         filterAppointments(selectedDate, selectedStatus, selectedUpcoming, isPast);
+        fetchAppointments();
     };
 
     const resetFilters = () => {
@@ -215,10 +226,20 @@ const PatientAppointment = () => {
         setFilteredAppointments(appointmentsWithPatients);
     };
 
-
+    const handleFollowUpSubmit = () => {
+        // You may perform any necessary actions here before closing the modal
+        setIsModalOpen(false);
+      };
+      const handleCloseFollowUpModal = () => {
+        setIsModalOpen(false);
+      };
+    
 
     return (
+
+
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
             {isFilterVisible && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', backgroundColor: '#f2f2f2', borderRadius: '10px' }}>
                     {isFilterVisible && (
@@ -271,69 +292,101 @@ const PatientAppointment = () => {
                     )}
                 </div>
             )}
-
-
-            <div className="container">
-                <div className="patients-list">
-                    <h2 style={{marginBottom:'20px'}}>
-                        {username}'s Appointments
-                        <FontAwesomeIcon
-                            className="filter-icon"
-                            icon={faFilter}
-                            onClick={() => setIsFilterVisible(!isFilterVisible)}
-                            style={{ color: '#14967f' }}
-                        />
-
-                    </h2>
-                    <ul className="patients-list">
-                        {filteredAppointments.map((a) => (
-                            <li key={a._id}>
-                                <div className="patients-header">
-                                    <div style={{ flex: 2, textAlign: 'left' }}>
-                                        <strong>Date: </strong>  {new Date(a.date).toLocaleDateString('en-GB')}
-                                    </div>
-                                    <div style={{ flex: 3, textAlign: 'left' }}>
-                                        <strong>ID: </strong>{a._id}
-                                    </div>
-                                    <div style={{ flex: 3, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        {new Date(a.date) > new Date() && a.status === 'Scheduled' && (
-                                            <div style={{ display: 'inline-block' }}>
-                                                <button className="cancel-button" style={{marginRight:'30px'}} onClick={() => {
-                                                    setAppointmentId(a._id);
-                                                    setIsConfirmModalOpen(true)
-                                                }}>Cancel</button>
-                                                <Link to={`/reschedule/${a._id}`}>
-                                                    <button className="reschedule-button">Reschedule</button>
-                                                </Link>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div style={{ flex: 1, textAlign: 'right', marginRight: '10px' }}>
-                                        <FontAwesomeIcon
-                                            className="view-icon"
-                                            icon={faEye}
-                                            onClick={() => {
-                                                setModalOpen(true);
-                                                setAppointmentId(a._id);
-                                                setAppointment(appointments.find((l) => l._id === a._id));
-                                            }}
-                                        />
-
-                                    </div>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-
+            {isLoading ? (
+                <div className="spinner-container">
+                    <BeatLoader color="#14967f" size={15} />
                 </div>
-                {modalOpen && appointment && patient &&
-                    <AppointmentsModalP
-                        setOpenModal={setModalOpen}
-                        appointment={appointment}
-                        patient={patient}
-                    />
-                }
-            </div>
+            ) : filteredAppointments.length === 0 ? (
+                <div className="spinner-container">
+                    <button onClick={() => navigate(-1)} style={{ display: 'inline-block', marginBottom: '10px', color: 'black', backgroundColor: 'transparent', padding: '10px', borderRadius: '5px', border: 'none' }}>
+                        <FontAwesomeIcon icon={faArrowLeft} size="2x" />
+                    </button>
+                    <p>No appointments found.</p>
+                </div>
+            ) : (
+                <div className="container">
+                    <div className="patients-list">
+                        <h2 style={{ marginBottom: '20px' }}>
+                            <button onClick={() => navigate(-1)} style={{ display: 'inline-block', marginBottom: '10px', color: 'black', backgroundColor: 'transparent', padding: '10px', borderRadius: '5px', border: 'none' }}>
+                                <FontAwesomeIcon icon={faArrowLeft} size="2x" />
+                            </button>
+                            {username}'s Appointments
+                            <FontAwesomeIcon
+                                className="filter-icon"
+                                icon={faFilter}
+                                onClick={() => setIsFilterVisible(!isFilterVisible)}
+                                style={{ color: '#14967f' }}
+                            />
+
+                        </h2>
+                        <ul className="patients-list">
+                            {filteredAppointments.map((a) => (
+                                <li key={a._id}>
+                                    <div className="patients-header">
+                                        <div style={{ flex: 2, textAlign: 'left' }}>
+                                            <strong>Date: </strong>  {new Date(a.date).toLocaleDateString('en-GB')}
+                                        </div>
+                                        <div style={{ flex: 3, textAlign: 'left' }}>
+                                            <strong>ID: </strong>{a._id}
+                                        </div>
+                                        <div style={{ flex: 3, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            {new Date(a.date) > new Date() && a.status === 'Scheduled' && (
+                                                <div style={{ display: 'inline-block' }}>
+                                                    <button className="cancel-button" style={{ marginRight: '30px' }} onClick={() => {
+                                                        setAppointmentId(a._id);
+                                                        setIsConfirmModalOpen(true)
+                                                    }}>Cancel</button>
+                                                    <Link to={`/reschedule/${a._id}`}>
+                                                        <button className="reschedule-button">Reschedule</button>
+                                                    </Link>
+                                                </div>
+                                            )}
+                                            {new Date(a.date) < new Date() && a.status === 'Scheduled' && (
+                                                <div style={{ display: 'inline-block', marginRight:'70px'}}>
+
+                                                   
+                                                        <button className="reschedule-button" onClick={() => {
+                                                            setAppointment(a);
+                                                            setIsModalOpen(true)
+                                                        }}>request follow-up</button>
+                                                  
+                                                </div>
+                                            )}
+                                            
+                                        </div>
+                                        <div style={{ flex: 1, textAlign: 'right', marginRight: '10px' }}>
+                                            <FontAwesomeIcon
+                                                className="view-icon"
+                                                icon={faEye}
+                                                onClick={() => {
+                                                    
+                                                    setAppointmentId(a._id);
+                                                    setAppointment(a);
+                                                    setModalOpen(true);
+                                                }}
+                                            />
+
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+
+                    </div>
+                    {modalOpen && appointment && patient &&
+                        <AppointmentsModalP
+                            setOpenModal={setModalOpen}
+                            appointment={appointment}
+                            patient={patient}
+                        />
+                    }
+                    {isModalOpen && (
+                        <FollowUpModal app={appointment.doctorId} onSubmit={handleFollowUpSubmit} onClose={handleCloseFollowUpModal} />
+                    )}
+                </div>
+
+            )}
+
 
 
 
