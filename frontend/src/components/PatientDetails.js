@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import DoctorHealthRecordModal from './DoctorHealthRecordModal';
+import PatientHealthRecord from '../pages/PatientHealthRecord';
 import FollowUpModal from './FollowUpModal';  
 import './patientDetails.css';
-
 const PatientDetails = () => {
   const { username, usernameDoctor } = useParams();
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ const PatientDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showFollowUpModal, setShowFollowUpModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHealthRecordModalOpen, setIsHealthRecordModalOpen] = useState(false);
+  const [viewHealthRecord, setViewHealthRecord] = useState(false);
 
   useEffect(() => {
     const fetchPatientData = async () => {
@@ -31,7 +34,6 @@ const PatientDetails = () => {
 
     fetchPatientData();
   }, [username]);
-
   const handleScheduleFollowUp = () => {
     setIsModalOpen(true);
   };
@@ -43,6 +45,19 @@ const PatientDetails = () => {
   const handleFollowUpSubmit = () => {
     // You may perform any necessary actions here before closing the modal
     setIsModalOpen(false);
+  };
+  const handleUploadHealthRecord = () => {
+    setIsHealthRecordModalOpen(true);
+  };
+
+  const handleCloseHealthRecordModal = () => {
+    setIsHealthRecordModalOpen(false);
+    setViewHealthRecord(false); // Reset the state when closing the modal
+  };
+
+  const handleHealthRecordSubmit = () => {
+    setIsHealthRecordModalOpen(false);
+    setViewHealthRecord(true);
   };
 
   if (loading) {
@@ -59,7 +74,7 @@ const PatientDetails = () => {
         <h2 className="title">Patient Details</h2>
         <table style={{ fontSize: '1.5em', padding: '10px' }}>
           <tbody>
-          <tr>
+            <tr>
               <th>Name:</th>
               <td>{patient.name}</td>
             </tr>
@@ -91,6 +106,7 @@ const PatientDetails = () => {
               <th>Emergency Contact Mobile Number:</th>
               <td>{patient.emergencyContact.mobileNumber}</td>
             </tr>
+            {/* Add more patient details as needed */}
           </tbody>
         </table>
       </div>
@@ -98,6 +114,12 @@ const PatientDetails = () => {
         <Link to={`/managePrescriptions/${username}/${usernameDoctor}`}>
           <button className="button">Manage Prescriptions</button>
         </Link>
+        <button className="button" onClick={handleUploadHealthRecord}>
+          Upload Health Record
+        </button>
+        <button className="button" onClick={() => setViewHealthRecord(true)}>
+          View Health Record
+        </button>
         <button className="button" onClick={handleScheduleFollowUp}>
           Schedule Follow-Up
         </button>
@@ -105,6 +127,13 @@ const PatientDetails = () => {
        {isModalOpen && (
            <FollowUpModal onSubmit={handleFollowUpSubmit} onClose={handleCloseFollowUpModal} />
         )}
+        {/* Render the DoctorHealthRecordModal component based on the isHealthRecordModalOpen state */}
+        {isHealthRecordModalOpen && (
+          <DoctorHealthRecordModal onSubmit={handleHealthRecordSubmit} onClose={handleCloseHealthRecordModal} />
+        )}
+       {/* Render the PatientHealthRecord component based on the "View Health Record" button click */}
+       {viewHealthRecord && <PatientHealthRecord username={username} onClose={handleCloseHealthRecordModal} />}
+       
         <button className="button" onClick={() => navigate(-1)}>Back</button>
       </div>
     </div>

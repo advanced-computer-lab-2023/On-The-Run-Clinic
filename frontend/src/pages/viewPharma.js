@@ -2,45 +2,39 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import BeatLoader from "react-spinners/BeatLoader";
+import BeatLoader from 'react-spinners/BeatLoader';
 import { faComments } from '@fortawesome/free-solid-svg-icons';
 
 const MyPharma = () => {
-
   const [pharmas, setPharmas] = useState([]);
-  const{username}=useParams();
-// Store original patient data
+  const { username } = useParams();
   const [loading, setLoading] = useState(true);
-const[pharma,setPharma]=useState(null);
+
   useEffect(() => {
     const fetchPharmas = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/getPharma`, {
-          withCredentials: true
+          withCredentials: true,
         });
         if (response.status === 200) {
-            setPharmas(response.data);
-            setLoading(false)
+          setPharmas(response.data);
+          setLoading(false);
         }
       } catch (error) {
-        console.error('Error fetching doctor:', error);
-      } // replace 'username' with the actual username
-
+        console.error('Error fetching pharmacists:', error);
+      }
     };
-    
- 
+
     fetchPharmas();
   }, []);
 
-  
-
-
+  const navigate = useNavigate();
 
   return (
     <div className="container">
       <div className="patients-list">
-        <h2> Pharmacists</h2>
-      
+        <h2>Pharmacists</h2>
+
         {loading ? (
           <div className="spinner-container">
             <BeatLoader color="#14967f" size={15} />
@@ -52,26 +46,35 @@ const[pharma,setPharma]=useState(null);
             {pharmas.map((p) => (
               <li key={p._id}>
                 <div className="patients-header">
-                <div style={{ flex: 1, textAlign: 'left' }}>
-                    <strong>Name: </strong>{p.name}
+                  <div style={{ flex: 1, textAlign: 'left' }}>
+                    <strong>Name: </strong>
+                    {p.name}
                   </div>
                   <div style={{ flex: 1, textAlign: 'left' }}>
-                    <strong>ID: </strong>{p._id}
+                    <strong>ID: </strong>
+                    {p._id}
                   </div>
-                  <div style={{ flex: 1, textAlign: 'right' ,marginRight:'10px'}}>
-                    
+                  <div style={{ flex: 1, textAlign: 'right', marginRight: '10px' }}>
                     <Link to={`/chat/${username}/${p.username}`}>
-                    <button style={{ background: 'transparent', border: 'none' }}>
-                      <FontAwesomeIcon icon={faComments} color="#14967f" style={{ marginLeft: '10px' }} />
+                      <button style={{ background: 'transparent', border: 'none' }}>
+                        <FontAwesomeIcon icon={faComments} color="#14967f" style={{ marginLeft: '10px' }} />
                       </button>
-                  </Link>
-                   
+                    </Link>
                   </div>
                 </div>
               </li>
             ))}
           </ul>
         )}
+      </div>
+      <div className="back-button-container">
+        <button
+          className="back-button"
+          onClick={() => navigate(-1)}
+          style={{ backgroundColor: '#2060a4', color: '#fff', marginTop: '20px' }}
+        >
+          Back
+        </button>
       </div>
     </div>
   );

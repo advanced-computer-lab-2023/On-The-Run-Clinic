@@ -107,7 +107,14 @@ const PatientSchema = new mongoose.Schema({
     type: String,
   },
 
-  notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification' }]
+  notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification' }],
+  
+  HealthRecord: [{
+    filename: String,
+    path: String,
+    mimetype: String,
+    data: Buffer
+  }],
  
 });
 

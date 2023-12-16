@@ -295,9 +295,8 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
     }
   };
   return (
-    <div>
+    <div style={{ maxWidth: '800px', margin: 'auto' }}>
       <h1>Doctor Appointments</h1>
-      
       <div>
         <label>Date Filter:</label>
         <input
@@ -331,31 +330,37 @@ const [newAppointmentHour, setNewAppointmentHour] = useState('');
   <label>Past Filter:</label>
   <input
     type="checkbox"
-    checked={selectedPast}
+    checked={selectedPast} 
     onChange={handlePastFilterChange}
   />
 </div>
       <button onClick={resetFilters}>Reset Filters</button>
       <ul>
-        {filteredAppointments.map((appointment) => (
+      {filteredAppointments.map((appointment) => (
           <li key={appointment._id}>
-            Date: {appointment.date}, Status: {appointment.status}, Description: {appointment.description} {appointment.patientInfo && (
-        <span>, Patient Email: <Link to={`/patient-details/${appointment.patientInfo.username}`}>{appointment.patientInfo.name}</Link></span>
-        )}
-        {new Date(appointment.date) > new Date() && appointment.status === 'Scheduled'&& (
-          <>
-          <button onClick={() => cancelAppointment(appointment._id)}>Cancel Appointment</button>
-          <Link to={`/reschedule/${appointment._id}`}>
-                  <button>Reschedule</button>
-                </Link>
-              </>
-        )}
+            <div>
+              <span>Date: {appointment.date}</span>
+              <span> | Status: {appointment.status}</span>
+              <span> | ID: {appointment._id}</span>
+            </div>
+            <div>
+              Description: {appointment.description}
+              {appointment.patientInfo && (
+                <span>, Patient Email: <Link to={`/patient-details/${appointment.patientInfo.username}`}>{appointment.patientInfo.name}</Link></span>
+              )}
+              {new Date(appointment.date) > new Date() && appointment.status === 'Scheduled' && (
+                <>
+                  <button onClick={() => cancelAppointment(appointment._id)}>Cancel Appointment</button>
+                  <Link to={`/reschedule/${appointment._id}`}>
+                    <button>Reschedule</button>
+                  </Link>
+                </>
+              )}
+            </div>
           </li>
         ))}
       </ul>
       <button onClick={() => navigate(-1)}>Back</button>
-
-      
     </div>
   );
 };
