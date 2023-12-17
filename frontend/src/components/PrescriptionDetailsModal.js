@@ -7,6 +7,7 @@ import { jsPDF } from "jspdf";
 // Set the root element for accessibility
 
 const PrescriptionDetailsModal = ({ setOpenModal, prescription }) => {
+    console.log(prescription.filled)
     const downloadPdf = () => {
         const doc = new jsPDF();
 
@@ -14,7 +15,7 @@ const PrescriptionDetailsModal = ({ setOpenModal, prescription }) => {
         doc.text(`ID: ${prescription._id}`, 10, 20);
         doc.text(`Date: ${new Date(prescription.date).toLocaleDateString('en-GB')}`, 10, 30);
         doc.text(`Doctor ID: ${prescription.doctor}`, 10, 40);
-        doc.text(`Filled: ${prescription.status === true ? 'Yes' : 'No'}`, 10, 50);
+        doc.text(`Filled: ${prescription.filled == true ? 'Yes' : 'No'}`, 10, 50);
         doc.text('Medicines:', 10, 60);
         prescription.medicines.forEach((medicine, index) => {
             doc.text(`Medicine Name: ${medicine.medicineName}`, 10, 70 + (index * 20));
@@ -48,7 +49,7 @@ const PrescriptionDetailsModal = ({ setOpenModal, prescription }) => {
                     <p><strong>ID: </strong>{prescription._id}</p>
                     <p><strong>Date: </strong>{new Date(prescription.date).toLocaleDateString('en-GB')}</p>
                     <p><strong>Doctor ID: </strong>{prescription.doctor}</p>
-                    <p><strong>Filled: </strong>{prescription.status === 'filled' ? 'Yes' : 'No'}</p>
+                    <p><strong>Filled: </strong>{prescription.filled === true ? 'Yes' : 'No'}</p>
                 </div>
                 <div className="medicine-table">
                     <table>

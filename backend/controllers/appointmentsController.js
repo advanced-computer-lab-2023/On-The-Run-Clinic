@@ -480,6 +480,7 @@ const rescheduleAppointment = async (req, res) => {
     if(!oldAppointment) {
       return res.status(400).json({ message: 'Appointment not found' });
     }
+    
     console.log("Test There");
     console.log("o" + oldAppointment);
     // Fetch the new appointment from the database
@@ -512,7 +513,7 @@ const rescheduleAppointment = async (req, res) => {
     newAppointment.patientId = oldAppointment.patientId; // Set the patientId of the old appointment to the new one
 
     // Update the old appointment details
-    oldAppointment.status = 'Available';
+    oldAppointment.status = 'Rescheduled';
     oldAppointment.patientId = null; // Remove the patientId from the old appointment
 
     // Save the updated appointments

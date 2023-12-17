@@ -261,6 +261,7 @@ const DoctorAppointment = () => {
                                         <option value="Cancelled">Cancelled</option>
                                         <option value="Completed">Completed</option>
                                         <option value="Available">Available</option>
+                                        <option value="Rescheduled">Available</option>
                                     </select>
                                 </div>
                                 <div style={{ margin: '10px' }}>
@@ -288,37 +289,37 @@ const DoctorAppointment = () => {
                         </div>
                     )}
                 </div>
-            )} 
+            )}
 
-{isLoading ? (
+            {isLoading ? (
                 <div className="spinner-container">
                     <BeatLoader color="#14967f" size={15} />
                 </div>
             ) : (
 
 
-            <div className="container">
+                <div className="container">
 
-                <div className="prescriptions-list" >
+                    <div className="prescriptions-list" >
 
 
-                    <h2>
-                        Your Appointments
-                        <FontAwesomeIcon
-                            className="add-icon"
-                            icon={faPlus}
-                            onClick={() => setIsFormVisible(!isFormVisible)}
-                            style={{ color: '#14967f' }}
-                        />
-                        <FontAwesomeIcon
-                            className="filter-icon"
-                            icon={faFilter}
-                            onClick={() => setIsFilterVisible(!isFilterVisible)}
-                            style={{ color: '#14967f' }}
-                        />
+                        <h2>
+                            Your Appointments
+                            <FontAwesomeIcon
+                                className="add-icon"
+                                icon={faPlus}
+                                onClick={() => setIsFormVisible(!isFormVisible)}
+                                style={{ color: '#14967f' }}
+                            />
+                            <FontAwesomeIcon
+                                className="filter-icon"
+                                icon={faFilter}
+                                onClick={() => setIsFilterVisible(!isFilterVisible)}
+                                style={{ color: '#14967f' }}
+                            />
 
-                    </h2>
-                   
+                        </h2>
+
                         <ul>
                             {filteredAppointments.map((a) => (
                                 <li key={a._id}>
@@ -353,20 +354,20 @@ const DoctorAppointment = () => {
                                 </li>
                             ))}
                         </ul>
-                </div>
-                <div className="prescription-form" >
-                    {isFormVisible && doctor && <AppointmentForm doctorId={doctor._id} onAppointmentsFetch={handleAppointments} />}
+                    </div>
+                    <div className="prescription-form" >
+                        {isFormVisible && doctor && <AppointmentForm doctorId={doctor._id} onAppointmentsFetch={handleAppointments} />}
 
-                </div>
+                    </div>
 
-                {modalOpen && appointment && doctor &&
-                    <AppointmentsModal
-                        setOpenModal={setModalOpen}
-                        appointment={appointment}
-                        doctor={doctor}
-                    />
-                }
-            </div>)}
+                    {modalOpen && appointment && doctor &&
+                        <AppointmentsModal
+                            setOpenModal={setModalOpen}
+                            appointment={appointment}
+                            doctor={doctor}
+                        />
+                    }
+                </div>)}
             <Modal
                 isOpen={isConfirmModalOpen}
                 onRequestClose={() => setIsConfirmModalOpen(false)}
