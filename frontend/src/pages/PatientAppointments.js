@@ -327,7 +327,7 @@ const PatientAppointment = () => {
                                             <strong>Date: </strong>  {new Date(a.date).toLocaleDateString('en-GB')}
                                         </div>
                                         <div style={{ flex: 3, textAlign: 'left' }}>
-                                            <strong>ID: </strong>{a._id}
+                                            <strong>Status: </strong>{a.status}
                                         </div>
                                         <div style={{ flex: 3, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                             {new Date(a.date) > new Date() && a.status === 'Scheduled' && (
