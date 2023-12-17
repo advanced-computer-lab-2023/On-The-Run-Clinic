@@ -14,7 +14,7 @@ const PrescriptionDetailsModal = ({ setOpenModal, prescription }) => {
         doc.text(`ID: ${prescription._id}`, 10, 20);
         doc.text(`Date: ${new Date(prescription.date).toLocaleDateString('en-GB')}`, 10, 30);
         doc.text(`Doctor ID: ${prescription.doctor}`, 10, 40);
-        doc.text(`Filled: ${prescription.status === 'filled' ? 'Yes' : 'No'}`, 10, 50);
+        doc.text(`Filled: ${prescription.status === true ? 'Yes' : 'No'}`, 10, 50);
         doc.text('Medicines:', 10, 60);
         prescription.medicines.forEach((medicine, index) => {
             doc.text(`Medicine Name: ${medicine.medicineName}`, 10, 70 + (index * 20));

@@ -43,7 +43,8 @@ const createPatient = async(req,res) => {
         emergencyContact,
         myDoctors:[],
         myfamilymembers:[],
-        prescriptions:[]
+        prescriptions:[],
+        healthpackage:null
 
       });
       await newPatient.save();
@@ -417,7 +418,7 @@ const CancelPackage = async (req,res) => {
   patient.packageCancelledDate = new Date();
   console.log(patient.packageCancelledDate);
   console.log('Cancelled');
-  patient.healthpackage=null;
+  patient.healthpackage='';
   await patient.save();
   res.status(201).json({message :"cancelled"});
   }
@@ -467,6 +468,13 @@ const viewHealthPackages = async (req, res) => {
   const { username } = req.params;
   console.log("hereee");
   try {
+    const p=await Patient.findOne({username})
+    console.log(p);
+    if(!p.healthpackage){
+      return res.status(404).json({ error: 'Error fetching health package' });
+    }
+
+   
     // Find the patient based on the provided username
     const patient = await Patient.findOne({ username }).populate('healthpackage');
 

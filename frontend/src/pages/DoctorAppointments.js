@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faPlus, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPlus, faFilter, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import AppointmentsModal from '../components/AppointmentsModal';
 import AppointmentForm from '../components/AppointmentForm';
 import FilterPanel from '../components/filterPanel';
 import Modal from 'react-modal';
+import BeatLoader from "react-spinners/BeatLoader";
 const DoctorAppointment = () => {
     const { username } = useParams();
     const [modalOpen, setModalOpen] = useState(false);
@@ -18,13 +19,14 @@ const DoctorAppointment = () => {
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [appointments, setAppointments] = useState([]);
-
+    const [isLoading, setIsLoading] = useState(false);
     const [appointment, setAppointment] = useState("");
     const [activeAppointmentId, setAppointmentId] = useState(null);
     const [doctor, setDoctor] = useState(null);
     const [isFilterVisible, setIsFilterVisible] = useState(false);
-
+    const navigate = useNavigate();
     const fetchAppointments = async () => {
+        setIsLoading(true);
         try {
             const response1 = await axios.get(`http://localhost:4000/getDoctor/${username}`, { withCredentials: true });
 
@@ -39,38 +41,44 @@ const DoctorAppointment = () => {
         } catch (error) {
             console.error('Error fetching appointments:', error);
         }
+        setIsLoading(false);
 
     }
 
     useEffect(() => {
         fetchAppointments();
-    }, [filteredAppointments]);
+    }, [username]);
 
     const handleAppointments = (newAppointments) => {
         setAppointments(newAppointments);
+        fetchAppointments();
     };
     const handleDateFilterChange = (event) => {
         const selectedDate = event.target.value;
         setSelectedDate(selectedDate);
         filterAppointments(selectedDate, selectedStatus, selectedUpcoming);
+        fetchAppointments();
     };
 
     const handleStatusFilterChange = (event) => {
         const selectedStatus = event.target.value;
         setSelectedStatus(selectedStatus);
         filterAppointments(selectedDate, selectedStatus, selectedUpcoming, selectedPast);
+        fetchAppointments();
     };
 
     const handleUpcomingFilterChange = () => {
         const isUpcoming = !selectedUpcoming;
         setSelectedUpcoming(isUpcoming);
         filterAppointments(selectedDate, selectedStatus, isUpcoming, selectedPast);
+        fetchAppointments();
     };
 
     const handlePastFilterChange = () => {
         const isPast = !selectedPast;
         setSelectedPast(isPast);
         filterAppointments(selectedDate, selectedStatus, selectedUpcoming, isPast);
+        fetchAppointments();
     };
 
     const resetFilters = () => {
@@ -105,6 +113,7 @@ const DoctorAppointment = () => {
 
                 setAppointments(updatedAppointments);
                 setFilteredAppointments(updatedAppointments);
+                fetchAppointments();
             }
         } catch (error) {
             console.error('Error cancelling appointment:', error);
@@ -279,7 +288,15 @@ const DoctorAppointment = () => {
                         </div>
                     )}
                 </div>
-            )}
+            )} 
+
+{isLoading ? (
+                <div className="spinner-container">
+                    <BeatLoader color="#14967f" size={15} />
+                </div>
+            ) : (
+
+
             <div className="container">
 
                 <div className="prescriptions-list" >
@@ -301,40 +318,41 @@ const DoctorAppointment = () => {
                         />
 
                     </h2>
-                    <ul>
-                        {filteredAppointments.map((a) => (
-                            <li key={a._id}>
-                                <div className="prescription-card">
-                                    <div className="prescription-header">
-                                        <span><strong>Date: </strong>  {new Date(a.date).toLocaleDateString('en-GB')}</span>
-                                        <span><strong>Status: </strong> {a.status}</span>
-                                        <FontAwesomeIcon
-                                            className="view-icon"
-                                            icon={faEye}
-                                            onClick={() => {
-                                                setModalOpen(true);
-                                                setAppointmentId(a._id);
-                                                setAppointment(appointments.find((l) => l._id === a._id));
-                                            }}
-                                        />
+                   
+                        <ul>
+                            {filteredAppointments.map((a) => (
+                                <li key={a._id}>
+                                    <div className="prescription-card">
+                                        <div className="prescription-header">
+                                            <span><strong>Date: </strong>  {new Date(a.date).toLocaleDateString('en-GB')}</span>
+                                            <span><strong>Status: </strong> {a.status}</span>
+                                            <FontAwesomeIcon
+                                                className="view-icon"
+                                                icon={faEye}
+                                                onClick={() => {
+                                                    setModalOpen(true);
+                                                    setAppointmentId(a._id);
+                                                    setAppointment(appointments.find((l) => l._id === a._id));
+                                                }}
+                                            />
 
+                                        </div>
+                                        <div><strong>Appointment ID: </strong> {a._id}</div>
+                                        {new Date(a.date) > new Date() && a.status === 'Scheduled' && (
+                                            <>
+                                                <button className="cancel-button" onClick={() => {
+                                                    setAppointmentId(a._id);
+                                                    setIsConfirmModalOpen(true)
+                                                }}>Cancel</button>
+                                                <Link to={`/reschedule/${a._id}`}>
+                                                    <button className="reschedule-button">Reschedule</button>
+                                                </Link>
+                                            </>
+                                        )}
                                     </div>
-                                    <div><strong>Appointment ID: </strong> {a._id}</div>
-                                    {new Date(a.date) > new Date() && a.status === 'Scheduled' && (
-                                        <>
-                                            <button className="cancel-button" onClick={() => {
-                                                setAppointmentId(a._id);
-                                                setIsConfirmModalOpen(true)
-                                            }}>Cancel</button>
-                                            <Link to={`/reschedule/${a._id}`}>
-                                                <button className="reschedule-button">Reschedule</button>
-                                            </Link>
-                                        </>
-                                    )}
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+                                </li>
+                            ))}
+                        </ul>
                 </div>
                 <div className="prescription-form" >
                     {isFormVisible && doctor && <AppointmentForm doctorId={doctor._id} onAppointmentsFetch={handleAppointments} />}
@@ -348,44 +366,44 @@ const DoctorAppointment = () => {
                         doctor={doctor}
                     />
                 }
-            </div>
+            </div>)}
             <Modal
-        isOpen={isConfirmModalOpen}
-        onRequestClose={() => setIsConfirmModalOpen(false)}
-        contentLabel="Confirm Delete"
-        style={{
-          content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: '#f4f4f4',
-            borderRadius: '10px',
-            padding: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          },
-        }}
-      >
-        <h2 style={{ color: '#333', marginBottom: '20px' }}>Confirm Cancellation</h2>
-        <p style={{ color: '#555', marginBottom: '30px' }}>Are you sure you want to cancel this appointment?</p>
-       
-        <div>
-          <button style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: 'crimson', color: '#fff', border: 'none', borderRadius: '5px' }} onClick={() => {
-            cancelAppointment(activeAppointmentId)
-            setIsConfirmModalOpen(false);
-          }}>
-            Yes
-          </button>
-          <button style={{ padding: '10px 20px', backgroundColor: 'blue', color: '#fff', border: 'none', borderRadius: '5px' }} onClick={() => setIsConfirmModalOpen(false)}>
-            No
-          </button>
-        </div>
-      </Modal>
+                isOpen={isConfirmModalOpen}
+                onRequestClose={() => setIsConfirmModalOpen(false)}
+                contentLabel="Confirm Delete"
+                style={{
+                    content: {
+                        top: '50%',
+                        left: '50%',
+                        right: 'auto',
+                        bottom: 'auto',
+                        marginRight: '-50%',
+                        transform: 'translate(-50%, -50%)',
+                        backgroundColor: '#f4f4f4',
+                        borderRadius: '10px',
+                        padding: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    },
+                }}
+            >
+                <h2 style={{ color: '#333', marginBottom: '20px' }}>Confirm Cancellation</h2>
+                <p style={{ color: '#555', marginBottom: '30px' }}>Are you sure you want to cancel this appointment?</p>
+
+                <div>
+                    <button style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: 'crimson', color: '#fff', border: 'none', borderRadius: '5px' }} onClick={() => {
+                        cancelAppointment(activeAppointmentId)
+                        setIsConfirmModalOpen(false);
+                    }}>
+                        Yes
+                    </button>
+                    <button style={{ padding: '10px 20px', backgroundColor: 'blue', color: '#fff', border: 'none', borderRadius: '5px' }} onClick={() => setIsConfirmModalOpen(false)}>
+                        No
+                    </button>
+                </div>
+            </Modal>
         </div>
 
     )

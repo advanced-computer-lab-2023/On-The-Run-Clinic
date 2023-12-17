@@ -156,7 +156,7 @@ const ViewDRAppointments = () => {
             if (response.status === 200) {
                 setPaymentSuccess(true);
                 setTimeout(() => {
-                    navigate(`/dashboard/patient/${patientUsername}`);
+                    navigate(`/filterAppointmentsPatient/${patientUsername}`);
                 }, 2000);
 
             }

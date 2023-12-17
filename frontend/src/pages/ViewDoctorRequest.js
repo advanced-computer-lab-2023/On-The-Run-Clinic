@@ -40,7 +40,7 @@ const ViewRequests = () => {
       });
 
       if (response.status === 200) {
-        setRequests(requests.filter((r) => r._id !== id));
+        
         fetchRequests();
       }
     } catch (error) {

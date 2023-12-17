@@ -238,7 +238,7 @@ app.get("/search/:username", searchPatientsByUserame);
 app.get("/getPatientAppointments/:id", getPatientAppointments);;
 
 
-app.get("/mypackage/:username", requireAuth, viewHealthPackages);
+app.get("/mypackage/:username", viewHealthPackages);
 app.post("/CancelPackage/:username", requireAuthPatient, CancelPackage);
 app.get("/getAvailableDoctorAppointments/:id", requireAuth, getAvailableDoctorAppointments);
 app.post("/reserveAppointment/:appointmentId", requireAuth, reserveAppointment);
