@@ -198,78 +198,12 @@ const linkMemberByEmail=async(req,res)=>{
     
     // Use a case-insensitive regular expression to search for patients by name
     const patient =await Patient.findOne({username:username});
+    const patientToBeLinked = await Patient.findOne({ email:email });
+    if (!patientToBeLinked||!patient) {
+      return res.status(404).json({ message: 'No patients found with the provided email.' });
+    }
    
-    if(email){
-      const patientToBeLinked = await Patient.findOne({ email:email });
-      if (!patientToBeLinked||!patient) {
-        return res.status(404).json({ message: 'No patients found with the provided email.' });
-      }
-      const p = await Patient.findOne({
-        linkedPatients: {
-          $elemMatch: {
-            linkedPatientId: patientToBeLinked._id
-          }
-        }
-      });
-
-      if(!p){
-        console.log("hena");
-        patient.linkedPatients.push({
-          linkedPatientId: patientToBeLinked._id,
-          linkedPatientUsername: patientToBeLinked.username,
-          linkedPatientRelation: relation,
-          linkedPatientName:patientToBeLinked.name
-        });
-        await patient.save();
-        patientToBeLinked.linkedPatients.push({
-          linkedPatientId: patient._id,
-          linkedPatientUsername: patient.username,
-          linkedPatientRelation: relation,
-          linkedPatientName: patient.name
-        });
-        await patientToBeLinked.save();
-      }
-
-    }
-    else if(email&&mobileNumber){
-      const patientToBeLinked = await Patient.findOne({ mobileNumber:mobileNumber,email:email });
-     
-
-      if (!patientToBeLinked||!patient) {
-        return res.status(404).json({ message: 'No patients found with the provided email.' });
-      }
-      const p = await Patient.findOne({
-        linkedPatients: {
-          $elemMatch: {
-            linkedPatientId: patientToBeLinked._id
-          }
-        }
-      });
-
-      if(!p){
-        patient.linkedPatients.push({
-          linkedPatientId: patientToBeLinked._id,
-          linkedPatientUsername: patientToBeLinked.username,
-          linkedPatientRelation: relation,
-          linkedPatientName:patientToBeLinked.name
-        });
-        await patient.save();
-        patientToBeLinked.linkedPatients.push({
-          linkedPatientId: patient._id,
-          linkedPatientUsername: patient.username,
-          linkedPatientRelation: relation,
-          linkedPatientName: patient.name
-        });
-        await patientToBeLinked.save();
-      }
-      
-
-    }
-    else{
-      const patientToBeLinked = await Patient.findOne({ mobileNumber:mobileNumber });
-      if (!patientToBeLinked||!patient) {
-        return res.status(404).json({ message: 'No patients found with the provided email.' });
-      }
+      console.log("hena");
       patient.linkedPatients.push({
         linkedPatientId: patientToBeLinked._id,
         linkedPatientUsername: patientToBeLinked.username,
@@ -284,8 +218,9 @@ const linkMemberByEmail=async(req,res)=>{
         linkedPatientName: patient.name
       });
       await patientToBeLinked.save();
-    }
+   
     
+
     res.status(200).json(patient);
   } catch (error) {
     console.error('Error searching for patients by name:', error);

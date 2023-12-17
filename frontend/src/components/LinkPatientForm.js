@@ -90,9 +90,9 @@ function LinkForm({ onLinkSuccess }) {
                         onChange={(e) => setFormData({ ...formData, relation: e.target.value })}
                     >
                         <option value="">Select relation</option>
-                        <option value="husband">Husband</option>
-                        <option value="wife">Wife</option>
-                        <option value="child">Child</option>
+                        <option value="Husband">Husband</option>
+                        <option value="Wife">Wife</option>
+                        <option value="Child">Child</option>
                     </select>
                 </div>
                 <div className="form-group">

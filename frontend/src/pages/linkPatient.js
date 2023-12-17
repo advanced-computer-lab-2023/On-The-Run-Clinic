@@ -63,6 +63,7 @@ function LinkPatientPage() {
       if (formData.mobileNumber.trim() !== '') {
         requestData.mobileNumber = formData.mobileNumber;
       }
+      console.log(requestData);
 
     try {
       const response = await axios.post('http://localhost:4000/linkMember', requestData,{
